@@ -1,0 +1,40 @@
+{
+    "name": "grinway/service-bundle",
+    "autoload": {
+        "psr-4": {
+            "GrinWay\\Service\\": "src/"
+        }
+    },
+	"version":		"2.0.0",
+    "type":			"symfony-bundle",
+    "description":	"Commonly used symfony services for extending into Symfony Application.",
+    "authors": [
+        {
+            "name":			"Grigory Koblitskiy",
+			"email":		"grin180898@mail.ru"
+        }
+    ],
+    "keywords": ["grinway", "service-bundle"],
+    "license": "MIT",
+    "require": {
+        "php": ">=7",
+        "nesbot/carbon": ">=2",
+        "fzaninotto/faker": "dev-bugfix",
+        "symfony/property-access": ">=6",
+        "symfony/string": ">=6",
+        "symfony/config": ">=6",
+        "symfony/finder": ">=6",
+        "symfony/options-resolver": ">=6",
+        "symfony/filesystem": ">=6",
+        "symfony/yaml": ">=6",
+        "symfony/http-foundation": ">=6",
+        "symfony/workflow": ">=6",
+        "symfony/translation": ">=6"
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/GrinWay/Faker.git"
+		}
+	]
+}

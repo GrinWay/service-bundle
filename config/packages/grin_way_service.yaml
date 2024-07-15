@@ -1,0 +1,15 @@
+grin_way_service:
+    locale:                         '%grin_way_service.locale%'
+    timezone:                       '%grin_way_service.timezone%'
+    app_env:                        '%grin_way_service.app_env%'
+    local_drive_for_test:           '%grin_way_service.local_drive_for_test%'
+    year_regex:                     '%grin_way_service.year_regex%'
+    year_regex_full:                '%grin_way_service.year_regex_full%'
+    ip_v4_regex:                    '%grin_way_service.ip_v4_regex%'
+    slash_of_ip_regex:              '%grin_way_service.slash_of_ip_regex%'
+    start_of_win_sys_file_regex:    '%grin_way_service.start_of_win_sys_file_regex%'
+
+    #load_packs_configs:
+    #    -   pack_name:      'monolog'
+    #        pack_rel_path:  ~
+    #        does_not_exist_mess: 'your_namespace.exception.file_must_exist' # (NOT REQUIRED) Translated message    

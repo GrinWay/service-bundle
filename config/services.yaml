@@ -1,0 +1,45 @@
+parameters:
+    ###> DEFAULT ###
+    grin_way_service.locale:                      'en_US'
+    grin_way_service.timezone:                    '+0000'
+    grin_way_service.app_env:                     '%env(APP_ENV)%'
+    grin_way_service.local_drive_for_test:        ''
+    grin_way_service.year_regex:                  '(?:\b[0-9]{4}\b|\b[0-9]{2}\b)'
+    grin_way_service.year_regex_full:             '[0-9]{4}'
+    grin_way_service.ip_v4_regex:                 '(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
+    grin_way_service.slash_of_ip_regex:           '[/\\]{1,2}'
+    grin_way_service.start_of_win_sys_file_regex: '\~[$]'
+    grin_way_service.load_packs_configs:          []
+    ###< DEFAULT ###
+
+services:
+    _defaults:
+        public:             false
+        autowire:           false
+        autoconfigure:      false
+        
+        bind:
+            ###> VALUES ###
+            #$grinWayServiceAppEnv:             '%grin_way_service.app_env%'
+            #$grinWayServiceProjectDir:         '%kernel.project_dir%'
+            #$grinWayServicePackageFilenames:   '%grin_way_service.load_packs_configs%'
+            #$grinWayServiceLocalDriveForTest:  '%grin_way_service.local_drive_for_test%'
+            #$grinWayServiceYearRegex:          '%grin_way_service.year_regex%'
+            #$grinWayServiceYearRegexFull:      '%grin_way_service.year_regex_full%'
+            #$grinWayServiceIpV4Regex:          '%grin_way_service.ip_v4_regex%'
+            #$grinWayServiceSlashOfIpRegex:     '%grin_way_service.slash_of_ip_regex%'
+            ###< VALUES ###
+            
+            ###> SERVICES ###
+            
+            ###> BUNDLE SERVICES (You can use them by @<name> in your services.yaml) ###
+            #$grinWayServiceFaker: '@grin_way_service.faker'
+            $grinWayServiceCarbonFactoryImmutable:    '@grin_way_service.carbon_factory_immutable'
+            ###< BUNDLE SERVICES (You can use them by @<name> in your services.yaml) ###
+            
+            ###> LIB SERVICES ###
+            # TODO: 0 replace t to this in this project
+            #$grinWayServiceT: '@Symfony\Contracts\Translation\TranslatorInterface'
+            ###< LIB SERVICES ###
+            
+            ###< SERVICES ###
