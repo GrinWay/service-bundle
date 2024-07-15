@@ -23,7 +23,6 @@ This bundle provides ready to use services:
 | [GrinWay\Service\Service\RandomPasswordService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/RandomPasswordService.php) |
 | [GrinWay\Service\Service\RegexService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/RegexService.php) |
 | [GrinWay\Service\Service\StringService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/StringService.php) |
-| [GrinWay\Service\Service\DoctrineService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/DoctrineService.php) |
 
 # Installation
 

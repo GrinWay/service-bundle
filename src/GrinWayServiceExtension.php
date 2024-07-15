@@ -17,7 +17,6 @@ use GrinWay\Service\Service\ServiceContainer;
 use GrinWay\Service\Service\ConfigService;
 use GrinWay\Service\Service\ArrayService;
 use GrinWay\Service\Service\BoolService;
-use GrinWay\Service\Service\DoctrineService;
 use GrinWay\Service\Service\BufferService;
 use GrinWay\Service\Service\CarbonService;
 use GrinWay\Service\Service\ClipService;
@@ -64,7 +63,6 @@ class GrinWayServiceExtension extends ConfigurableExtension implements PrependEx
     {
         ServiceContainer::loadYaml(
             $container,
-			__DIR__ . '/..',
             [
                 ['config', 'services.yaml'],
             ],
@@ -273,11 +271,6 @@ class GrinWayServiceExtension extends ConfigurableExtension implements PrependEx
             [
                 ConfigService::class,
                 ConfigService::class,
-				false,
-            ],
-            [
-                DoctrineService::class,
-                DoctrineService::class,
 				false,
             ],
             ] as [ $id, $class, $isAbstract ]

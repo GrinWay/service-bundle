@@ -7,7 +7,6 @@ use function Symfony\Component\String\{
     b
 };
 
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
@@ -100,7 +99,6 @@ class ServiceContainer
     */
     public static function loadYaml(
         ContainerBuilder $container,
-		string $absPathToRel,
         string|array $relPath,
         ?string $filename = null,
     ): void {
@@ -109,8 +107,7 @@ class ServiceContainer
             foreach ($relPath as [$path, $filename]) {
                 self::loadYaml(
                     $container,
-                    $absPathToRel,
-					$path,
+                    $path,
                     $filename,
                 );
             }
@@ -120,12 +117,12 @@ class ServiceContainer
         if (\is_string($relPath) && $filename === null) {
             throw new \Exception('Incorrect method arguments');
         }
-		
+
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(
                 [
-                    u($absPathToRel)->ensureEnd('/') . \ltrim($relPath, '/\\'),
+                    __DIR__ . '/../../' . $relPath,
                 ],
             ),
         );

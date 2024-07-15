@@ -130,17 +130,4 @@ class CarbonService
     }
 
     //###< API ###
-	
-	
-    //###> STATIC API ###
-
-	/**/
-	public static function getNow(
-		bool $isImmutable = true,
-		string $tz = 'UTC',
-	): Carbon|CarbonImmutable {
-		return $isImmutable ? CarbonImmutable::now($tz) : Carbon::now($tz);
-	}
-	
-    //###< STATIC API ###
 }
