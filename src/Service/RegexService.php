@@ -59,7 +59,7 @@ class RegexService
         if (\is_array($strings)) {
             \array_walk(
                 $strings,
-                static fn($partOfPath) => '~.*' . $getEscapedString($partOfPath) . '.*~',
+                static fn($partOfPath) => $getEscapedString($partOfPath),
             );
         }
 
@@ -89,8 +89,8 @@ class RegexService
                 '?'     => '[?]',
                 '['     => '[[]',
                 ']'     => '[]]',
-                '\\'    => '(?:\\\\|\/)',
-                '/'     => '(?:\\|\/)',
+                '\\'    => '(?:\\\\)',
+                '/'     => '[/]',
                 '.'     => '[.]',
                 '-'     => '[-]',
                 ')'     => '[)]',
