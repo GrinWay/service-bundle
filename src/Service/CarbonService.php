@@ -134,7 +134,33 @@ class CarbonService
 	
     //###> STATIC API ###
 
-	/**/
+	/**
+	*
+	*/
+	public static function getWeekends(?\DateTimeInterface $carbon = null, string $onlyCarbonProperty = null, bool $includePassed = true): array {
+		$carbon = static::getEnsuredCarbonInstance($carbon, isImmutable: true);
+		
+		$arrayOfCarbonWeekends = static::getArrayOfCarbonWeekends($carbon, includePassed: $includePassed);
+		
+		if (null !== $onlyCarbonProperty) {
+			if (isset($carbon->{$onlyCarbonProperty})) {
+				\array_walk($arrayOfCarbonWeekends, static fn(\DateTimeInterface &$c) => $c = $c->{$onlyCarbonProperty});				
+			} else {
+				$mess = \sprintf(
+					'The property name: "%s" does not exist in class: "%s"',
+					$onlyCarbonProperty,
+					\get_debug_type($carbon),
+				);
+				throw new \Exception($mess);
+			}
+		}
+		
+		return $arrayOfCarbonWeekends;
+	}
+	
+	/**
+	*
+	*/
 	public static function getNow(
 		bool $isImmutable = true,
 		string $tz = 'UTC',
@@ -143,4 +169,37 @@ class CarbonService
 	}
 	
     //###< STATIC API ###
+	
+	private static function getArrayOfCarbonWeekends(CarbonImmutable $carbon, bool $includePassed): array {
+		$carbons = [];
+		
+		$end = $carbon->endOfMonth();
+		
+		if (true === $includePassed) {
+			$start = $carbon->startOfMonth();
+		} else {
+			$start = static::getNow();
+		}
+		
+		while ($start->lte($end)) {
+			if ($start->isWeekend()) {
+				$carbons[] = $start->copy();					
+			}
+			$start = $start->addDay();
+		}
+		
+		return $carbons;
+	}
+	
+	private static function getEnsuredCarbonInstance(?\DateTimeInterface $carbon, bool $isImmutable = true): Carbon|CarbonImmutable {
+		$carbon ??= static::getNow(isImmutable: $isImmutable);
+		if (!$carbon instanceof Carbon || !$carbon instanceof CarbonImmutable) {
+			if (true === $isImmutable) {
+				$carbon = new CarbonImmutable($carbon);				
+			} else {
+				$carbon = new Carbon($carbon);
+			}
+		}
+		return $carbon;
+	}
 }
