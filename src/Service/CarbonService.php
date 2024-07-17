@@ -29,6 +29,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use GrinWay\Service\Contracts\{
     GrinWayIsoFormat
 };
+use GrinWay\Service\Service\BoolService;
 use GrinWay\Service\IsoFormat\{
     GrinWayLLLIsoFormat
 };
@@ -135,27 +136,36 @@ class CarbonService
     //###> STATIC API ###
 
 	/**
+	* Works as a filter
+	* 
+	* get days... from carbonStart to carbonEnd
+	* get years... from carbonStart to carbonEnd
+	*/
+	public static function get(Carbon|CarbonImmutable|callable $carbonStart, Carbon|CarbonImmutable|callable $carbonEnd, ?callable $predicatAddCarbon = null, ?\DateTimeInterface $carbon = null, string $onlyCarbonProperty = null, bool $includePassed = true): array {
+		$predicatAddCarbon ??= true;
+		
+		return self::doGet(
+			predicatAddCarbon: $predicatAddCarbon,
+			carbon: $carbon,
+			onlyCarbonProperty: $onlyCarbonProperty,
+			includePassed: $includePassed,
+			carbonStart: $carbonStart,
+			carbonEnd: $carbonEnd,
+		);
+	}
+
+	/**
 	*
 	*/
-	public static function getWeekends(?\DateTimeInterface $carbon = null, string $onlyCarbonProperty = null, bool $includePassed = true): array {
-		$carbon = static::getEnsuredCarbonInstance($carbon, isImmutable: true);
-		
-		$arrayOfCarbonWeekends = static::getArrayOfCarbonWeekends($carbon, includePassed: $includePassed);
-		
-		if (null !== $onlyCarbonProperty) {
-			if (isset($carbon->{$onlyCarbonProperty})) {
-				\array_walk($arrayOfCarbonWeekends, static fn(\DateTimeInterface &$c) => $c = $c->{$onlyCarbonProperty});				
-			} else {
-				$mess = \sprintf(
-					'The property name: "%s" does not exist in class: "%s"',
-					$onlyCarbonProperty,
-					\get_debug_type($carbon),
-				);
-				throw new \Exception($mess);
-			}
-		}
-		
-		return $arrayOfCarbonWeekends;
+	public static function getWeekends(Carbon|CarbonImmutable|callable $carbonStart, Carbon|CarbonImmutable|callable $carbonEnd, ?\DateTimeInterface $carbon = null, string $onlyCarbonProperty = null, bool $includePassed = true): array {
+		return self::doGet(
+			predicatAddCarbon: static fn($c) => $c->isWeekend(),
+			carbon: $carbon,
+			onlyCarbonProperty: $onlyCarbonProperty,
+			includePassed: $includePassed,
+			carbonStart: $carbonStart,
+			carbonEnd: $carbonEnd,
+		);
 	}
 	
 	/**
@@ -170,24 +180,75 @@ class CarbonService
 	
     //###< STATIC API ###
 	
-	private static function getArrayOfCarbonWeekends(CarbonImmutable $carbon, bool $includePassed): array {
+	private static function doGet(Carbon|CarbonImmutable|callable $carbonStart, Carbon|CarbonImmutable|callable $carbonEnd, ?\DateTimeInterface $carbon, string $onlyCarbonProperty, bool $includePassed, callable|bool $predicatAddCarbon, ?callable $carbonGetNext = null): array {
+		$carbon = static::getEnsuredCarbonInstance($carbon, isImmutable: true);
+		
+		$carbonGetNext ??= $onlyCarbonProperty;
+		
+		if (!\is_callable($carbonStart)) {
+			$mess = \sprintf('You must pass an argument: "%s"', '$carbonStart');
+			throw new \Exception($mess);
+			//$carbonStart = $carbonStart->startOfMonth();
+		} else {
+			$carbonStart = $carbonStart($carbon);
+		}
+		
+		if (!\is_callable($carbonEnd)) {
+			$mess = \sprintf('You must pass an argument: "%s"', '$carbonEnd');
+			throw new \Exception($mess);
+			//$carbonEnd = $carbonEnd->endOfMonth();
+		} else {
+			$carbonEnd = $carbonEnd($carbon);
+		}
+		
+		$arrayOfCarbon = static::getArrayOfCarbonCallback(
+			carbon: $carbon,
+			carbonStart: $carbonStart,
+			carbonEnd: $carbonEnd,
+			carbonGetNext: $carbonGetNext,
+			includePassed: $includePassed,
+			predicatAddCarbon: $predicatAddCarbon,
+		);
+		
+		if (null !== $onlyCarbonProperty) {
+			BoolService::isPropExist($carbon, $onlyCarbonProperty, throw: true);
+			\array_walk($arrayOfCarbon, static fn(\DateTimeInterface &$c) => $c = $c->{$onlyCarbonProperty});				
+		}
+		
+		return $arrayOfCarbon;
+	}
+	
+	private static function getArrayOfCarbonCallback(CarbonImmutable $carbon, bool $includePassed, callable|bool $predicatAddCarbon, callable|string $carbonGetNext, Carbon|CarbonImmutable $carbonStart, Carbon|CarbonImmutable $carbonEnd): array {
+		
+		if (!\is_callable($carbonGetNext)) {
+			BoolService::isPropExist($carbon, $carbonGetNext, throw: true);
+			
+			$carbonGetNext = static function(Carbon|CarbonImmutable $c) use ($carbonGetNext): Carbon|CarbonImmutable {
+				return $c->copy()->add(1, $carbonGetNext);
+			};
+		}
+		
+		
 		$carbons = [];
 		
-		$end = $carbon->endOfMonth();
+		$carbonAcc = $carbonStart;
 		
-		if (true === $includePassed) {
-			$start = $carbon->startOfMonth();
-		} else {
-			$start = static::getNow();
-		}
-		
-		while ($start->lte($end)) {
-			if ($start->isWeekend()) {
-				$carbons[] = $start->copy();					
+		while ($carbonAcc->lte($carbonEnd)) {
+
+			if (true === $includePassed || $carbonAcc->gte($carbon)) {
+				if (\is_callable($predicatAddCarbon)) {
+					$isAddCarbon = $predicatAddCarbon($carbonAcc);
+				} else {
+					$isAddCarbon = $predicatAddCarbon;
+				}
+				
+				if (true === $isAddCarbon) {
+					$carbons[] = $carbonAcc->copy();
+				}
 			}
-			$start = $start->addDay();
+			$carbonAcc = $carbonGetNext($carbonAcc);
 		}
-		
+
 		return $carbons;
 	}
 	
