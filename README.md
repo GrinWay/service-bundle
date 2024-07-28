@@ -1,8 +1,6 @@
-grinway/service-bundle
-========
+# grinway/service-bundle
 
-# Description
-
+## Description
 
 This bundle provides ready to use services:
 | Service id |
@@ -25,7 +23,8 @@ This bundle provides ready to use services:
 | [GrinWay\Service\Service\StringService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/StringService.php) |
 | [GrinWay\Service\Service\DoctrineService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/DoctrineService.php) |
 
-# Installation
+
+## Installation
 
 ### Step 1: Require the bundle
 
@@ -61,9 +60,9 @@ composer require "grinway/service-bundle"
 
 ### [Binds](https://github.com/GrinWay/docs/blob/main/docs/borrow-services.yaml-section.md)
 
-### Step 3: Usage
+## Usage
 
-**Symfony Autowiring**
+#### Symfony Autowiring
 
 These services are already available for using:
 
@@ -83,7 +82,7 @@ class YourClass {
 }
 ```
 
-**php extending + Symfony Autowiring**
+#### php extending + Symfony Autowiring
 
 ```php
 //###> YOUR FILE #1 ###
@@ -110,7 +109,7 @@ class YourClass {
 }
 ```
 
-**Or bind grin_way_service services**
+#### Or bind grin_way_service services
 
 ```yaml
 parameters:
@@ -123,7 +122,7 @@ services:
         bind:
             ###> SERVICES ###
             
-            $t:                 '@Symfony\Contracts\Translation\TranslatorInterface'
+            $t: '@Symfony\Contracts\Translation\TranslatorInterface'
             
             ###>grin_way_service ###
             
@@ -155,7 +154,7 @@ class YourController {
 }
 ```
 
-**Global setting _instanceof.yaml**
+#### Global setting _instanceof.yaml
 
 Create `_instanceof.yaml` file by the path `%kernel.project_dir%/config/_instanceof.yaml`
 and write down there something usual, like this:
@@ -193,7 +192,7 @@ imports:
     -   resource: 'services_yaml/'
 ```
 
-### Step 4: Override bundle parameters and configure the bundle
+## Override bundle parameters and configure the bundle
 
 Open terminal in your project `%kernel.project_dir%` and execute:
 
@@ -201,9 +200,9 @@ Open terminal in your project `%kernel.project_dir%` and execute:
 cp "./bundles/grinway/service-bundle/config/packages/grin_way_service.yaml" "./config/packages/grin_way_service.yaml"
 ```
 
-Here `%kernel.project_dir%/config/packages/grin_way_service.yaml`, you can override any parameter.
-
-Also you can override parameters in your `%kernel.project_dir%/config/services.yaml`
+Here `%kernel.project_dir%/config/packages/grin_way_service.yaml`, you can override any bundle parameters.
+Also you can override some parameters in your `%kernel.project_dir%/config/services.yaml` but not all of them.
+It's better to override parameters in the bundle `grin_way_service.yaml` file.
 
 ```yaml
 parameters:
