@@ -67,28 +67,28 @@ class BoolService
     }
 
     //###< API ###
-	
-	
+
+
     //###> STATIC API ###
-	
-	/**
-	*
-	*/
-	public static function isPropExist(object $obj, int|string $prop, bool $throw): bool {
-		if (!isset($obj->{$prop})) {
-			$mess = \sprintf(
-				'The property name: "%s" does not exist in class: "%s"',
-				$prop,
-				\get_debug_type($obj),
-			);
-			if (true === $throw) {				
-				throw new \Exception($mess);
-			}
-			return false;
-		}
-		return true;
-	}
-	
+
+    /**
+    *
+    */
+    public static function isPropExist(object $obj, int|string $prop, bool $throw): bool
+    {
+        if (!isset($obj->{$prop})) {
+            $mess = \sprintf(
+                'The property name: "%s" does not exist in class: "%s"',
+                $prop,
+                \get_debug_type($obj),
+            );
+            if (true === $throw) {
+                throw new \Exception($mess);
+            }
+            return false;
+        }
+        return true;
+    }
+
     //###< STATIC API ###
-	
 }
