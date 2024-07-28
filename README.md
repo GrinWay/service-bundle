@@ -155,6 +155,44 @@ class YourController {
 }
 ```
 
+**Global setting _instanceof.yaml**
+
+Create `_instanceof.yaml` file by the path `%kernel.project_dir%/config/_instanceof.yaml`
+and write down there something usual, like this:
+
+```yaml
+###> MESSENGER ###
+App\Contract\Messenger\CommandBusHandlerInterface:
+    tags:
+    -   name:   'messenger.message_handler'
+        bus:    'command.bus'
+    -   name:   'app.command_bus_handler'
+
+App\Contract\Messenger\EventBusHandlerInterface:
+    tags:
+    -   name:   'messenger.message_handler'
+        bus:    'event.bus'
+    -   name:   'app.event_bus_handler'
+###< MESSENGER ###
+
+###> EVENT LISTENER ###
+App\Contract\EventListener\KernelBeforeLocaleEventListenerInterface:
+    tags:
+    -   name: kernel.event_listener
+        # to allow to change to locale of the Request
+        priority: 127
+###< EVENT LISTENER ###
+```
+
+There're at least two advantages when you use a separate `_instanceof.yaml` file:
+1) You got rid of an unnecessary content in your `services.yaml`
+2) If you use imports in `services.yaml` it allow you not to write _instanceof structure in those files, cuz you already have this structure applied globally!
+
+```yaml
+imports:
+    -   resource: 'services_yaml/'
+```
+
 ### Step 4: Override bundle parameters and configure the bundle
 
 Open terminal in your project `%kernel.project_dir%` and execute:
@@ -204,4 +242,4 @@ parameters:
     ###< GrinWay\Service ###
 ```
 
-But remember, `services.yaml` parameters wins `grin_way_service.yaml` ones.
+Remember, `services.yaml` parameters wins `grin_way_service.yaml` ones.

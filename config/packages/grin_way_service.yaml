@@ -8,6 +8,7 @@ grin_way_service:
     ip_v4_regex:                    '%grin_way_service.ip_v4_regex%'
     slash_of_ip_regex:              '%grin_way_service.slash_of_ip_regex%'
     start_of_win_sys_file_regex:    '%grin_way_service.start_of_win_sys_file_regex%'
+    global_instanceof_rel_path:     '%grin_way_service.global_instanceof_rel_path%'
 
     #load_packs_configs:
     #    -   pack_name:      'monolog'

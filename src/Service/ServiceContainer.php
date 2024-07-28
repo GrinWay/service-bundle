@@ -100,7 +100,7 @@ class ServiceContainer
     */
     public static function loadYaml(
         ContainerBuilder $container,
-		string $absPathToRel,
+        string $absPathToRel,
         string|array $relPath,
         ?string $filename = null,
     ): void {
@@ -110,7 +110,7 @@ class ServiceContainer
                 self::loadYaml(
                     $container,
                     $absPathToRel,
-					$path,
+                    $path,
                     $filename,
                 );
             }
@@ -120,7 +120,7 @@ class ServiceContainer
         if (\is_string($relPath) && $filename === null) {
             throw new \Exception('Incorrect method arguments');
         }
-		
+
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(

@@ -54,13 +54,13 @@ class StringService
         protected readonly CarbonService $carbonService,
         protected readonly BoolService $boolService,
         protected readonly RegexService $regexService,
-		#[Autowire(param: 'grin_way_service.year_regex')]
+        #[Autowire(param: 'grin_way_service.year_regex')]
         protected readonly string $grinWayServiceYearRegex,
-		#[Autowire(param: 'grin_way_service.year_regex_full')]
+        #[Autowire(param: 'grin_way_service.year_regex_full')]
         protected readonly string $grinWayServiceYearRegexFull,
-		#[Autowire(param: 'grin_way_service.ip_v4_regex')]
+        #[Autowire(param: 'grin_way_service.ip_v4_regex')]
         protected readonly string $grinWayServiceIpV4Regex,
-		#[Autowire(param: 'grin_way_service.slash_of_ip_regex')]
+        #[Autowire(param: 'grin_way_service.slash_of_ip_regex')]
         protected readonly string $grinWayServiceSlashOfIpRegex,
     ) {
     }

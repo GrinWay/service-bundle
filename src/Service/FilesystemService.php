@@ -60,11 +60,11 @@ class FilesystemService
         protected readonly DumpInfoService $dumpInfoService,
         protected readonly StringService $stringService,
         protected readonly SluggerInterface $slugger,
-		#[Autowire(param: 'grin_way_service.local_drive_for_test')]
+        #[Autowire(param: 'grin_way_service.local_drive_for_test')]
         protected readonly string $grinWayServiceLocalDriveForTest,
-		#[Autowire(param: 'grin_way_service.app_env')]
+        #[Autowire(param: 'grin_way_service.app_env')]
         protected readonly string $grinWayServiceAppEnv,
-		#[Autowire(service: 'grin_way_service.carbon_factory_immutable')]
+        #[Autowire(service: 'grin_way_service.carbon_factory_immutable')]
         protected $grinWayServiceCarbonFactoryImmutable,
     ) {
         $this->filesystem = new Filesystem();
