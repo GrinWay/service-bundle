@@ -10,7 +10,6 @@ parameters:
     grin_way_service.slash_of_ip_regex:           '[/\\]{1,2}'
     grin_way_service.start_of_win_sys_file_regex: '\~[$]'
     grin_way_service.load_packs_configs:          []
-    grin_way_service.global_instanceof_rel_path:  'config'
     ###< DEFAULT ###
 
 services:

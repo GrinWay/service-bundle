@@ -26,7 +26,6 @@ class Configuration implements ConfigurationInterface
         private $grinWayServiceIpV4Regex,
         private $grinWayServiceSlashOfIpRegex,
         private $grinWayServiceStartOfWinSysFileRegex,
-        private $globalInstanceofRelPath,
     ) {
     }
 
@@ -116,11 +115,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode(GrinWayServiceExtension::START_OF_WIN_SYS_FILE_REGEX)
                     ->info('The regular expression of windows hidden system files')
                     ->defaultValue($this->grinWayServiceStartOfWinSysFileRegex)
-                ->end()
-
-                ->scalarNode(GrinWayServiceExtension::GLOBAL_INSTANCEOF_REL_PATH)
-                    ->info('The relative path to directory where there is the "' . GrinWayServiceExtension::GLOBAL_INSTANCEOF_FILENAME . '" file to assign tags globally')
-                    ->defaultValue($this->globalInstanceofRelPath)
                 ->end()
 
             ->end()

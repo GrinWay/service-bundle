@@ -7,21 +7,21 @@ This bundle provides ready to use services:
 | ------------- |
 | grin_way_service.faker |
 | grin_way_service.carbon_factory_immutable |
-| [GrinWay\Service\Service\ArrayService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/ArrayService.php) |
-| [GrinWay\Service\Service\BoolService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/BoolService.php) |
-| [GrinWay\Service\Service\BufferService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/BufferService.php) |
-| [GrinWay\Service\Service\CarbonService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/CarbonService.php) |
-| [GrinWay\Service\Service\ClipService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/ClipService.php) |
-| [GrinWay\Service\Service\ConfigService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/ConfigService.php) |
-| [GrinWay\Service\Service\DumpInfoService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/DumpInfoService.php) |
-| [GrinWay\Service\Service\FilesystemService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/FilesystemService.php) |
-| [GrinWay\Service\Service\HtmlService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/HtmlService.php) |
-| [GrinWay\Service\Service\OSService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/OSService.php) |
-| [GrinWay\Service\Service\ParserService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/ParserService.php) |
-| [GrinWay\Service\Service\RandomPasswordService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/RandomPasswordService.php) |
-| [GrinWay\Service\Service\RegexService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/RegexService.php) |
-| [GrinWay\Service\Service\StringService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/StringService.php) |
-| [GrinWay\Service\Service\DoctrineService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/DoctrineService.php) |
+| [ArrayService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/ArrayService.php) |
+| [BoolService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/BoolService.php) |
+| [BufferService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/BufferService.php) |
+| [CarbonService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/CarbonService.php) |
+| [ClipService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/ClipService.php) |
+| [ConfigService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/ConfigService.php) |
+| [DumpInfoService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/DumpInfoService.php) |
+| [FilesystemService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/FilesystemService.php) |
+| [HtmlService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/HtmlService.php) |
+| [OSService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/OSService.php) |
+| [ParserService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/ParserService.php) |
+| [RandomPasswordService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/RandomPasswordService.php) |
+| [RegexService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/RegexService.php) |
+| [StringService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/StringService.php) |
+| [DoctrineService](https://github.com/GrinWay/service-bundle/blob/main/src/Service/DoctrineService.php) |
 
 
 ## Installation
@@ -152,44 +152,6 @@ class YourController {
 		]);
 	}
 }
-```
-
-#### Global setting _instanceof.yaml
-
-Create `_instanceof.yaml` file by the path `%kernel.project_dir%/config/_instanceof.yaml`
-and write down there something usual, like this:
-
-```yaml
-###> MESSENGER ###
-App\Contract\Messenger\CommandBusHandlerInterface:
-    tags:
-    -   name:   'messenger.message_handler'
-        bus:    'command.bus'
-    -   name:   'app.command_bus_handler'
-
-App\Contract\Messenger\EventBusHandlerInterface:
-    tags:
-    -   name:   'messenger.message_handler'
-        bus:    'event.bus'
-    -   name:   'app.event_bus_handler'
-###< MESSENGER ###
-
-###> EVENT LISTENER ###
-App\Contract\EventListener\KernelBeforeLocaleEventListenerInterface:
-    tags:
-    -   name: kernel.event_listener
-        # to allow to change to locale of the Request
-        priority: 127
-###< EVENT LISTENER ###
-```
-
-There're at least two advantages when you use a separate `_instanceof.yaml` file:
-1) You got rid of an unnecessary content in your `services.yaml`
-2) If you use imports in `services.yaml` it allow you not to write _instanceof structure in those files, cuz you already have this structure applied globally!
-
-```yaml
-imports:
-    -   resource: 'services_yaml/'
 ```
 
 ## Override bundle parameters and configure the bundle
