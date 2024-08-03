@@ -51,8 +51,6 @@ class GrinWayServiceExtension extends ConfigurableExtension implements PrependEx
     public const IP_V_4_REGEX_KEY = 'ip_v4_regex';
     public const SLASH_OF_IP_REGEX_KEY = 'slash_of_ip_regex';
     public const START_OF_WIN_SYS_FILE_REGEX = 'start_of_win_sys_file_regex';
-    public const GLOBAL_INSTANCEOF_REL_PATH = 'global_instanceof_rel_path';
-    public const GLOBAL_INSTANCEOF_FILENAME = '_instanceof.yaml';
 
     public function __construct(
         //private readonly BoolService $boolService,
@@ -109,9 +107,6 @@ class GrinWayServiceExtension extends ConfigurableExtension implements PrependEx
             ),
             grinWayServiceStartOfWinSysFileRegex:    $container->getParameter(
                 ServiceContainer::getParameterName(self::PREFIX, self::START_OF_WIN_SYS_FILE_REGEX),
-            ),
-            globalInstanceofRelPath:    $container->getParameter(
-                ServiceContainer::getParameterName(self::PREFIX, self::GLOBAL_INSTANCEOF_REL_PATH),
             ),
         );
     }
@@ -442,10 +437,6 @@ class GrinWayServiceExtension extends ConfigurableExtension implements PrependEx
         $this->setRestContainerDefinitions(
             $container,
         );
-        $this->setGlobalInstanceOfRegisterForAutoconfiguration(
-            $config,
-            $container,
-        );
     }
 
     private function setContainerTags(ContainerBuilder $container)
@@ -470,109 +461,5 @@ class GrinWayServiceExtension extends ConfigurableExtension implements PrependEx
             self::PREFIX,
             self::TIMEZONE,
         ));
-    }
-
-    /**
-    * FileLocator for "%kernel.project_dir%/ <relPath> /_instanceof.yaml":
-    *
-    * _instanceof.yaml has the same syntax as _instanceof of services.yaml
-    * only works for all the project
-    *
-    * # if one element that's a TAG_NAME
-    * INTERFACE1:
-    *    tags:
-    *    -  TAG_NAME1
-    *    -  TAG_NAME2
-    *
-    * # TAG_NAMES named as "name"
-    * INTERFACE2:
-    *    tags:
-    *    -  name: TAG_NAME1
-    *    -  name: TAG_NAME2
-    *
-    * # TAG_NAMES named as "name"
-    * INTERFACE3:
-    *    tags:
-    *    -  name: TAG_NAME1
-    *       dop_attr: NAME
-    *    -  name: TAG_NAME2
-    *
-    * # TAG_NAMES as keys
-    * INTERFACE4:
-    *    tags:
-    *       TAG_NAME1:
-    *           dop_attr: NAME
-    *       TAG_NAME2:
-    *           dop_attr: NAME
-    */
-    public function setGlobalInstanceOfRegisterForAutoconfiguration(
-        array $config,
-        ContainerBuilder $container,
-    ): void {
-        $pa = PropertyAccess::createPropertyAccessor();
-
-        $relPath = $pa->getValue($config, '[' . self::GLOBAL_INSTANCEOF_REL_PATH . ']');
-        if (null === $relPath) {
-            return;
-        }
-
-        $kernelProjectDir = $container->getParameter('kernel.project_dir');
-        $absPathToYamlInstanceOf = Path::makeAbsolute(
-            path: $relPath,
-            basePath: $kernelProjectDir,
-        );
-
-        $fileLocator = new FileLocator($absPathToYamlInstanceOf);
-        $absPathToYamlInstanceOf = Path::normalize(
-            $fileLocator->locate(self::GLOBAL_INSTANCEOF_FILENAME, first: true),
-        );
-
-        $interfaces = Yaml::parseFile(
-            $absPathToYamlInstanceOf,
-            Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE
-            | Yaml::PARSE_OBJECT
-            | Yaml::PARSE_DATETIME
-            | Yaml::PARSE_CONSTANT
-            | Yaml::PARSE_CUSTOM_TAGS
-        );
-        if (!\is_array($interfaces)) {
-            return;
-        }
-        foreach ($interfaces as $interface => $instanceAndTheirTags) {
-            $tagsAndAttributes = $pa->getValue($instanceAndTheirTags, '[tags]');
-
-            if (null === $interface) {
-                continue;
-            }
-
-            foreach ($tagsAndAttributes as $tagKey => $tagAttributes) {
-                if (\is_int($tagKey)) {
-                    if (\is_string($tagAttributes)) {
-                        $tagName = $tagAttributes;
-                        $tagAttributes = [];
-                    } else {
-                        $tagName = $pa->getValue($tagAttributes, '[name]');
-                        unset($tagAttributes['name']);
-                    }
-                } else {
-                    $tagName = $tagKey;
-                }
-
-                if (!\is_string($tagName)) {
-                    $message = \sprintf(
-                        'Name of the tag must me string and must be: "key" or [name] of assotiative element or one element in tag array',
-                    );
-                    throw new \Exception($message);
-                }
-                if (empty($tagAttributes)) {
-                    $tagAttributes = [];
-                }
-
-                $container->registerForAutoconfiguration($interface)
-                    ->addTag($tagName, $tagAttributes)
-                    ->setAutoconfigured(true)
-                ;
-            }
-        }
     }
 }
