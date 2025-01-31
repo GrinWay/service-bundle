@@ -1,4 +1,4 @@
-grinway/service-bundle
+GrinWay/service-bundle
 ======
 
 About
