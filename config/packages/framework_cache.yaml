@@ -1,0 +1,9 @@
+framework:
+    cache:
+        pools:
+
+            grinway_service.cache_pool.currency:
+                adapters:
+                - 'cache.adapter.filesystem'
+                default_lifetime: 2678400 # 2678400 === 31 day
+                tags: true

@@ -16,6 +16,9 @@ class GrinWayServiceBundle extends AbstractBundle
     public const BUNDLE_PREFIX = self::EXTENSION_ALIAS . '.';
     public const COMMAND_PREFIX = self::EXTENSION_ALIAS . ':';
 
+    // https://symfony.com/doc/current/components/cache.html#stampede-prevention
+    public const CACHE_TAG_FOR_ALL = self::EXTENSION_ALIAS;
+
     protected string $extensionAlias = self::EXTENSION_ALIAS;
 
     public function configure(DefinitionConfigurator $definition): void
@@ -23,10 +26,34 @@ class GrinWayServiceBundle extends AbstractBundle
         $definition->rootNode()
             ->children()//
 
-            // ...
+            //###> currency array node ###
+            ->arrayNode('currency')
+            ->children()//
+
+            ->stringNode('fixer_api_key')//
+            ->isRequired()
+            ->cannotBeEmpty()
+            ->end()//
+
+            //###< currency array node ###
+            ->end()
+            ->end()//
 
             ->end()
             ->end()//
+        ;
+    }
+
+    /**
+     * Helper
+     */
+    private function setServiceContainerParameters(array $config, ContainerConfigurator $container): void
+    {
+        $env = $container->env();
+        $parameters = $container->parameters();
+
+        $parameters
+            ->set(self::bundlePrefixed('currency.fixer_api_key'), $config['currency']['fixer_api_key'])//
         ;
     }
 
@@ -110,15 +137,6 @@ class GrinWayServiceBundle extends AbstractBundle
     /**
      * Helper
      */
-    private function setServiceContainerParameters(array $config, ContainerConfigurator $container): void
-    {
-        $container->parameters()//            ->set(self::bundlePrefixed(''), $config[''])//
-        ;
-    }
-
-    /**
-     * Helper
-     */
     private function setServiceContainerServices(array $config, ContainerConfigurator $container): void
     {
         $container->import($this->absPath('config/services.yaml'));
@@ -176,6 +194,8 @@ class GrinWayServiceBundle extends AbstractBundle
         $container->import($this->absPath('config/packages/framework_translator.yaml'));
         $container->import($this->absPath('config/packages/framework_validation.yaml'));
         $container->import($this->absPath('config/packages/framework_test.yaml'));
+        $container->import($this->absPath('config/packages/framework_cache.yaml'));
+        $container->import($this->absPath('config/packages/maker.yaml'));
     }
 
     /**
