@@ -1,0 +1,33 @@
+{
+    "name": "@grinway/service",
+    "description": "",
+    "license": "MIT",
+    "version": "0.0.0",
+    "main": "dist/controller.js",
+    "scripts": {},
+    "symfony": {
+        "controllers": {
+            "service": {
+                "main": "dist/controller.js",
+                "name": "grinway/service",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "autoimport": {
+                    "@grinway/service/dist/style/main.scss": false
+                },
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+	},
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "sass": "^1.82.0",
+        "sass-loader": "16.0.1"
+    }
+}

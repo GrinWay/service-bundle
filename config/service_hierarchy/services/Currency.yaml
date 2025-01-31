@@ -1,0 +1,10 @@
+services:
+
+    _defaults:
+        autoconfigure: false
+        autowire: false
+
+    GrinWay\Service\Service\Currency:
+        class: GrinWay\Service\Service\Currency
+
+    grinway_service.currency: '@GrinWay\Service\Service\Currency'
