@@ -71,7 +71,7 @@ class Currency
 
         // try to get cached value
         $currencyCachePool = $this->serviceLocator->get('currencyCachePool');
-        $fixerPayload = $currencyCachePool->get(GrinWayServiceBundle::bundlePrefixed('fixer_currencies'), function (ItemInterface $item) use ($fixerHttpClient): string {
+        $fixerPayload = $currencyCachePool->get(GrinWayServiceBundle::bundlePrefixed('fixer_currencies'), static function (ItemInterface $item) use ($fixerHttpClient): string {
             $item->tag([GrinWayServiceBundle::GENERIC_CACHE_TAG]);
             return $fixerHttpClient->request('GET', '')->getContent();
         });

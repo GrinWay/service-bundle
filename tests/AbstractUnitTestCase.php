@@ -12,12 +12,8 @@ abstract class AbstractUnitTestCase extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->client = static::createClient();
-        //
-        self::bootKernel();
-        //
         self::ensureKernelShutdown();
+
+        $this->client = static::createClient();
     }
-
-
 }
