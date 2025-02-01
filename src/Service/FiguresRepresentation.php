@@ -11,30 +11,10 @@ use function Symfony\Component\String\u;
 
 class FiguresRepresentation
 {
-    public static function convertToStringWithEndFigures(int|float $numeric, int $endFiguresCount): string
+    public static function getStringWithEndFigures(string|int|float $numeric, int $endFiguresCount): string
     {
-        self::validate(
-            $numeric,
-            [new LikeNumeric()],
-        );
-        self::validate(
-            $endFiguresCount,
-            [new PositiveOrZero()],
-        );
-
-        if (\is_float($numeric)) {}
-
-        $part = 10 ** $endFiguresCount;
-        // 123 -> 1
-        $startPart = (int)($numeric / $part);
-        // 123 -> 23
-        $endPart = (int)($numeric % $part);
-
-        return self::concatNumbersWithCorrectCountOfEndFigures(
-            $startPart,
-            $endPart,
-            $endFiguresCount,
-        );
+        // TODO: current
+        return '100';
     }
 
     /**
