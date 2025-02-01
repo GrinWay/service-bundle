@@ -184,8 +184,9 @@ class Currency
      */
     protected function getCachedFixerDecodedPayload(bool $refresh = false): array
     {
-        $serializer = $this->serviceLocator->get('pa');
+        $serializer = $this->serviceLocator->get('serializer');
         $fixerHttpClient = $this->serviceLocator->get('grinwayServiceCurrencyFixerLatest');
+
         $currencyCacheKey = GrinWayServiceBundle::bundlePrefixed('fixer_currencies');
 
         /** @var CacheInterface $currencyCachePool */
