@@ -8,6 +8,7 @@ use GrinWay\Service\Validator\LikeNumeric;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use function Symfony\Component\String\u;
 
@@ -45,7 +46,7 @@ class Currency
      * @param string $convertToCurrency ISO 4217 Code (Three capital letters)
      * @return string converted currency value with end figures (with count $endFiguresCount)
      */
-    public function transferAmountFromToWithEndFigures(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount): string
+    public function transferAmountFromToWithEndFigures(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount, bool $forceMakeHttpRequestToFixer = false): string
     {
         $this->validate(
             $amountWithEndFigures,
@@ -70,16 +71,17 @@ class Currency
         $serializer = $this->serviceLocator->get('serializer');
 
         // try to get cached value
-        $currencyCachePool = $this->serviceLocator->get('currencyCachePool');
-        $fixerPayload = $currencyCachePool->get(GrinWayServiceBundle::bundlePrefixed('fixer_currencies'), static function (ItemInterface $item) use ($fixerHttpClient): string {
-            $item->tag([GrinWayServiceBundle::GENERIC_CACHE_TAG]);
-            return $fixerHttpClient->request('GET', '')->getContent();
-        });
-        $fixerPayload = $serializer->decode($fixerPayload, 'json');
+        if (false === $forceMakeHttpRequestToFixer) {
+            $fixerPayload = $this->getCachedFixerDecodedPayload();
+        } else {
+            $fixerPayload = $this->getCachedFixerDecodedPayload(refresh: true);
+        }
+        $success = $pa->getValue($fixerPayload, '[success]') ?: false;
+        if (false === $success) {
+            $fixerPayload = $this->getCachedFixerDecodedPayload(refresh: true);
+        }
 
-        $success = $pa->getValue($fixerPayload, '[success]');
         if (true === $success) { // ? else
-
             $baseString = $pa->getValue($fixerPayload, '[base]');
             if (null === $baseString) {// ?
                 $message = 'There is no base currency form fixer API, invalid response from fixer API';
@@ -168,7 +170,7 @@ class Currency
     /**
      * Helper
      */
-    private function assertCurrencyExistsInFixerAPI(?string $currencyValue, string $currencyString): void
+    protected function assertCurrencyExistsInFixerAPI(?string $currencyValue, string $currencyString): void
     {
         if (null === $currencyValue) {
             $message = \sprintf(
@@ -177,5 +179,28 @@ class Currency
             );
             throw new \RuntimeException($message);
         }
+    }
+
+    /**
+     * @internal
+     */
+    protected function getCachedFixerDecodedPayload(bool $refresh = false): array
+    {
+        $serializer = $this->serviceLocator->get('pa');
+        $currencyCacheKey = GrinWayServiceBundle::bundlePrefixed('fixer_currencies');
+
+        /** @var CacheInterface $currencyCachePool */
+        $currencyCachePool = $this->serviceLocator->get('currencyCachePool');
+
+        if (true === $refresh) {
+            $currencyCachePool->delete($currencyCacheKey);
+        }
+
+        $fixerPayload = $currencyCachePool->get($currencyCacheKey, static function (ItemInterface $item) use ($fixerHttpClient): string {
+            $item->tag([GrinWayServiceBundle::GENERIC_CACHE_TAG]);
+            return $fixerHttpClient->request('GET', '')->getContent();
+        });
+
+        return $serializer->decode($fixerPayload, 'json');
     }
 }
