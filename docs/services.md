@@ -3,3 +3,5 @@
 `grinway_service.currency`
 
 `HttpClientInterface $grinwayServiceCurrencyFixerLatest`
+
+FiguresRepresentation API

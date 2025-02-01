@@ -11,6 +11,72 @@ use function Symfony\Component\String\u;
 class FiguresRepresentation
 {
     /**
+     * API
+     *
+     * Usage:
+     * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbers(100);
+     */
+    public static function getStartEndNumbersWithEndFigures(string $number, int $endFiguresCount): array
+    {
+        return [
+            self::getStartNumberWithEndFigures($number, $endFiguresCount),
+            self::getEndNumberWithEndFigures($number, $endFiguresCount),
+        ];
+    }
+
+    /**
+     * API
+     */
+    public static function getStartNumberWithEndFigures(string $number, int $endFiguresCount): int
+    {
+        return (int)self::getStartFiguresWithEndFigures($number, $endFiguresCount);
+    }
+
+    /**
+     * API
+     */
+    public static function getEndNumberWithEndFigures(string $number, int $endFiguresCount): int
+    {
+        return (int)self::getEndFiguresWithEndFigures($number, $endFiguresCount);
+    }
+
+    /**
+     * API
+     */
+    public static function getStartFiguresWithEndFigures(string $number, int $endFiguresCount): string
+    {
+        self::validate(
+            $number,
+            [new NotBlank(), new LikeInt()],
+        );
+        self::validate(
+            $endFiguresCount,
+            [new NotBlank(), new PositiveOrZero()],
+        );
+
+        return \substr($number, 0, \strlen($number) - $endFiguresCount);
+    }
+
+    /**
+     * API
+     */
+    public static function getEndFiguresWithEndFigures(string $number, int $endFiguresCount): string
+    {
+        self::validate(
+            $number,
+            [new NotBlank(), new LikeInt()],
+        );
+        self::validate(
+            $endFiguresCount,
+            [new NotBlank(), new PositiveOrZero()],
+        );
+
+        return \substr($number, -1 * $endFiguresCount);
+    }
+
+    /**
+     * API
+     *
      * This method joins number with end figures
      * @return string
      */
@@ -19,12 +85,10 @@ class FiguresRepresentation
         self::validate(
             $startNumber,
             [new NotBlank(), new LikeInt()],
-            'Passed $startNumber is not like int',
         );
         self::validate(
             $endNumber,
             [new NotBlank(), new LikeInt()],
-            'Passed $endNumber is not like int',
         );
 
         $endNumberContainsOnlyZeros = null !== (u((string)$endNumber)->match('~^(?<only_zeros>[0]+)$~')['only_zeros'] ?? null);
@@ -53,22 +117,24 @@ class FiguresRepresentation
         self::validate(
             $resultNumberWithEndFigures,
             [new notBlank(), new LikeInt()],
-            'Result string must be not blank, like int',
         );
         return $resultNumberWithEndFigures;
     }
 
+    /**
+     * API
+     *
+     * 100 -> 1.00
+     */
     public static function amountWithEndFiguresAsFloat(string $amountWithEndFigures, int $endFiguresCount): float
     {
         self::validate(
             $amountWithEndFigures,
             [new NotBlank(), new LikeInt()],
-            '$amountWithEndFigures must be not blank and like int'
         );
         self::validate(
             $endFiguresCount,
             [new NotBlank(), new PositiveOrZero()],
-            '$endFiguresCount must be not blank and positive or zero'
         );
 
         if (0 !== $endFiguresCount) {
@@ -93,16 +159,11 @@ class FiguresRepresentation
         return (float)$float;
     }
 
-    private static function validate(mixed $value, array $constraints, string $invalidArgumentExceptionString): void
+    /**
+     * @internal
+     */
+    protected static function validate(mixed $value, array $constraints): void
     {
-        if (!Validation::createIsValidCallable(...$constraints)($value)) {
-            if (empty($invalidArgumentExceptionString)) {
-                $message = 'Invalid value, got "%s"';
-            } else {
-                $invalidArgumentExceptionString = \rtrim($invalidArgumentExceptionString, '.,');
-                $message = \sprintf('%s, got "%s"', $invalidArgumentExceptionString, $value);
-            }
-            throw new \InvalidArgumentException($message);
-        }
+        Validation::createCallable(...$constraints)($value);
     }
 }
