@@ -11,7 +11,7 @@ use function Symfony\Component\String\u;
 
 class FiguresRepresentation
 {
-    public function convertToStringWithEndFigures(int|float $numeric, int $endFiguresCount): string
+    public static function convertToStringWithEndFigures(int|float $numeric, int $endFiguresCount): string
     {
         self::validate(
             $numeric,
