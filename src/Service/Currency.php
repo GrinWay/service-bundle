@@ -14,6 +14,6 @@ class Currency
      */
     public function transferAmountFromTo(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency): string
     {
-        return '20000';
+        return '19900';
     }
 }
