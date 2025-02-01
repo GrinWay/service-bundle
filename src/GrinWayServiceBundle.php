@@ -17,7 +17,7 @@ class GrinWayServiceBundle extends AbstractBundle
     public const COMMAND_PREFIX = self::EXTENSION_ALIAS . ':';
 
     // https://symfony.com/doc/current/components/cache.html#stampede-prevention
-    public const CACHE_TAG_FOR_ALL = self::EXTENSION_ALIAS;
+    public const GENERIC_CACHE_TAG = self::EXTENSION_ALIAS;
 
     protected string $extensionAlias = self::EXTENSION_ALIAS;
 
