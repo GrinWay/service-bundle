@@ -163,40 +163,43 @@ class FiguresRepresentation
             [new NotBlank(), new LikeInt()],
         );
 
-        $startNumberPart = (int)$startNumberPart;
-        $endNumberPart = (int)$endNumberPart;
+        // '000000000000000000000000' -> 0
+        // '999999999999999999999999999999999999999' -> no more than max int
+        $endNumberPart = (int)\substr(
+            $endNumberPart,
+            0,
+            \strlen((string)\PHP_INT_MAX) - 1,
+        );
 
-        $endNumberContainsOnlyZeros = null !== (u((string)$endNumberPart)->match('~^(?<only_zeros>[0]+)$~')['only_zeros'] ?? null);
-        if ($endNumberContainsOnlyZeros) {
-            $endNumberPart = \str_repeat('0', $endFiguresCount);
-        } else {
-            $passedEndFiguresCount = \strlen((string)$endNumberPart);
+        $actualEndNumberPartLength = \strlen((string)$endNumberPart);
 
-            if ($endFiguresCount < $passedEndFiguresCount) {
-                $plusSignsPrecision = 1;
+        $signsPrecision = 1;
+        $requiredForRoundingLengthEndNumberPart = $endFiguresCount + $signsPrecision;
 
-                $endNumberPart = \substr((string)$endNumberPart, 0, $endFiguresCount + $plusSignsPrecision);
-                $endNumberPart = (int)$endNumberPart;
-                $endNumberPart = $endNumberPart / (10 ** $plusSignsPrecision);
-                $endNumberPart = (int)\round($endNumberPart, 0, \PHP_ROUND_HALF_UP);// ?
-
-                $firstNumberOfEndNumberPart = (int)($endNumberPart / (10 ** $endFiguresCount));
-                $endNumberPartOverflow = 0 !== $firstNumberOfEndNumberPart;
-                // 100 === $endNumberPart for instance
-                if ($endNumberPartOverflow) {
-                    $startNumberPart += $firstNumberOfEndNumberPart;
-                    $endNumberPart %= (10 ** $endFiguresCount);
-                }
-            } elseif ($endFiguresCount > $passedEndFiguresCount) {
-                $endNumberPart .= \str_repeat('0', $endFiguresCount - $passedEndFiguresCount);
-            }
+        // guarantee $endNumberPart not less than required length
+        if ($requiredForRoundingLengthEndNumberPart > $actualEndNumberPartLength) {
+            $endNumberPart .= \str_repeat('0', $requiredForRoundingLengthEndNumberPart - $actualEndNumberPartLength);
         }
+        // cut as string
+        $endNumberPart = (int)\substr($endNumberPart, 0, $requiredForRoundingLengthEndNumberPart);
+        // cut as int
+        $endNumberPart /= 10 ** ($requiredForRoundingLengthEndNumberPart - $signsPrecision);
+        // round
+        $endNumberPart = (int)\round($endNumberPart, 0, \PHP_ROUND_HALF_UP);
+
+        $firstNumberOfEndNumberPart = (int)($endNumberPart / (10 ** $endFiguresCount));
+        $endNumberPartOverflow = 0 !== $firstNumberOfEndNumberPart;
+        // 100 === $endNumberPart for instance
+        if ($endNumberPartOverflow) {
+            $startNumberPart += $firstNumberOfEndNumberPart;
+            $endNumberPart %= 10 ** $endFiguresCount;
+        }
+
         $resultNumberWithEndFigures = \sprintf(
             '%s%s',
             $startNumberPart,
             $endNumberPart,
         );
-        \dump($resultNumberWithEndFigures);
 
         self::validate(
             $resultNumberWithEndFigures,
