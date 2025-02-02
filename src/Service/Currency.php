@@ -78,9 +78,9 @@ class Currency
             $fixerPayload = $this->getCachedFixerDecodedPayload(refresh: true);
         }
 
-        if (true === $success) { // ? else
+        if (true === $success) {
             $baseString = $pa->getValue($fixerPayload, '[base]');
-            if (null === $baseString) {// ?
+            if (null === $baseString) {
                 $message = 'There is no base currency form fixer API, invalid response from fixer API';
                 throw new \RuntimeException($message);
             }

@@ -47,6 +47,11 @@ class FiguresRepresentation
     /**
      * API
      *
+     * Use this only for various CONVERSIONS
+     *
+     * Not for value representation
+     * instead deal with int or strings
+     *
      * 100 -> 1.00
      */
     public static function numberWithEndFiguresAsFloat(string $numberWithEndFigures, int $endFiguresCount): float
@@ -86,7 +91,7 @@ class FiguresRepresentation
      * API
      *
      * Usage:
-     * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbers(100);
+     * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbersWithEndFigures(100);
      */
     public static function getStartEndNumbersWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): array
     {
