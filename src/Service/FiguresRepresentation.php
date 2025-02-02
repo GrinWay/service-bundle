@@ -196,6 +196,7 @@ class FiguresRepresentation
             $startNumberPart,
             $endNumberPart,
         );
+        \dump($resultNumberWithEndFigures);
 
         self::validate(
             $resultNumberWithEndFigures,
