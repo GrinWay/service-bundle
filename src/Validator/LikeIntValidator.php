@@ -16,6 +16,7 @@ final class LikeIntValidator extends ConstraintValidator
             return;
         }
 
+        $likeInt = (string)$likeInt;
         $v = u($likeInt)->match('~^(?<like_int>[0-9]+)$~')['like_int'] ?? null;
         if (null !== $v) {
             return;
