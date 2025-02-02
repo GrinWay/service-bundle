@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
-use function Symfony\Component\String\u;
 
 /**
  * Currency converter
@@ -130,28 +129,10 @@ class Currency
         $oneBaseToCurrencyValue = (float)$oneBaseToCurrencyValue;
         $toNumber = $oneBaseToCurrencyValue * $fromAmountBaseValue;
 
-        return $this->getCurrencyValueWithEndTwoFigures($toNumber, $endFiguresCount);
-    }
-
-    /**
-     * Helper
-     */
-    protected function getCurrencyValueWithEndTwoFigures(string|int|float $number, int $endFiguresCount): string
-    {
-        $number = (string)$number;
-        $pa = $this->serviceLocator->get('pa');
-
-        $this->validate(
-            $number,
-            [new NotBlank(), new LikeNumeric()],
+        return FiguresRepresentation::getStringWithEndFigures(
+            $toNumber,
+            $endFiguresCount,
         );
-
-        $matches = u($number)->match('~^(?<front>\d*)(?:[.](?<end>\d*))?$~');
-
-        $frontFigures = $pa->getValue($matches, '[front]');
-        $endFigures = $pa->getValue($matches, '[end]') ?: '0';
-
-        return FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures($frontFigures, $endFigures, $endFiguresCount);;
     }
 
     /**

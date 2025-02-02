@@ -11,10 +11,71 @@ use function Symfony\Component\String\u;
 
 class FiguresRepresentation
 {
-    public static function getStringWithEndFigures(string|int|float $numeric, int $endFiguresCount): string
+    /**
+     * API
+     *
+     * If 2 === $endFiguresCount
+     * (float $number 1.) -> 100
+     * (float $number 1.0000000000000) -> 100
+     * (int $number 23) -> 2300
+     * (string $number 0) -> 000
+     */
+    public static function getStringWithEndFigures(string|int|float $number, int $endFiguresCount): string
     {
-        // TODO: current
-        return '100';
+        $number = (string)$number;
+
+        self::validate(
+            $number,
+            [new NotBlank(), new LikeNumeric()],
+        );
+
+        $matches = u($number)->match('~^(?<front>\d*)(?:[.](?<end>\d*))?$~');
+        $frontFigures = $matches['front'];
+        $endFigures = $matches['end'] ?: '0';
+
+        return self::concatNumbersWithCorrectCountOfEndFigures(
+            $frontFigures,
+            $endFigures,
+            $endFiguresCount,
+        );
+    }
+
+    /**
+     * API
+     *
+     * 100 -> 1.00
+     */
+    public static function amountWithEndFiguresAsFloat(string $amountWithEndFigures, int $endFiguresCount): float
+    {
+        self::validate(
+            $amountWithEndFigures,
+            [new NotBlank(), new LikeInt()],
+        );
+        self::validate(
+            $endFiguresCount,
+            [new NotBlank(), new PositiveOrZero()],
+        );
+
+        if (0 !== $endFiguresCount) {
+
+            $front = \substr($amountWithEndFigures, 0, -1 * \abs($endFiguresCount));
+            $end = \substr($amountWithEndFigures, -1 * \abs($endFiguresCount));
+
+            $float = \sprintf(
+                '%s.%s',
+                $front,
+                $end,
+            );
+        } else {
+            $front = $amountWithEndFigures;
+
+            $float = \sprintf(
+                '%s.',
+                $front,
+            );
+        }
+
+        return (float)$float;
     }
 
     /**
@@ -126,44 +187,6 @@ class FiguresRepresentation
             [new notBlank(), new LikeInt()],
         );
         return $resultNumberWithEndFigures;
-    }
-
-    /**
-     * API
-     *
-     * 100 -> 1.00
-     */
-    public static function amountWithEndFiguresAsFloat(string $amountWithEndFigures, int $endFiguresCount): float
-    {
-        self::validate(
-            $amountWithEndFigures,
-            [new NotBlank(), new LikeInt()],
-        );
-        self::validate(
-            $endFiguresCount,
-            [new NotBlank(), new PositiveOrZero()],
-        );
-
-        if (0 !== $endFiguresCount) {
-
-            $front = \substr($amountWithEndFigures, 0, -1 * \abs($endFiguresCount));
-            $end = \substr($amountWithEndFigures, -1 * \abs($endFiguresCount));
-
-            $float = \sprintf(
-                '%s.%s',
-                $front,
-                $end,
-            );
-        } else {
-            $front = $amountWithEndFigures;
-
-            $float = \sprintf(
-                '%s.',
-                $front,
-            );
-        }
-
-        return (float)$float;
     }
 
     /**
