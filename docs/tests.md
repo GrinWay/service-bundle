@@ -18,3 +18,8 @@ end numer string 0000000000000000000000000000000000000000 with $endFiguresCount 
 
 //\dump($currencyService->transferAmountFromTo('123', 'USD', 'EUR')); // OK
 //\dump($currencyService->transferAmountFromTo('10000', 'RUB', 'EUR')); // OK
+
+
+[Currency.php](..%2Fsrc%2FService%2FCurrency.php)
+
+[FiguresRepresentation.php](..%2Fsrc%2FService%2FFiguresRepresentation.php)

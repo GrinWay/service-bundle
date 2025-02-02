@@ -4,6 +4,7 @@ namespace GrinWay\Service\Service;
 
 use GrinWay\Service\Validator\LikeInt;
 use GrinWay\Service\Validator\LikeNumeric;
+use GrinWay\Telegram\Service\Telegram;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Validation;
@@ -19,17 +20,20 @@ class FiguresRepresentation
      * (float $number 1.0000000000000) -> 100
      * (int $number 23) -> 2300
      * (string $number 0) -> 000
+     *
+     * It's not recommended but even (string $number 1,0) -> 100
      */
-    public static function getStringWithEndFigures(string|int|float $number, int $endFiguresCount): string
+    public static function getStringWithEndFigures(string|int|float $humanNumber, int $endFiguresCount): string
     {
-        $number = (string)$number;
+        $humanNumber = (string)$humanNumber;
+        $humanNumber = \strtr($humanNumber, [',' => '.']);
 
         self::validate(
-            $number,
+            $humanNumber,
             [new NotBlank(), new LikeNumeric()],
         );
 
-        $matches = u($number)->match('~^(?<front>\d*)(?:[.](?<end>\d*))?$~');
+        $matches = u($humanNumber)->match('~^(?<front>\d*)(?:[.](?<end>\d*))?$~');
         $frontFigures = $matches['front'];
         $endFigures = $matches['end'] ?: '0';
 
@@ -45,10 +49,10 @@ class FiguresRepresentation
      *
      * 100 -> 1.00
      */
-    public static function amountWithEndFiguresAsFloat(string $amountWithEndFigures, int $endFiguresCount): float
+    public static function numberWithEndFiguresAsFloat(string $numberWithEndFigures, int $endFiguresCount): float
     {
         self::validate(
-            $amountWithEndFigures,
+            $numberWithEndFigures,
             [new NotBlank(), new LikeInt()],
         );
         self::validate(
@@ -58,8 +62,8 @@ class FiguresRepresentation
 
         if (0 !== $endFiguresCount) {
 
-            $front = \substr($amountWithEndFigures, 0, -1 * \abs($endFiguresCount));
-            $end = \substr($amountWithEndFigures, -1 * \abs($endFiguresCount));
+            $front = \substr($numberWithEndFigures, 0, -1 * \abs($endFiguresCount));
+            $end = \substr($numberWithEndFigures, -1 * \abs($endFiguresCount));
 
             $float = \sprintf(
                 '%s.%s',
@@ -67,7 +71,7 @@ class FiguresRepresentation
                 $end,
             );
         } else {
-            $front = $amountWithEndFigures;
+            $front = $numberWithEndFigures;
 
             $float = \sprintf(
                 '%s.',
@@ -84,37 +88,37 @@ class FiguresRepresentation
      * Usage:
      * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbers(100);
      */
-    public static function getStartEndNumbersWithEndFigures(string $number, int $endFiguresCount): array
+    public static function getStartEndNumbersWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): array
     {
         return [
-            self::getStartNumberWithEndFigures($number, $endFiguresCount),
-            self::getEndNumberWithEndFigures($number, $endFiguresCount),
+            self::getStartNumberWithEndFigures($numberWithEndFigures, $endFiguresCount),
+            self::getEndNumberWithEndFigures($numberWithEndFigures, $endFiguresCount),
         ];
     }
 
     /**
      * API
      */
-    public static function getStartNumberWithEndFigures(string $number, int $endFiguresCount): int
+    public static function getStartNumberWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): int
     {
-        return (int)self::getStartFiguresWithEndFigures($number, $endFiguresCount);
+        return (int)self::getStartFiguresWithEndFigures($numberWithEndFigures, $endFiguresCount);
     }
 
     /**
      * API
      */
-    public static function getEndNumberWithEndFigures(string $number, int $endFiguresCount): int
+    public static function getEndNumberWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): int
     {
-        return (int)self::getEndFiguresWithEndFigures($number, $endFiguresCount);
+        return (int)self::getEndFiguresWithEndFigures($numberWithEndFigures, $endFiguresCount);
     }
 
     /**
      * API
      */
-    public static function getStartFiguresWithEndFigures(string $number, int $endFiguresCount): string
+    public static function getStartFiguresWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): string
     {
         self::validate(
-            $number,
+            $numberWithEndFigures,
             [new NotBlank(), new LikeInt()],
         );
         self::validate(
@@ -122,16 +126,16 @@ class FiguresRepresentation
             [new NotBlank(), new PositiveOrZero()],
         );
 
-        return \substr($number, 0, \strlen($number) - $endFiguresCount);
+        return \substr($numberWithEndFigures, 0, \strlen($numberWithEndFigures) - $endFiguresCount);
     }
 
     /**
      * API
      */
-    public static function getEndFiguresWithEndFigures(string $number, int $endFiguresCount): string
+    public static function getEndFiguresWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): string
     {
         self::validate(
-            $number,
+            $numberWithEndFigures,
             [new NotBlank(), new LikeInt()],
         );
         self::validate(
@@ -139,7 +143,7 @@ class FiguresRepresentation
             [new NotBlank(), new PositiveOrZero()],
         );
 
-        return \substr($number, -1 * $endFiguresCount);
+        return \substr($numberWithEndFigures, -1 * $endFiguresCount);
     }
 
     /**
@@ -148,38 +152,49 @@ class FiguresRepresentation
      * This method joins number with end figures
      * @return string
      */
-    public static function concatNumbersWithCorrectCountOfEndFigures(string|int $startNumber, string|int $endNumber, int $endFiguresCount): string
+    public static function concatNumbersWithCorrectCountOfEndFigures(string|int $startNumberPart, string|int $endNumberPart, int $endFiguresCount): string
     {
         self::validate(
-            $startNumber,
+            $startNumberPart,
             [new NotBlank(), new LikeInt()],
         );
         self::validate(
-            $endNumber,
+            $endNumberPart,
             [new NotBlank(), new LikeInt()],
         );
 
-        $endNumberContainsOnlyZeros = null !== (u((string)$endNumber)->match('~^(?<only_zeros>[0]+)$~')['only_zeros'] ?? null);
+        $startNumberPart = (int)$startNumberPart;
+        $endNumberPart = (int)$endNumberPart;
+
+        $endNumberContainsOnlyZeros = null !== (u((string)$endNumberPart)->match('~^(?<only_zeros>[0]+)$~')['only_zeros'] ?? null);
         if ($endNumberContainsOnlyZeros) {
-            $endNumber = \str_repeat('0', $endFiguresCount);
+            $endNumberPart = \str_repeat('0', $endFiguresCount);
         } else {
-            $passedEndFiguresCount = \strlen((string)$endNumber);
+            $passedEndFiguresCount = \strlen((string)$endNumberPart);
 
             if ($endFiguresCount < $passedEndFiguresCount) {
                 $plusSignsPrecision = 1;
 
-                $endNumber = \substr((string)$endNumber, 0, $endFiguresCount + $plusSignsPrecision);
-                $endNumber = (int)$endNumber;
-                $endNumber = $endNumber / (10 ** $plusSignsPrecision);
-                $endNumber = (int)\round($endNumber, 0, \PHP_ROUND_HALF_UP);// ?
+                $endNumberPart = \substr((string)$endNumberPart, 0, $endFiguresCount + $plusSignsPrecision);
+                $endNumberPart = (int)$endNumberPart;
+                $endNumberPart = $endNumberPart / (10 ** $plusSignsPrecision);
+                $endNumberPart = (int)\round($endNumberPart, 0, \PHP_ROUND_HALF_UP);// ?
+
+                $firstNumberOfEndNumberPart = (int)($endNumberPart / (10 ** $endFiguresCount));
+                $endNumberPartOverflow = 0 !== $firstNumberOfEndNumberPart;
+                // 100 === $endNumberPart for instance
+                if ($endNumberPartOverflow) {
+                    $startNumberPart += $firstNumberOfEndNumberPart;
+                    $endNumberPart %= (10 ** $endFiguresCount);
+                }
             } elseif ($endFiguresCount > $passedEndFiguresCount) {
-                $endNumber .= \str_repeat('0', $endFiguresCount - $passedEndFiguresCount);
+                $endNumberPart .= \str_repeat('0', $endFiguresCount - $passedEndFiguresCount);
             }
         }
         $resultNumberWithEndFigures = \sprintf(
             '%s%s',
-            $startNumber,
-            $endNumber,
+            $startNumberPart,
+            $endNumberPart,
         );
 
         self::validate(

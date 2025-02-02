@@ -120,7 +120,7 @@ class Currency
         );
 
         $oneBaseFromCurrencyValue = (float)$oneBaseFromCurrencyValue;
-        $fromCurrencyFloatAmount = FiguresRepresentation::amountWithEndFiguresAsFloat(
+        $fromCurrencyFloatAmount = FiguresRepresentation::numberWithEndFiguresAsFloat(
             $amountWithEndFigures,
             $endFiguresCount,
         );
