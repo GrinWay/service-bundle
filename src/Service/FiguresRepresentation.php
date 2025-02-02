@@ -15,6 +15,8 @@ class FiguresRepresentation
     /**
      * API
      *
+     * Transforms human number representation to the dot-less representation with end figures count
+     *
      * If 2 === $endFiguresCount
      * (float $number 1.) -> 100
      * (float $number 1.0000000000000) -> 100
@@ -33,6 +35,8 @@ class FiguresRepresentation
             [new NotBlank(), new LikeNumeric()],
         );
 
+        $humanNumber = \number_format($humanNumber,10,'.','');
+
         $matches = u($humanNumber)->match('~^(?<front>\d*)(?:[.](?<end>\d*))?$~');
         $frontFigures = $matches['front'];
         $endFigures = $matches['end'] ?: '0';
@@ -47,10 +51,10 @@ class FiguresRepresentation
     /**
      * API
      *
-     * Use this only for various CONVERSIONS
+     * Represents dot-less as a float
      *
-     * Not for value representation
-     * instead deal with int or strings
+     * If it's possible don't use this function
+     * because it returns float type
      *
      * 100 -> 1.00
      */
@@ -90,8 +94,13 @@ class FiguresRepresentation
     /**
      * API
      *
+     * Explodes dot-less number representation to the "start" and "end" (int)s
+     * It's an array of int php types
+     *
      * Usage:
-     * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbersWithEndFigures(100);
+     * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbersWithEndFigures(123, 2);
+     * // (int)1 === $one
+     * // (int)23 === $twoThree
      */
     public static function getStartEndNumbersWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): array
     {
@@ -103,6 +112,11 @@ class FiguresRepresentation
 
     /**
      * API
+     *
+     * Extracts "start" part of the dot-less number representation as int
+     *
+     * If 2 === $endFiguresCount
+     * '123' -> (int)1
      */
     public static function getStartNumberWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): int
     {
@@ -111,6 +125,11 @@ class FiguresRepresentation
 
     /**
      * API
+     *
+     * Extracts "end" part of the dot-less number representation as int
+     *
+     * If 2 === $endFiguresCount
+     * '123' -> (int)23
      */
     public static function getEndNumberWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): int
     {
@@ -119,6 +138,11 @@ class FiguresRepresentation
 
     /**
      * API
+     *
+     * Extracts "start" part of the dot-less number representation as string
+     *
+     * If 2 === $endFiguresCount
+     * '123' -> '1'
      */
     public static function getStartFiguresWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): string
     {
@@ -131,11 +155,27 @@ class FiguresRepresentation
             [new NotBlank(), new PositiveOrZero()],
         );
 
-        return \substr($numberWithEndFigures, 0, \strlen($numberWithEndFigures) - $endFiguresCount);
+        $actualLength = \strlen($numberWithEndFigures);
+        if ($actualLength < $endFiguresCount) {
+            $message = \sprintf(
+                'Too long $endFiguresCount, got "%s", max: "%s"',
+                $endFiguresCount,
+                $actualLength,
+            );
+            throw new \InvalidArgumentException($message);
+        }
+
+        $length = $actualLength - $endFiguresCount;
+        return \substr($numberWithEndFigures, 0, $length);
     }
 
     /**
      * API
+     *
+     * Extracts "end" part of the dot-less number representation as string
+     *
+     * If 2 === $endFiguresCount
+     * '123' -> '23'
      */
     public static function getEndFiguresWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): string
     {
@@ -154,9 +194,10 @@ class FiguresRepresentation
     /**
      * API
      *
-     * This method joins number with end figures
+     * This method joins "start" and "end" parts to obtain number with end figures
      *
      * This method treats endNumberPart only as a string
+     * because there is no any math operations with it
      *
      * @return string
      */
@@ -171,13 +212,9 @@ class FiguresRepresentation
             [new NotBlank(), new LikeInt()],
         );
 
-        // '000000000000000000000000' -> 0
-        // '999999999999999999999999999999999999999' -> no more than max int
-        $endNumberPart = \substr(
-            (string)$endNumberPart,
-            0,
-            \strlen((string)\PHP_INT_MAX) - 1,
-        );
+        // cuts lead zeros
+        $startNumberPart = (int)$startNumberPart;
+        $endNumberPart = (string)$endNumberPart;
 
         $actualEndNumberPartLength = \strlen($endNumberPart);
 

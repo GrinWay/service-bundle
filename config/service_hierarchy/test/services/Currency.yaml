@@ -1,0 +1,18 @@
+services:
+
+    _defaults:
+        autoconfigure: false
+        autowire: false
+
+    GrinWay\Service\Service\Currency:
+        public: true
+        class: GrinWay\Service\Service\Currency
+        arguments:
+            $serviceLocator: !service_locator
+                grinwayServiceCurrencyFixerLatest: '@Symfony\Contracts\HttpClient\HttpClientInterface $grinwayServiceCurrencyFixerLatest'
+                currencyCachePool: '@Symfony\Contracts\Cache\TagAwareCacheInterface $grinwayServiceCachePoolCurrency'
+                serializer: '@serializer'
+                validator: '@validator'
+                pa: '@Symfony\Component\PropertyAccess\PropertyAccessorInterface'
+
+    grinway_service.currency: '@GrinWay\Service\Service\Currency'

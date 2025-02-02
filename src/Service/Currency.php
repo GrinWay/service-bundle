@@ -85,48 +85,29 @@ class Currency
                 throw new \RuntimeException($message);
             }
 
-            $oneBaseToCurrencyValue = $pa->getValue(
-                $fixerPayload,
-                \sprintf('[rates][%s]', $toCurrencyString),
-            );
-            $this->assertCurrencyExistsInFixerAPI(
-                $oneBaseToCurrencyValue,
+            $oneBaseToCurrencyValue = $this->getValidatedOneBaseCurrencyValueFromFixerPayload(
                 $toCurrencyString,
-            );
-            $this->validate(
-                $oneBaseToCurrencyValue,
-                [new NotBlank(), new LikeNumeric()],
+                $fixerPayload,
             );
 
             if ($baseString === $fromCurrencyString) {
                 $oneBaseFromCurrencyValue = 1; // exactly 1 rate
             } else {
-                $oneBaseFromCurrencyValue = $pa->getValue(
-                    $fixerPayload,
-                    \sprintf('[rates][%s]', $fromCurrencyString),
-                );
-                $this->assertCurrencyExistsInFixerAPI(
-                    $oneBaseToCurrencyValue,
+                $oneBaseFromCurrencyValue = $this->getValidatedOneBaseCurrencyValueFromFixerPayload(
                     $fromCurrencyString,
+                    $fixerPayload,
                 );
             }
         } else {
             throw new \RuntimeException('Request to the fixer API service was not successful');
         }
 
-        $this->validate(
-            $oneBaseToCurrencyValue,
-            [new NotBlank(), new LikeNumeric()],
-        );
-
-        $oneBaseFromCurrencyValue = (float)$oneBaseFromCurrencyValue;
+        // CONVERSION ALGORITHM
         $fromCurrencyFloatAmount = FiguresRepresentation::numberWithEndFiguresAsFloat(
             $amountWithEndFigures,
             $endFiguresCount,
         );
         $fromAmountBaseValue = $fromCurrencyFloatAmount / $oneBaseFromCurrencyValue;
-
-        $oneBaseToCurrencyValue = (float)$oneBaseToCurrencyValue;
         $toNumber = $oneBaseToCurrencyValue * $fromAmountBaseValue;
 
         return FiguresRepresentation::getStringWithEndFigures(
@@ -183,5 +164,29 @@ class Currency
         });
 
         return $serializer->decode($fixerPayload, 'json');
+    }
+
+    /**
+     * Helper
+     *
+     * @internal
+     */
+    private function getValidatedOneBaseCurrencyValueFromFixerPayload(mixed $currencyString, array $fixerPayload)
+    {
+        $pa = $this->serviceLocator->get('pa');
+
+        $oneBaseCurrencyValue = $pa->getValue(
+            $fixerPayload,
+            \sprintf('[rates][%s]', $currencyString),
+        );
+        $this->assertCurrencyExistsInFixerAPI(
+            $oneBaseCurrencyValue,
+            $currencyString,
+        );
+        $this->validate(
+            $oneBaseCurrencyValue,
+            [new NotBlank(), new LikeNumeric()],
+        );
+        return $oneBaseCurrencyValue;
     }
 }
