@@ -150,6 +150,9 @@ class FiguresRepresentation
      * API
      *
      * This method joins number with end figures
+     *
+     * This method treats endNumberPart only as a string
+     *
      * @return string
      */
     public static function concatNumbersWithCorrectCountOfEndFigures(string|int $startNumberPart, string|int $endNumberPart, int $endFiguresCount): string
@@ -165,35 +168,20 @@ class FiguresRepresentation
 
         // '000000000000000000000000' -> 0
         // '999999999999999999999999999999999999999' -> no more than max int
-        $endNumberPart = (int)\substr(
-            $endNumberPart,
+        $endNumberPart = \substr(
+            (string)$endNumberPart,
             0,
             \strlen((string)\PHP_INT_MAX) - 1,
         );
 
-        $actualEndNumberPartLength = \strlen((string)$endNumberPart);
-
-        $signsPrecision = 1;
-        $requiredForRoundingLengthEndNumberPart = $endFiguresCount + $signsPrecision;
+        $actualEndNumberPartLength = \strlen($endNumberPart);
 
         // guarantee $endNumberPart not less than required length
-        if ($requiredForRoundingLengthEndNumberPart > $actualEndNumberPartLength) {
-            $endNumberPart .= \str_repeat('0', $requiredForRoundingLengthEndNumberPart - $actualEndNumberPartLength);
+        if ($endFiguresCount > $actualEndNumberPartLength) {
+            $endNumberPart .= \str_repeat('0', $endFiguresCount - $actualEndNumberPartLength);
         }
-        // cut as string
-        $endNumberPart = (int)\substr($endNumberPart, 0, $requiredForRoundingLengthEndNumberPart);
-        // cut as int
-        $endNumberPart /= 10 ** ($requiredForRoundingLengthEndNumberPart - $signsPrecision);
-        // round
-        $endNumberPart = (int)\round($endNumberPart, 0, \PHP_ROUND_HALF_UP);
-
-        $firstNumberOfEndNumberPart = (int)($endNumberPart / (10 ** $endFiguresCount));
-        $endNumberPartOverflow = 0 !== $firstNumberOfEndNumberPart;
-        // 100 === $endNumberPart for instance
-        if ($endNumberPartOverflow) {
-            $startNumberPart += $firstNumberOfEndNumberPart;
-            $endNumberPart %= 10 ** $endFiguresCount;
-        }
+        // cut as string DON'T DEAL WITH FLOAT, it can convert (990 / 10) to 100
+        $endNumberPart = \substr($endNumberPart, 0, $endFiguresCount);
 
         $resultNumberWithEndFigures = \sprintf(
             '%s%s',
