@@ -20,7 +20,7 @@ abstract class AbstractCurrencyValidTransferTestCase extends AbstractUnitTestCas
         foreach ($toCurrencies as $idx => $toCurrency) {
             $fromCurrency = static::fromCurrency();
             $amountWithEndFigures = static::amount();
-            $transferredAmount = $this->currencyService->transferAmountFromToWithEndFigures(
+            $transferredAmount = $this->currencyService->convertFromCurrencyToAnotherWithEndFigures(
                 $amountWithEndFigures,
                 $fromCurrency,
                 $toCurrency,

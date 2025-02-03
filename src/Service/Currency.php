@@ -2,6 +2,8 @@
 
 namespace GrinWay\Service\Service;
 
+use GrinWay\Service\Exception\Fixer\NoBaseFixerException;
+use GrinWay\Service\Exception\Fixer\NotSuccessFixerException;
 use GrinWay\Service\GrinWayServiceBundle;
 use GrinWay\Service\Validator\LikeInt;
 use GrinWay\Service\Validator\LikeNumeric;
@@ -25,12 +27,12 @@ class Currency
     }
 
     /**
-     * @deprecated function "transferAmountFromTo" use "transferAmountFromToWithEndFigures" instead since grinway/service-bundle v2 will be removed
+     * @deprecated function "transferAmountFromTo" use "convertFromCurrencyToAnotherWithEndFigures" instead since grinway/service-bundle v2 will be removed
      * @deprecated default value for $endFiguresCount since grinway/service-bundle v2 will be required
      */
     public function transferAmountFromTo(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount = 2): string
     {
-        return $this->transferAmountFromToWithEndFigures(
+        return $this->convertFromCurrencyToAnotherWithEndFigures(
             $amountWithEndFigures,
             $amountCurrency,
             $convertToCurrency,
@@ -46,8 +48,10 @@ class Currency
      * @param string $amountCurrency ISO 4217 Code (Three capital letters)
      * @param string $convertToCurrency ISO 4217 Code (Three capital letters)
      * @return string converted currency value with end figures (with count $endFiguresCount)
+     * @throws NotSuccessFixerException
+     * @throws NoBaseFixerException
      */
-    public function transferAmountFromToWithEndFigures(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount, bool $forceMakeHttpRequestToFixer = false): string
+    public function convertFromCurrencyToAnotherWithEndFigures(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount, bool $forceMakeHttpRequestToFixer = false): string
     {
         $this->validate(
             $amountWithEndFigures,
@@ -83,8 +87,7 @@ class Currency
         if (true === $success) {
             $baseString = $pa->getValue($fixerPayload, '[base]');
             if (null === $baseString) {
-                $message = 'There is no base currency form fixer API, invalid response from fixer API';
-                throw new \RuntimeException($message);
+                throw new NoBaseFixerException();
             }
 
             $oneBaseToCurrencyValue = $this->getValidatedOneBaseCurrencyValueFromFixerPayload(
@@ -101,7 +104,7 @@ class Currency
                 );
             }
         } else {
-            throw new \RuntimeException('Request to the fixer API service was not successful');
+            throw new NotSuccessFixerException();
         }
 
         // CONVERSION ALGORITHM

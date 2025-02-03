@@ -2,8 +2,10 @@ framework:
     cache:
         pools:
 
+            # In order not to get GrinWay\Service\Exception\Fixer\NoBaseFixerException
+            # Look at the "Features": https://fixer.io/signup/free
             grinway_service.cache_pool.currency:
                 adapters:
                 - 'cache.adapter.filesystem'
-                default_lifetime: 2678400 # 2678400 === 31 day
+                default_lifetime: '%env(string:default:grinway_service.currency.cache.lifetime:)%'
                 tags: true

@@ -10,7 +10,13 @@ use Symfony\Component\Validator\Validation;
 use function Symfony\Component\String\u;
 
 /**
- * When you need to work with number representations like 100 when you imagined 1.00, or 10023 when it's 100.23
+ * It's a class of static helper methods only
+ *
+ * 1) "*WithEndFigures" static methods:
+ * When you need to work with number representations like
+ * 100 when you imagined 1.00
+ * or 10023 when imagined 100.23
+ *
  * you will need static methods of this class
  *
  * @author Grigory Koblitskiy <grin180898@outlook.com>
@@ -46,7 +52,7 @@ class FiguresRepresentation
         $frontFigures = $matches['front'];
         $endFigures = $matches['end'] ?: '0';
 
-        return self::concatNumbersWithCorrectCountOfEndFigures(
+        return self::concatStartEndPartsWithEndFigures(
             $frontFigures,
             $endFigures,
             $endFiguresCount,
@@ -206,7 +212,7 @@ class FiguresRepresentation
      *
      * @return string
      */
-    public static function concatNumbersWithCorrectCountOfEndFigures(string|int $startNumberPart, string|int $endNumberPart, int $endFiguresCount): string
+    public static function concatStartEndPartsWithEndFigures(string|int $startNumberPart, string|int $endNumberPart, int $endFiguresCount): string
     {
         self::validate(
             $startNumberPart,
@@ -241,6 +247,18 @@ class FiguresRepresentation
             [new notBlank(), new LikeInt()],
         );
         return $resultNumberWithEndFigures;
+    }
+
+    /**
+     * @deprecated Use "concatStartEndPartsWithEndFigures" instead, since grinway/service-bundle v2 will be removed
+     */
+    public static function concatNumbersWithCorrectCountOfEndFigures(string|int $startNumberPart, string|int $endNumberPart, int $endFiguresCount): string
+    {
+        return self::concatStartEndPartsWithEndFigures(
+            startNumberPart: $startNumberPart,
+            endNumberPart: $endNumberPart,
+            endFiguresCount: $endFiguresCount,
+        );
     }
 
     /**

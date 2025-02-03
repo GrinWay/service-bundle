@@ -1,32 +1,15 @@
 GrinWay/service-bundle
 ======
+[![Latest Stable Version](https://poser.pugx.org/GrinWay/service-bundle/v)](//packagist.org/packages/GrinWay/service-bundle)
+[![Total Downloads](https://poser.pugx.org/GrinWay/service-bundle/downloads)](//packagist.org/packages/GrinWay/service-bundle)
 
-About
-------
-It's the set of commonly used tools for a Symfony application.
+<h2>Commonly used tools for a symfony app</h2>
 
-Installation
-------
-1. Execute (for `vendor` dependencies)
+### 1. 😗 [Abilities]()
 
-```console
-composer require grinway/service-bundle
-```
+### 2. 🔰 [Installation]()
 
-> NOTE: With the help of composer recipe you will get<br>`config/packages/grinway_service.yaml`<br>**Check it's not empty!**
 
-If you didn't get these configuration files just copy them from `@GrinWayService/.install/symfony/config`
-
-2. Add this to your `bundles.php`
-
-```php
-<?php
-
-// %kernel.project_dir%/config/bundles.php
-return [
-    GrinWay\Service\GrinWayServiceBundle::class => ['all' => true],
-];
-```
 
 Usage
 ------

@@ -12,7 +12,7 @@ class NonexistentTransferAmountTest extends AbstractUnitTestCase
     public function testTransferringWithNonexistentFromCurrencyThrowsRuntimeException()
     {
         $this->expectException(\RuntimeException::class);
-        $this->currencyService->transferAmountFromToWithEndFigures(
+        $this->currencyService->convertFromCurrencyToAnotherWithEndFigures(
             '100',
             'NONEXISTENT_CURRENCY',
             'RUB',
@@ -23,7 +23,7 @@ class NonexistentTransferAmountTest extends AbstractUnitTestCase
     public function testTransferringWithNonexistentToCurrencyThrowsRuntimeException()
     {
         $this->expectException(\RuntimeException::class);
-        $this->currencyService->transferAmountFromToWithEndFigures(
+        $this->currencyService->convertFromCurrencyToAnotherWithEndFigures(
             '100',
             'EUR',
             'NONEXISTENT_CURRENCY',
@@ -34,7 +34,7 @@ class NonexistentTransferAmountTest extends AbstractUnitTestCase
     public function testTransferringWithNonexistentBothDifferentCurrenciesThrowRuntimeException()
     {
         $this->expectException(\RuntimeException::class);
-        $this->currencyService->transferAmountFromToWithEndFigures(
+        $this->currencyService->convertFromCurrencyToAnotherWithEndFigures(
             '100',
             'NONEXISTENT_CURRENCY_2',
             'NONEXISTENT_CURRENCY_1',
@@ -44,7 +44,7 @@ class NonexistentTransferAmountTest extends AbstractUnitTestCase
 
     public function testTransferringWithNonexistentBothSameCurrenciesReturnsPassedNumberWithEndFigures()
     {
-        $result = $this->currencyService->transferAmountFromToWithEndFigures(
+        $result = $this->currencyService->convertFromCurrencyToAnotherWithEndFigures(
             '100',
             'NONEXISTENT_CURRENCY_1',
             'NONEXISTENT_CURRENCY_1',

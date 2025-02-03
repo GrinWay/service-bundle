@@ -21,7 +21,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
     public function testConcatNumbersWithCorrectCountOfEndFiguresStringsThrowsWhenEndFloatLike()
     {
         $this->expectException(ValidationFailedException::class);
-        FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        FiguresRepresentation::concatStartEndPartsWithEndFigures(
             '01',
             '23.',
             2,
@@ -31,7 +31,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
     public function testConcatNumbersWithCorrectCountOfEndFiguresStringsThrowsWhenStartFloatLike()
     {
         $this->expectException(ValidationFailedException::class);
-        FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        FiguresRepresentation::concatStartEndPartsWithEndFigures(
             '01.',
             '23',
             2,
@@ -40,7 +40,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
 
     public function testConcatNumbersWithCorrectCountOfEndFiguresZeroEndCount()
     {
-        $result = FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        $result = FiguresRepresentation::concatStartEndPartsWithEndFigures(
             123456,
             '00000023',
             0,
@@ -51,7 +51,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
     public function testConcatNumbersWithCorrectCountOfEndFiguresThrowsOnNegativeIntEnd()
     {
         $this->expectException(ValidationFailedException::class);
-        FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        FiguresRepresentation::concatStartEndPartsWithEndFigures(
             0,
             -123456,
             0,
@@ -61,7 +61,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
     public function testConcatNumbersWithCorrectCountOfEndFiguresThrowsOnNegativeIntStart()
     {
         $this->expectException(ValidationFailedException::class);
-        FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        FiguresRepresentation::concatStartEndPartsWithEndFigures(
             -123456,
             '00000023',
             0,
@@ -71,7 +71,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
     public function testConcatNumbersWithCorrectCountOfEndFiguresThrowsOnNegativeStringEnd()
     {
         $this->expectException(ValidationFailedException::class);
-        FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        FiguresRepresentation::concatStartEndPartsWithEndFigures(
             0,
             '-123456',
             0,
@@ -81,7 +81,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
     public function testConcatNumbersWithCorrectCountOfEndFiguresThrowsOnNegativeStringStart()
     {
         $this->expectException(ValidationFailedException::class);
-        FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        FiguresRepresentation::concatStartEndPartsWithEndFigures(
             '-123456',
             '00000023',
             0,
@@ -90,7 +90,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
 
     public function testConcatNumbersWithCorrectCountOfEndFiguresWithMoreThanPhpIntMaxEndCount()
     {
-        $result = FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        $result = FiguresRepresentation::concatStartEndPartsWithEndFigures(
             12,
             '20934820480218401284021834028401289038402983401234',
             50,
@@ -100,7 +100,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
 
     public function testConcatNumbersWithCorrectCountOfEndFiguresWithEndPartLeadZeros()
     {
-        $result = FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        $result = FiguresRepresentation::concatStartEndPartsWithEndFigures(
             1,
             '00000023',
             2,
@@ -110,7 +110,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
 
     public function testConcatNumbersWithCorrectCountOfEndFiguresIntsFillWithZerozIfEndCountMore()
     {
-        $result = FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        $result = FiguresRepresentation::concatStartEndPartsWithEndFigures(
             1,
             23,
             3,
@@ -120,7 +120,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
 
     public function testConcatNumbersWithCorrectCountOfEndFiguresStringsWithStartLeadZero()
     {
-        $result = FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        $result = FiguresRepresentation::concatStartEndPartsWithEndFigures(
             '01',
             '23',
             2,
@@ -130,7 +130,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
 
     public function testConcatNumbersWithCorrectCountOfEndFiguresStrings()
     {
-        $result = FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        $result = FiguresRepresentation::concatStartEndPartsWithEndFigures(
             '1',
             '23',
             2,
@@ -140,7 +140,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
 
     public function testConcatNumbersWithCorrectCountOfEndFiguresInts()
     {
-        $result = FiguresRepresentation::concatNumbersWithCorrectCountOfEndFigures(
+        $result = FiguresRepresentation::concatStartEndPartsWithEndFigures(
             1,
             23,
             2,
