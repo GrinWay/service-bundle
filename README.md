@@ -5,6 +5,10 @@ GrinWay/service-bundle
 
 <h2>Commonly used tools for a symfony app</h2>
 
+<p align="center">
+  <img alt="dance gif" src="https://github.com/GrinWay/service-bundle/blob/main/docs/media/gif/anime.gif" />
+</p>
+
 ### 😗 [Abilities](https://github.com/GrinWay/service-bundle/blob/main/docs/abilities.md)
 
 ### 🔰 [Installation](https://github.com/GrinWay/service-bundle/blob/main/docs/installation.md)
