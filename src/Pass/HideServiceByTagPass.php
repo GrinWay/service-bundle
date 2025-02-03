@@ -4,6 +4,7 @@ namespace GrinWay\Service\Pass;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use function Symfony\Component\String\u;
 
 class HideServiceByTagPass implements CompilerPassInterface
@@ -29,23 +30,38 @@ class HideServiceByTagPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         foreach ($this->tags as $tag) {
-            foreach ($container->findTaggedServiceIds($tag) as $serviceId => $serviceTagAttributes) {
-                if ($container->hasDefinition($serviceId)) {
-                    $definition = $container->findDefinition($serviceId);
-                    $class = $definition->getClass();
-                    $definition->setClass($class);
-                    $shortClassName = (new \ReflectionClass($class))->getShortName();
-                    $shortClassName = (string)u($shortClassName)->snake();
-                    $newId = \sprintf(
-                        '%s%s.%s',
-                        $this->hiddenServiceIdPrefix,
-                        $tag,
-                        $shortClassName,
-                    );
-                    $container->removeDefinition($serviceId);
+            foreach ($container->findTaggedServiceIds($tag) as $currentId => $serviceTagAttributes) {
+                if ($container->hasDefinition($currentId)) {
+                    $definition = $container->findDefinition($currentId);
+                    $newId = $this->getNewId($definition, $tag);
+                    $container->removeDefinition($currentId);
                     $container->setDefinition($newId, $definition);
                 }
             }
         }
+    }
+
+    /**
+     * Helper
+     */
+    private function getShortClassName(Definition $definition): string
+    {
+        $class = $definition->getClass();
+        $shortClassName = (new \ReflectionClass($class))->getShortName();
+        return (string)u($shortClassName)->snake();
+    }
+
+    /**
+     * Helper
+     */
+    private function getNewId(Definition $definition, string $tag): string
+    {
+        $shortClassName = $this->getShortClassName($definition);
+        return \sprintf(
+            '%s%s.%s',
+            $this->hiddenServiceIdPrefix,
+            $tag,
+            $shortClassName,
+        );
     }
 }

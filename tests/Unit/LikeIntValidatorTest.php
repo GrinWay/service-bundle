@@ -58,4 +58,12 @@ class LikeIntValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate(1., new LikeInt());
         $this->assertNoViolation();
     }
+
+    public function testAlphaStringIsInvalid()
+    {
+        $this->validator->validate('alpha', new LikeInt());
+        $this->buildViolation('It is not like int: {{ like_int }}.')
+            ->setParameter('{{ like_int }}', 'alpha')
+            ->assertRaised();
+    }
 }
