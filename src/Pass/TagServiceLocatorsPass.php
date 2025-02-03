@@ -27,12 +27,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class TagServiceLocatorsPass implements CompilerPassInterface
 {
+    /**
+     * @param string $ownerTagName Each service with this tag has its own ServiceLocator by the other tag ($dynamicTagFormat)
+     * @param string $staticOwnerMethodNameForDynamicFormatCompletion this static method must return ONLY STRING
+     * @param string $dynamicTagFormat must contain no more than one wildcard (%s for instance)
+     */
     public function __construct(
         private readonly string $collectorServiceId,
         private readonly string $collectorServiceMethodCallName,
-        /**
-         * Each service with this tag has its own ServiceLocator by the other tag ($dynamicTagFormat)
-         */
         private readonly string $ownerTagName,
         private readonly string $staticOwnerMethodNameForDynamicFormatCompletion,
         private readonly string $dynamicTagFormat,
@@ -48,6 +50,9 @@ class TagServiceLocatorsPass implements CompilerPassInterface
             $ownerDefinition = $container->findDefinition($serviceId);
             $ownerClass = $ownerDefinition->getClass();
             $dynamicParameter = [$ownerClass, $this->staticOwnerMethodNameForDynamicFormatCompletion]();
+            if (!\is_string($dynamicParameter)) {
+                throw new \BadMethodCallException('Static owner method must return only string');
+            }
             $dynamicTagName = \sprintf($this->dynamicTagFormat, $dynamicParameter);
 
             $dynamicDefinitions = [];
@@ -64,7 +69,7 @@ class TagServiceLocatorsPass implements CompilerPassInterface
             });
             $dynamicLocator = ServiceLocatorTagPass::register($container, $dynamicDefinitionsDepthDecreased);
             $collectorDefinition->addMethodCall($this->collectorServiceMethodCallName, [
-                $dynamicTagName,
+                (string)$dynamicTagName,
                 $dynamicLocator,
             ]);
         }
