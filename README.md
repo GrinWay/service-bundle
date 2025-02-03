@@ -1,5 +1,6 @@
 GrinWay/service-bundle
 ======
+![Tests](https://github.com/GrinWay/service-bundle/workflows/tests/badge.svg)
 [![Latest Stable Version](https://poser.pugx.org/GrinWay/service-bundle/v)](//packagist.org/packages/GrinWay/service-bundle)
 [![Total Downloads](https://poser.pugx.org/GrinWay/service-bundle/downloads)](//packagist.org/packages/GrinWay/service-bundle)
 
