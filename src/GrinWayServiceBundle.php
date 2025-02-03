@@ -2,19 +2,31 @@
 
 namespace GrinWay\Service;
 
+use GrinWay\Service\Validator\LikeNumeric;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Validation;
 
 /**
  * @final
+ *
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
  */
 class GrinWayServiceBundle extends AbstractBundle
 {
     public const EXTENSION_ALIAS = 'grinway_service';
     public const BUNDLE_PREFIX = self::EXTENSION_ALIAS . '.';
     public const COMMAND_PREFIX = self::EXTENSION_ALIAS . ':';
+
+    // https://symfony.com/doc/current/components/cache.html#stampede-prevention
+    public const GENERIC_CACHE_TAG = self::EXTENSION_ALIAS;
+
+    //###> DEFAULTS ###
+    public const DEFAULT_CURRENCY_CACHE_LIFETIME = 86400;
+    //###< DEFAULTS ###
 
     protected string $extensionAlias = self::EXTENSION_ALIAS;
 
@@ -23,10 +35,52 @@ class GrinWayServiceBundle extends AbstractBundle
         $definition->rootNode()
             ->children()//
 
-            // ...
+            ->arrayNode('currency')
+            ->children()//
+            //###> currency array node ###
+
+            ->stringNode('fixer_api_key')//
+            ->isRequired()
+            ->cannotBeEmpty()
+            ->end()//
+
+            ->arrayNode('cache')//
+            ->children()
+            //###> cache array node ###
+
+            ->scalarNode('lifetime')
+            ->validate()->always()->then(static fn($v) => Validation::createCallable(new NotBlank(), new LikeNumeric())($v))->end() // only when explicitly configured
+            ->defaultValue(self::DEFAULT_CURRENCY_CACHE_LIFETIME) // docs default
+            ->end()//
+
+            //###> cache array node ###
+            ->end()
+            ->end()//
+
+            //###< currency array node ###
+            ->end()
+            ->end()//
 
             ->end()
             ->end()//
+        ;
+    }
+
+    /**
+     * Helper
+     */
+    private function setServiceContainerParameters(array $config, ContainerConfigurator $container): void
+    {
+        $env = $container->env();
+        $parameters = $container->parameters();
+
+        //###> DEFAULTS ###
+        $currencyCacheLifetime = $config['currency']['cache']['lifetime'] ?? self::DEFAULT_CURRENCY_CACHE_LIFETIME;
+        //###< DEFAULTS ###
+
+        $parameters
+            ->set(self::bundlePrefixed('currency.fixer_api_key'), $config['currency']['fixer_api_key'])//
+            ->set(self::bundlePrefixed('currency.cache.lifetime'), $currencyCacheLifetime)//
         ;
     }
 
@@ -110,15 +164,6 @@ class GrinWayServiceBundle extends AbstractBundle
     /**
      * Helper
      */
-    private function setServiceContainerParameters(array $config, ContainerConfigurator $container): void
-    {
-        $container->parameters()//            ->set(self::bundlePrefixed(''), $config[''])//
-        ;
-    }
-
-    /**
-     * Helper
-     */
     private function setServiceContainerServices(array $config, ContainerConfigurator $container): void
     {
         $container->import($this->absPath('config/services.yaml'));
@@ -162,6 +207,8 @@ class GrinWayServiceBundle extends AbstractBundle
 
     /**
      * Helper
+     *
+     * Self bundle's configuration is imported automatically
      */
     private function importOtherBundleConfigurations(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
@@ -176,6 +223,8 @@ class GrinWayServiceBundle extends AbstractBundle
         $container->import($this->absPath('config/packages/framework_translator.yaml'));
         $container->import($this->absPath('config/packages/framework_validation.yaml'));
         $container->import($this->absPath('config/packages/framework_test.yaml'));
+        $container->import($this->absPath('config/packages/framework_cache.yaml'));
+        $container->import($this->absPath('config/packages/maker.yaml'));
     }
 
     /**

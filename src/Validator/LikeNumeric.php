@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraint;
  * @author Grigory Koblitskiy <grin180898@outlook.com>
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class AbsolutePath extends Constraint
+final class LikeNumeric extends Constraint
 {
-    public string $message = 'The path "{{ path }}" is not an absolute one.';
+    public string $message = 'The {{ like_numeric }} is not like numeric.';
 }
