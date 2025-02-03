@@ -6,6 +6,9 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use function Symfony\Component\String\u;
 
+/**
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
+ */
 final class LikeIntValidator extends ConstraintValidator
 {
     public function validate(mixed $likeInt, Constraint $constraint): void

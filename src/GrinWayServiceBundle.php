@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @final
+ *
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
  */
 class GrinWayServiceBundle extends AbstractBundle
 {

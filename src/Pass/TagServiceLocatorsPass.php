@@ -24,6 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *      - dynamic 2 | DYNAMIC_TAG_NAME 3 | DynamicServiceLocator 3
  *      - dynamic 3 |                    |
  * ...
+ *
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
  */
 class TagServiceLocatorsPass implements CompilerPassInterface
 {

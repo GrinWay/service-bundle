@@ -15,6 +15,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  * Currency converter
  *
  * Telegram currency amount style explanation: (IMAGINED 1.00 becomes REPRESENTED IN VARIABLE AS 100)
+ *
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
  */
 class Currency
 {

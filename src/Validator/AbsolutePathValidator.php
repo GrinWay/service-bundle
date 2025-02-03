@@ -6,6 +6,9 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
+ */
 class AbsolutePathValidator extends ConstraintValidator
 {
     public function validate(mixed $path, Constraint $constraint): void
@@ -16,7 +19,7 @@ class AbsolutePathValidator extends ConstraintValidator
             return;
         }
 
-        $path = (string) $path;
+        $path = (string)$path;
         if (Path::isAbsolute($path)) {
             return;
         }

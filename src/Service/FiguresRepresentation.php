@@ -4,12 +4,17 @@ namespace GrinWay\Service\Service;
 
 use GrinWay\Service\Validator\LikeInt;
 use GrinWay\Service\Validator\LikeNumeric;
-use GrinWay\Telegram\Service\Telegram;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Validation;
 use function Symfony\Component\String\u;
 
+/**
+ * When you need to work with number representations like 100 when you imagined 1.00, or 10023 when it's 100.23
+ * you will need static methods of this class
+ *
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
+ */
 class FiguresRepresentation
 {
     /**
@@ -35,7 +40,7 @@ class FiguresRepresentation
             [new NotBlank(), new LikeNumeric()],
         );
 
-        $humanNumber = \number_format($humanNumber,10,'.','');
+        $humanNumber = \number_format($humanNumber, 10, '.', '');
 
         $matches = u($humanNumber)->match('~^(?<front>\d*)(?:[.](?<end>\d*))?$~');
         $frontFigures = $matches['front'];

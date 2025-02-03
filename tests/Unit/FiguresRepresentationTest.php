@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
 #[CoversClass(FiguresRepresentation::class)]
 class FiguresRepresentationTest extends AbstractUnitTestCase
 {
-    public function testGetStartEndNumbersWithEndFiguresWith10EndCountThrowsException()
+    public function testGetStartEndNumbersWithEndFiguresWhenNumberCountLessThan10EndCountThrowsException()
     {
         $this->expectException(\InvalidArgumentException::class);
         FiguresRepresentation::getStartEndNumbersWithEndFigures(
