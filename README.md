@@ -5,12 +5,12 @@ GrinWay/service-bundle
 
 <h2>Commonly used tools for a symfony app</h2>
 
-### 😗 [Abilities]()
+### 😗 [Abilities](https://github.com/GrinWay/service-bundle/blob/main/docs/abilities.md)
 
-### 🔰 [Installation]()
+### 🔰 [Installation](https://github.com/GrinWay/service-bundle/blob/main/docs/installation.md)
 
-### 📝 [Configuration]()
+### 📝 [Configuration](https://github.com/GrinWay/service-bundle/blob/main/docs/configuration.md)
 
-### 🎮 [UX stimulus controllers]()
+### 🎮 [UX stimulus controllers](https://github.com/GrinWay/service-bundle/blob/main/docs/ux-stimulus-controllers.md)
 
-### 🔗 [Reference]()
+### 🔗 [Reference](https://github.com/GrinWay/service-bundle/blob/main/docs/reference.md)

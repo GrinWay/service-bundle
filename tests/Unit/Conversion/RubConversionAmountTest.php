@@ -1,12 +1,12 @@
 <?php
 
-namespace GrinWay\Service\Tests\Unit\Transfer;
+namespace GrinWay\Service\Tests\Unit\Conversion;
 
 use GrinWay\Service\Service\Currency;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Currency::class)]
-class RubTransferAmountTest extends AbstractCurrencyValidTransferTestCase
+class RubConversionAmountTest extends AbstractCurrencyValidConversionTestCase
 {
     public static function fromCurrency(): string
     {

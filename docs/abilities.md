@@ -2,7 +2,7 @@ Abilities
 ------
 This bundle supplies you with:
 
-* service [Currency]() (its [test]())
+* service [grinway_service.currency](https://github.com/GrinWay/service-bundle/blob/main/src/Service/Currency.php) (its [test]())
     * theoretically can throw [NotSuccessFixerException]() in `convertFromCurrencyToAnotherWithEndFigures`
       so you can catch it in your code
     * practically can throw [NoBaseFixerException]() in `convertFromCurrencyToAnotherWithEndFigures`

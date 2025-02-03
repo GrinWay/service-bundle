@@ -1,13 +1,13 @@
 <?php
 
-namespace GrinWay\Service\Tests\Unit\Transfer;
+namespace GrinWay\Service\Tests\Unit\Conversion;
 
 use GrinWay\Service\Service\Currency;
 use GrinWay\Service\Tests\Unit\AbstractUnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Currency::class)]
-class NonexistentTransferAmountTest extends AbstractUnitTestCase
+class NonexistentCurrencyConversionTest extends AbstractUnitTestCase
 {
     public function testTransferringWithNonexistentFromCurrencyThrowsRuntimeException()
     {

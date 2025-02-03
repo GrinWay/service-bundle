@@ -1,10 +1,10 @@
 <?php
 
-namespace GrinWay\Service\Tests\Unit\Transfer;
+namespace GrinWay\Service\Tests\Unit\Conversion;
 
 use GrinWay\Service\Tests\Unit\AbstractUnitTestCase;
 
-abstract class AbstractCurrencyValidTransferTestCase extends AbstractUnitTestCase
+abstract class AbstractCurrencyValidConversionTestCase extends AbstractUnitTestCase
 {
     abstract public static function fromCurrency(): string;
 
