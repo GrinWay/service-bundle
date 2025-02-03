@@ -29,10 +29,7 @@ class FiguresRepresentation
      * Transforms human number representation to the dot-less representation with end figures count
      *
      * If 2 === $endFiguresCount
-     * (float $number 1.) -> 100
-     * (float $number 1.0000000000000) -> 100
-     * (int $number 23) -> 2300
-     * (string $number 0) -> 000
+     * 1.0 -> 100
      *
      * It's not recommended but even (string $number 1,0) -> 100
      */
@@ -62,10 +59,10 @@ class FiguresRepresentation
     /**
      * API
      *
-     * Represents dot-less as a float
+     * Converts dot-less string with end figures as a float
      *
-     * If it's possible don't use this function
-     * because it returns float type
+     * IMPORTANT: If it's possible don't use this function because it returns float type
+     * it would be better if you don't deal with float php type
      *
      * 100 -> 1.00
      */
@@ -110,8 +107,8 @@ class FiguresRepresentation
      *
      * Usage:
      * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbersWithEndFigures(123, 2);
-     * // (int)1 === $one
-     * // (int)23 === $twoThree
+     * // int 1  === $one
+     * // int 23 === $twoThree
      */
     public static function getStartEndNumbersWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): array
     {
