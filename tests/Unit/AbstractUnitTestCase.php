@@ -26,13 +26,13 @@ abstract class AbstractUnitTestCase extends AbstractTestCase
     private function setUpCurrencyServiceWithMockedHttpFixerClient()
     {
         $mockedFixerPlainPayload = $this->mockedGrinWayServiceFixerLatestClientPlainResponse;
-        $grinwayTelegramFileClientResponseGenerator = static function () use ($mockedFixerPlainPayload): \Generator {
+        $fileClientResponseGenerator = static function () use ($mockedFixerPlainPayload): \Generator {
             while (true) {
                 yield new MockResponse($mockedFixerPlainPayload);
             }
         };
         self::getContainer()->set(\sprintf('%s $grinwayServiceCurrencyFixerLatest', HttpClientInterface::class), new MockHttpClient(
-            $grinwayTelegramFileClientResponseGenerator(),
+            $fileClientResponseGenerator(),
         ));
         $currencyFixerPayload = self::getContainer()
             ->get(\sprintf('%s $grinwayServiceCurrencyFixerLatest', HttpClientInterface::class))
