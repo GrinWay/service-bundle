@@ -11,7 +11,7 @@ trait HasBufferTest
             static::assertSame(
                 0,
                 $bufferStatus['buffer_used'] ?? 0,
-                message: 'Buffer was not used',
+                message: 'Output buffer was supposed not to be used',
             );
         }
     }
