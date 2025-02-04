@@ -2,6 +2,11 @@
 
 namespace GrinWay\Service\Test\Trait;
 
+/**
+ * Assertions for test classes for output buffer
+ *
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
+ */
 trait HasBufferTest
 {
     protected static function assertOutputBufferWasNotUsed(?string $dopMessage = null): void
