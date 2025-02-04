@@ -7,7 +7,7 @@ Installation
 composer require grinway/service-bundle
 ```
 
-> NOTE: With the help of the composer recipe you will get<br>`config/packages/service_bundle.yaml`
+> NOTE: With the help of the composer recipe you will get<br>`config/packages/grinway_service.yaml`
 > <br>**Check it's not empty!**
 
 If you didn't get these configuration files just copy them from `@GrinWayService/.install/symfony/config`
