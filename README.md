@@ -17,3 +17,5 @@ GrinWay/service-bundle
 ### 📝 [Configuration](https://github.com/GrinWay/service-bundle/blob/main/docs/configuration.md)
 
 ### 🔗 [Reference](https://github.com/GrinWay/service-bundle/blob/main/docs/reference.md)
+
+### ✅ [Supported versions](https://github.com/GrinWay/service-bundle/blob/main/docs/supported-versions.md)
