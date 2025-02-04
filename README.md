@@ -16,6 +16,4 @@ GrinWay/service-bundle
 
 ### 📝 [Configuration](https://github.com/GrinWay/service-bundle/blob/main/docs/configuration.md)
 
-### 🎮 [UX stimulus controllers](https://github.com/GrinWay/service-bundle/blob/main/docs/ux-stimulus-controllers.md)
-
 ### 🔗 [Reference](https://github.com/GrinWay/service-bundle/blob/main/docs/reference.md)

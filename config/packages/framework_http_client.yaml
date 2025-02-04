@@ -6,6 +6,6 @@ framework:
 
             # https://fixer.io/quickstart
             grinway_service.currency.fixer_latest:
-                base_uri: 'http://data.fixer.io/api/latest?access_key=%env(default:grinway_service.currency.fixer_api_key:)%'
+                base_uri: 'http://data.fixer.io/api/latest?access_key=%env(string:default:grinway_service.currency.fixer_api_key:)%'
                 headers:
                     Content-Type: 'application/json'
