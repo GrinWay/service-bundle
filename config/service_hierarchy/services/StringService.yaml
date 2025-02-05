@@ -1,0 +1,8 @@
+services:
+
+    _defaults:
+        autoconfigure: false
+        autowire: false
+
+#    grinway_service.string_service:
+#        class: 'GrinWay\Service\Service\StringService'

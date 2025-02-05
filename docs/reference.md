@@ -39,9 +39,9 @@ If you do you will get an error:
 
 ### Symfony framework http clients
 
-| Service ID                                                                                                                              | Description                                                                                                                 |
-|-----------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| [grinway_service.currency.fixer_latest](https://github.com/GrinWay/service-bundle/blob/main/config/packages/framework_http_client.yaml) | The http client with pre-set `base_uri` and GET query parameter `access_token` essential for [Fixer API](https://fixer.io/) |
+| Service ID                                                                                                                              | Service ID (autowiring version)                                                       | Description                                                                                                                 |
+|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| [grinway_service.currency.fixer_latest](https://github.com/GrinWay/service-bundle/blob/main/config/packages/framework_http_client.yaml) | `Symfony\Contracts\HttpClient\HttpClientInterface $grinwayServiceCurrencyFixerLatest` | The http client with pre-set `base_uri` and GET query parameter `access_token` essential for [Fixer API](https://fixer.io/) |
 
 ### Symfony cache pools
 

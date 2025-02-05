@@ -55,7 +55,10 @@
     "endroid/installer": "^1",
     "symfony/yaml": "^7.2",
     "symfony/validator": "^7.2",
-    "symfony/cache": "^7.2"
+    "symfony/cache": "^7.2",
+    "nesbot/carbon": "^3.8",
+    "symfony/process": "^7.2",
+    "doctrine/doctrine-bundle": "^2.13"
   },
   "config": {
     "allow-plugins": {

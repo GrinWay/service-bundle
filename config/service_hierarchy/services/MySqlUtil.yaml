@@ -1,0 +1,18 @@
+services:
+
+    _defaults:
+        autoconfigure: false
+        autowire: false
+
+    GrinWay\Service\Service\MySqlUtil:
+        class: 'GrinWay\Service\Service\MySqlUtil'
+        arguments:
+            $serviceLocator: !service_locator
+                slugger: '@Symfony\Component\String\Slugger\SluggerInterface'
+                carbonFI: '@grinway_service.carbon_factory_immutable'
+            $backupAbsPath: '%env(string:resolve:default:grinway_service.database.backup_abs_path:)%'
+            $databaseName: '%env(string:default:grinway_service.database.database_name:)%'
+            $databasePort: '%env(string:default:grinway_service.database.port:)%'
+            $databaseUsername: '%env(string:default:grinway_service.database.user:)%'
+
+    grinway_service.mysql_util: '@GrinWay\Service\Service\MySqlUtil'

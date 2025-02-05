@@ -26,6 +26,12 @@ class GrinWayServiceBundle extends AbstractBundle
 
     //###> DEFAULTS ###
     public const DEFAULT_CURRENCY_CACHE_LIFETIME = 86400;
+    public const DEFAULT_DATA_TIME_FORMAT = 'd.m.Y H:i:s P';
+    public const DEFAULT_TIMEZONE = '+00:00';
+    public const DEFAULT_LOCALE = 'en';
+    public const DEFAULT_CARBON_YEAR_OVERFLOW = true;
+    public const DEFAULT_CARBON_MONTH_OVERFLOW = true;
+    public const DEFAULT_CARBON_STRICT_MODE = true;
     //###< DEFAULTS ###
 
     protected string $extensionAlias = self::EXTENSION_ALIAS;
@@ -34,6 +40,62 @@ class GrinWayServiceBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()//
+
+            ->stringNode('locale')
+            ->defaultValue(self::DEFAULT_LOCALE)
+            ->end()//
+
+            ->stringNode('timezone')
+            ->defaultValue(self::DEFAULT_TIMEZONE)
+            ->end()//
+
+            ->stringNode('date_time_format')
+            ->defaultValue(self::DEFAULT_DATA_TIME_FORMAT)
+            ->end()//
+
+            ->arrayNode('database')//
+            ->children()
+            //###> database array node ###
+
+            ->stringNode('database_name')
+            ->isRequired()
+            ->end()//
+
+            ->stringNode('port')
+            ->isRequired()
+            ->end()//
+
+            ->stringNode('user')
+            ->isRequired()
+            ->end()//
+
+            ->stringNode('backup_abs_path')
+            ->isRequired()
+            ->end()//
+
+            //###< database array node ###
+            ->end()
+            ->end()//
+
+            ->arrayNode('carbon')//
+            ->children()
+            //###> carbon array node ###
+
+            ->booleanNode('strict_mode')
+            ->defaultValue(self::DEFAULT_CARBON_STRICT_MODE)
+            ->end()//
+
+            ->booleanNode('month_overflow')
+            ->defaultValue(self::DEFAULT_CARBON_MONTH_OVERFLOW)
+            ->end()//
+
+            ->booleanNode('year_overflow')
+            ->defaultValue(self::DEFAULT_CARBON_YEAR_OVERFLOW)
+            ->end()//
+
+            //###< carbon array node ###
+            ->end()
+            ->end()//
 
             ->arrayNode('currency')
             ->children()//
@@ -74,13 +136,22 @@ class GrinWayServiceBundle extends AbstractBundle
         $env = $container->env();
         $parameters = $container->parameters();
 
-        //###> DEFAULTS ###
-        $currencyCacheLifetime = $config['currency']['cache']['lifetime'] ?? self::DEFAULT_CURRENCY_CACHE_LIFETIME;
-        //###< DEFAULTS ###
-
         $parameters
+            ->set(self::bundlePrefixed('database.database_name'), $config['database']['database_name'])//
+            ->set(self::bundlePrefixed('database.port'), $config['database']['port'])//
+            ->set(self::bundlePrefixed('database.user'), $config['database']['user'])//
+            ->set(self::bundlePrefixed('database.backup_abs_path'), $config['database']['backup_abs_path'])//
+
+            ->set(self::bundlePrefixed('locale'), $config['locale'] ?? self::DEFAULT_LOCALE)//
+            ->set(self::bundlePrefixed('timezone'), $config['timezone'] ?? self::DEFAULT_TIMEZONE)//
+            ->set(self::bundlePrefixed('date_time_format'), $config['date_time_format'] ?? self::DEFAULT_DATA_TIME_FORMAT)//
+
+            ->set(self::bundlePrefixed('carbon.strict_mode'), $config['carbon']['strict_mode'] ?? self::DEFAULT_CARBON_STRICT_MODE)//
+            ->set(self::bundlePrefixed('carbon.month_overflow'), $config['carbon']['month_overflow'] ?? self::DEFAULT_CARBON_MONTH_OVERFLOW)//
+            ->set(self::bundlePrefixed('carbon.year_overflow'), $config['carbon']['year_overflow'] ?? self::DEFAULT_CARBON_YEAR_OVERFLOW)//
+
             ->set(self::bundlePrefixed('currency.fixer_api_key'), $config['currency']['fixer_api_key'])//
-            ->set(self::bundlePrefixed('currency.cache.lifetime'), $currencyCacheLifetime)//
+            ->set(self::bundlePrefixed('currency.cache.lifetime'), $config['currency']['cache']['lifetime'] ?? self::DEFAULT_CURRENCY_CACHE_LIFETIME)//
         ;
     }
 
@@ -224,6 +295,7 @@ class GrinWayServiceBundle extends AbstractBundle
         $container->import($this->absPath('config/packages/framework_validation.yaml'));
         $container->import($this->absPath('config/packages/framework_test.yaml'));
         $container->import($this->absPath('config/packages/framework_cache.yaml'));
+        $container->import($this->absPath('config/packages/doctrine.yaml'));
         $container->import($this->absPath('config/packages/maker.yaml'));
     }
 

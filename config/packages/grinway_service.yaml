@@ -1,3 +1,12 @@
 grinway_service:
+
+    locale: '%env(APP_DEFAULT_LOCALE)%'
+
+    database:
+        database_name: '%env(APP_DATABASE_NAME)%'
+        port: '%env(APP_DATABASE_PORT)%'
+        user: '%env(APP_DATABASE_USER)%'
+        backup_abs_path: '%env(APP_DATABASE_BACKUP_ABS_PATH)%'
+
     currency:
         fixer_api_key: '%env(APP_CURRENCY_FIXER_API_KEY)%'

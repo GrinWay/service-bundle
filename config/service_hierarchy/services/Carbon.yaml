@@ -1,0 +1,17 @@
+services:
+
+    _defaults:
+        autoconfigure: false
+        autowire: false
+
+    # https://carbon.nesbot.com/
+    grinway_service.carbon_factory_immutable:
+        class: 'Carbon\FactoryImmutable'
+        arguments:
+            $settings:
+                locale: '%env(string:default:grinway_service.locale:)%'
+                strictMode: '%env(bool:default:grinway_service.carbon.strict_mode:)%'
+                timezone: '%env(string:default:grinway_service.timezone:)%'
+                toStringFormat: '%env(string:default:grinway_service.date_time_format:)%'
+                monthOverflow: '%env(bool:default:grinway_service.carbon.month_overflow:)%'
+                yearOverflow: '%env(bool:default:grinway_service.carbon.year_overflow:)%'

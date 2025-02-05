@@ -1,3 +1,22 @@
 grinway_service:
+
+    locale: '%env(APP_DEFAULT_LOCALE)%'
+    timezone: '%env(APP_DEFAULT_TIMEZONE)%'
+    date_time_format: '%env(APP_DATE_TIME_FORMAT)%'
+
+    database:
+        database_name: '%env(APP_DATABASE_NAME)%'
+        port: '%env(APP_DATABASE_PORT)%'
+        user: '%env(APP_DATABASE_USER)%'
+        backup_abs_path: '%env(APP_DATABASE_BACKUP_ABS_PATH)%'
+
+    carbon:
+        # if true throws exceptions when invalid argument for nesbot/carbon otherwise false
+        strict_mode: '%env(APP_CARBON_STRICT_MODE)%'
+        # if true months will change considering each day of a month
+        month_overflow: '%env(APP_CARBON_MONTH_OVERFLOW)%'
+        # if true years will change considering each month of a year
+        year_overflow: '%env(APP_CARBON_YEAR_OVERFLOW)%'
+
     currency:
         fixer_api_key: '%env(APP_CURRENCY_FIXER_API_KEY)%'

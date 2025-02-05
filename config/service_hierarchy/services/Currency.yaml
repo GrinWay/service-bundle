@@ -5,7 +5,7 @@ services:
         autowire: false
 
     GrinWay\Service\Service\Currency:
-        class: GrinWay\Service\Service\Currency
+        class: 'GrinWay\Service\Service\Currency'
         arguments:
             $serviceLocator: !service_locator
                 grinwayServiceCurrencyFixerLatest: '@grinway_service.currency.fixer_latest'
