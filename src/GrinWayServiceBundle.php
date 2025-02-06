@@ -312,7 +312,7 @@ class GrinWayServiceBundle extends AbstractBundle
         $container->import($this->absPath('config/packages/framework_test.yaml'));
         $container->import($this->absPath('config/packages/framework_cache.yaml'));
         $container->import($this->absPath('config/packages/doctrine.yaml'));
-        $container->import($this->absPath('config/packages/maker.yaml'));
+//        $container->import($this->absPath('config/packages/maker.yaml'));
     }
 
     /**
