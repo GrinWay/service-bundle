@@ -7,14 +7,14 @@ env:
    APP_DATABASE_NAME: "${{ secrets.APP_DATABASE_NAME }}"
    APP_DATABASE_PORT: "${{ secrets.APP_DATABASE_PORT }}"
    APP_DATABASE_USER: "${{ secrets.APP_DATABASE_USER }}"
-   APP_DATABASE_PORT_WITH_DOTS: "${{ secrets.APP_DATABASE_PORT_WITH_DOTS }}"
+   APP_DATABASE_IP: "${{ secrets.APP_DATABASE_IP }}"
    APP_TEST_DATABASE_PASSWORD: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}"
-   GRINWAY_SERVICE_DATABASE_URL: "mysql://${{ secrets.APP_DATABASE_USER }}:${{ secrets.APP_TEST_DATABASE_PASSWORD }}@0.0.0.0:3306/${{ secrets.APP_DATABASE_NAME }}?sslmode=disable&charset=utf8mb4"
+   GRINWAY_SERVICE_DATABASE_URL: "mysql://${{ secrets.APP_DATABASE_USER }}:${{ secrets.APP_TEST_DATABASE_PASSWORD }}@${{ secrets.APP_DATABASE_IP }}:${{ secrets.APP_DATABASE_PORT }}/${{ secrets.APP_DATABASE_NAME }}?sslmode=disable&charset=utf8mb4"
 
 on:
   workflow_dispatch: ~
-  #push:
-  #  branches: [ "main" ]
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
