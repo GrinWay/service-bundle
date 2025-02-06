@@ -4,3 +4,10 @@ doctrine:
         types:
             # Usage: #[ORM\Column(type: 'percent')]
             percent: 'GrinWay\Service\Doctrine\DBAL\Type\PercentType'
+
+# To be able to test MySqlUtil
+when@test:
+    doctrine:
+        dbal:
+            url: '%env(resolve:GRINWAY_SERVICE_DATABASE_URL)%'
+            server_version: '8.0.40'

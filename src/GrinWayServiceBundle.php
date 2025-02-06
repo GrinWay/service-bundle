@@ -57,7 +57,7 @@ class GrinWayServiceBundle extends AbstractBundle
             ->children()
             //###> database array node ###
 
-            ->stringNode('host')
+            ->stringNode('ip')
             ->info('when prod: it\'s the database ip, when dev: docker container DSN when it\'s named network')
             ->isRequired()
             ->end()//
@@ -147,7 +147,7 @@ class GrinWayServiceBundle extends AbstractBundle
 
         $parameters
             ->set(self::bundlePrefixed('database.database_name'), $config['database']['database_name'])//
-            ->set(self::bundlePrefixed('database.host'), $config['database']['host'])//
+            ->set(self::bundlePrefixed('database.ip'), $config['database']['ip'])//
             ->set(self::bundlePrefixed('database.port'), $config['database']['port'])//
             ->set(self::bundlePrefixed('database.user'), $config['database']['user'])//
             ->set(self::bundlePrefixed('database.backup_abs_dir'), $config['database']['backup_abs_dir'])//

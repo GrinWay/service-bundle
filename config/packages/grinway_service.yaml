@@ -3,7 +3,7 @@ grinway_service:
     locale: '%env(APP_DEFAULT_LOCALE)%'
 
     database:
-        host: '%env(APP_DATABASE_HOST)%'
+        ip: '%env(APP_DATABASE_IP)%'
         database_name: '%env(APP_DATABASE_NAME)%'
         port: '%env(APP_DATABASE_PORT)%'
         user: '%env(APP_DATABASE_USER)%'

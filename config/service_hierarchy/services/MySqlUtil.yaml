@@ -11,7 +11,7 @@ services:
                 slugger: '@Symfony\Component\String\Slugger\SluggerInterface'
                 carbonFI: '@grinway_service.carbon_factory_immutable'
             $backupAbsPath: '%env(string:default:grinway_service.database.backup_abs_dir:)%'
-            $databaseHost: '%env(string:default:grinway_service.database.host:)%'
+            $databaseHost: '%env(string:default:grinway_service.database.ip:)%'
             $databaseName: '%env(string:default:grinway_service.database.database_name:)%'
             $databasePort: '%env(string:default:grinway_service.database.port:)%'
             $databaseUsername: '%env(string:default:grinway_service.database.user:)%'

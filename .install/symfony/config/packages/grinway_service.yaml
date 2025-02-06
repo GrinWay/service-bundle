@@ -9,7 +9,7 @@ grinway_service:
 
     database:
         # Required (when prod: it's the database ip, when dev: docker container DSN when it's named network)
-        host: '%env(APP_DATABASE_HOST)%'
+        ip: '%env(APP_DATABASE_IP)%'
         # Required
         database_name: '%env(APP_DATABASE_NAME)%'
         # Required

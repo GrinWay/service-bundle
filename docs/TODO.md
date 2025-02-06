@@ -42,3 +42,12 @@ doctrine:
             datetime_immutable:
                 class: Carbon\Doctrine\DateTimeImmutableType
 ```
+
+# To be able to test MySqlUtil
+```yaml
+when@test:
+doctrine:
+dbal:
+url: '%env(resolve:GRINWAY_SERVICE_DATABASE_URL)%'
+server_version: '8.0.40'
+```

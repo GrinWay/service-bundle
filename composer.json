@@ -60,7 +60,8 @@
     "symfony/process": "^7.2",
     "doctrine/doctrine-bundle": "^2.13",
     "symfony/dotenv": "^7.2",
-    "symfony/filesystem": "^7.2"
+    "symfony/filesystem": "^7.2",
+    "symfony/orm-pack": "^2.4"
   },
   "config": {
     "allow-plugins": {
