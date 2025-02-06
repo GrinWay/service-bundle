@@ -62,9 +62,9 @@ jobs:
         mysql user: "${{ secrets.APP_DATABASE_USER }}" # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
         mysql password: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}" # Required if "mysql user" exists. The password for the "mysql user"
     
-    - name: Create The Database
-      run: |
-        php bin/console doctrine:database:create --if-not-exists --env test
+    #- name: Create The Database
+    #  run: |
+    #    php bin/console doctrine:database:create --if-not-exists --env test
     
     - name: tests
       run: vendor/bin/phpunit
