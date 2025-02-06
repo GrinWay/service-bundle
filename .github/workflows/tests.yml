@@ -2,8 +2,8 @@ name: tests
 
 on:
   workflow_dispatch: ~
-  push:
-    branches: [ "main" ]
+  #push:
+  #  branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -38,13 +38,20 @@ jobs:
     - name: Install Composer Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     
-    #- name: Create Database
-    #  run: |
-    #    mkdir -p data
-    #    touch data/database.sqlite
+    - name: Create The Database
+      run: |
+        mkdir -p data
+        touch data/database.sqlite
     
     - name: tests
       env:
          APP_CURRENCY_FIXER_API_KEY: "${{ secrets.APP_CURRENCY_FIXER_API_KEY }}"
-      #  DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
+         APP_DEFAULT_LOCALE: "${{ secrets.APP_DEFAULT_LOCALE }}"
+         APP_DATABASE_BACKUP_ABS_PATH: "${{ secrets.APP_DATABASE_BACKUP_ABS_PATH }}"
+         APP_DATABASE_NAME: "${{ secrets.APP_DATABASE_NAME }}"
+         APP_DATABASE_PORT: "${{ secrets.APP_DATABASE_PORT }}"
+         APP_DATABASE_USER: "${{ secrets.APP_DATABASE_USER }}"
+         APP_DATABASE_HOST: "${{ secrets.APP_DATABASE_HOST }}"
+         APP_TEST_DATABASE_PASSWORD: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}"
+         DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
       run: vendor/bin/phpunit
