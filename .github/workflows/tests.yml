@@ -10,7 +10,7 @@ env:
    APP_DATABASE_IP: "${{ secrets.APP_DATABASE_IP }}"
    APP_DATABASE_PORT_WITH_DOTS: "${{ secrets.APP_DATABASE_PORT_WITH_DOTS }}"
    APP_TEST_DATABASE_PASSWORD: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}"
-   GRINWAY_SERVICE_DATABASE_URL: "mysql://${{ secrets.APP_DATABASE_USER }}:${{ secrets.APP_TEST_DATABASE_PASSWORD }}@localhost${{ secrets.APP_DATABASE_PORT_WITH_DOTS }}/${{ secrets.APP_DATABASE_NAME }}?sslmode=disable&charset=utf8mb4"
+   GRINWAY_SERVICE_DATABASE_URL: "mysql://${{ secrets.APP_DATABASE_USER }}:${{ secrets.APP_TEST_DATABASE_PASSWORD }}@0.0.0.0${{ secrets.APP_DATABASE_PORT_WITH_DOTS }}/${{ secrets.APP_DATABASE_NAME }}?sslmode=disable&charset=utf8mb4"
 
 on:
   workflow_dispatch: ~
