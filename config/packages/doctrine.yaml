@@ -3,5 +3,4 @@ doctrine:
 
         types:
             # Usage: #[ORM\Column(type: 'percent')]
-            percent:
-                class: 'GrinWay\Service\Doctrine\DBAL\Type\PercentType'
+            percent: 'GrinWay\Service\Doctrine\DBAL\Type\PercentType'

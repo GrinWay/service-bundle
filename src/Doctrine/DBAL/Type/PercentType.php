@@ -18,6 +18,11 @@ class PercentType extends Type
         return 'DECIMAL(5, 2)';
     }
 
+    public function getName()
+    {
+        return 'percent';
+    }
+
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return new Percent($value);

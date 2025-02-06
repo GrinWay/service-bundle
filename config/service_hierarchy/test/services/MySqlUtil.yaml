@@ -5,6 +5,7 @@ services:
         autowire: false
 
     GrinWay\Service\Service\MySqlUtil:
+        public: true
         class: 'GrinWay\Service\Service\MySqlUtil'
         arguments:
             $serviceLocator: !service_locator

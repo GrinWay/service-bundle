@@ -9,6 +9,6 @@ imports:
 # when always OVERRIDES
 when@test:
     imports:
-    # priority (low)
+    # (PRIORITY LOW)
     -   resource: 'service_hierarchy/test/services/'
-    # priority (hight)
+    # (PRIORITY HIGH)

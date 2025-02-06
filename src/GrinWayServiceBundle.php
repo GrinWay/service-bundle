@@ -57,6 +57,11 @@ class GrinWayServiceBundle extends AbstractBundle
             ->children()
             //###> database array node ###
 
+            ->stringNode('host')
+            ->info('when prod: it\'s the database ip, when dev: docker container DSN when it\'s named network')
+            ->isRequired()
+            ->end()//
+
             ->stringNode('database_name')
             ->isRequired()
             ->end()//
@@ -71,6 +76,10 @@ class GrinWayServiceBundle extends AbstractBundle
 
             ->stringNode('backup_abs_path')
             ->isRequired()
+            ->end()//
+
+            ->stringNode('password')
+            ->info('REQUIRED ONLY WHEN TEST')
             ->end()//
 
             //###< database array node ###
@@ -138,6 +147,7 @@ class GrinWayServiceBundle extends AbstractBundle
 
         $parameters
             ->set(self::bundlePrefixed('database.database_name'), $config['database']['database_name'])//
+            ->set(self::bundlePrefixed('database.host'), $config['database']['host'])//
             ->set(self::bundlePrefixed('database.port'), $config['database']['port'])//
             ->set(self::bundlePrefixed('database.user'), $config['database']['user'])//
             ->set(self::bundlePrefixed('database.backup_abs_path'), $config['database']['backup_abs_path'])//
@@ -153,6 +163,12 @@ class GrinWayServiceBundle extends AbstractBundle
             ->set(self::bundlePrefixed('currency.fixer_api_key'), $config['currency']['fixer_api_key'])//
             ->set(self::bundlePrefixed('currency.cache.lifetime'), $config['currency']['cache']['lifetime'] ?? self::DEFAULT_CURRENCY_CACHE_LIFETIME)//
         ;
+
+        if ('test' === $env) {
+            $parameters
+                ->set(self::bundlePrefixed('test.database.password'), $config['database']['password'])//
+            ;
+        }
     }
 
     /**

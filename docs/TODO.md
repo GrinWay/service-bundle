@@ -1,3 +1,6 @@
+install `mysqldump` on ubuntu
+https://serverfault.com/questions/1023046/install-mysqldump-for-mysql-8-0-on-ubuntu-18-04
+
 new configuration
 
 `grinway_service.carbon_factory_immutable`

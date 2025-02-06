@@ -1,22 +1,44 @@
 grinway_service:
 
+    # Optional
     locale: '%env(APP_DEFAULT_LOCALE)%'
+    # Optional
     timezone: '%env(APP_DEFAULT_TIMEZONE)%'
+    # Optional
     date_time_format: '%env(APP_DATE_TIME_FORMAT)%'
 
     database:
+        # Required (when prod: it's the database ip, when dev: docker container DSN when it's named network)
+        host: '%env(APP_DATABASE_HOST)%'
+        # Required
         database_name: '%env(APP_DATABASE_NAME)%'
+        # Required
         port: '%env(APP_DATABASE_PORT)%'
+        # Required
         user: '%env(APP_DATABASE_USER)%'
-        backup_abs_path: '%env(APP_DATABASE_BACKUP_ABS_PATH)%'
+        # Required
+        backup_abs_path: '%env(resolve:APP_DATABASE_BACKUP_ABS_PATH)%'
 
     carbon:
+        # Optional
         # if true throws exceptions when invalid argument for nesbot/carbon otherwise false
         strict_mode: '%env(APP_CARBON_STRICT_MODE)%'
+        # Optional
         # if true months will change considering each day of a month
         month_overflow: '%env(APP_CARBON_MONTH_OVERFLOW)%'
+        # Optional
         # if true years will change considering each month of a year
         year_overflow: '%env(APP_CARBON_YEAR_OVERFLOW)%'
 
     currency:
+        # Required
         fixer_api_key: '%env(APP_CURRENCY_FIXER_API_KEY)%'
+        cache:
+            # Optional
+            lifetime: '%env(APP_CURRENCY_CACHE_LIFETIME)%'
+
+when@test:
+    grinway_service:
+        database:
+            # REQUIRED ONLY WHEN TEST
+            password: '%env(APP_TEST_DATABASE_PASSWORD)%'
