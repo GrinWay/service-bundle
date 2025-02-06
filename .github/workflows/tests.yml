@@ -1,5 +1,16 @@
 name: tests
 
+env:
+   APP_CURRENCY_FIXER_API_KEY: "${{ secrets.APP_CURRENCY_FIXER_API_KEY }}"
+   APP_DEFAULT_LOCALE: "${{ secrets.APP_DEFAULT_LOCALE }}"
+   APP_DATABASE_BACKUP_ABS_PATH: "${{ secrets.APP_DATABASE_BACKUP_ABS_PATH }}"
+   APP_DATABASE_NAME: "${{ secrets.APP_DATABASE_NAME }}"
+   APP_DATABASE_PORT: "${{ secrets.APP_DATABASE_PORT }}"
+   APP_DATABASE_USER: "${{ secrets.APP_DATABASE_USER }}"
+   APP_DATABASE_HOST: "${{ secrets.APP_DATABASE_HOST }}"
+   APP_TEST_DATABASE_PASSWORD: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}"
+   DATABASE_URL: "mysql://${{ secrets.APP_DATABASE_USER }}:${{ secrets.APP_TEST_DATABASE_PASSWORD }}@${{ secrets.APP_DATABASE_HOST }}:${{ secrets.APP_DATABASE_PORT }}/${{ secrets.APP_DATABASE_NAME }}?sslmode=disable&charset=utf8mb4&serverVersion=8.0.40"
+
 on:
   workflow_dispatch: ~
   #push:
@@ -37,21 +48,27 @@ jobs:
 
     - name: Install Composer Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - uses: mirromutth/mysql-action@v1.1
+      with:
+        host port: "${{ secrets.APP_DATABASE_PORT }}" # Optional, default value is 3306. The port of host
+        container port: "${{ secrets.APP_DATABASE_PORT }}" # Optional, default value is 3306. The port of container
+        character set server: 'utf8' # Optional, default value is 'utf8mb4'. The '--character-set-server' option for mysqld
+        collation server: 'utf8_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
+        mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
+        mysql database: "${{ secrets.APP_DATABASE_NAME }}" # Optional, default value is "test". The specified database which will be create
+        mysql root password: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}" # Required if "mysql user" is empty, default is empty. The root superuser password
+        mysql user: "${{ secrets.APP_DATABASE_USER }}" # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+        mysql password: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}" # Required if "mysql user" exists. The password for the "mysql user"
     
+    #- name: Create The Database
+    #  run: |
+    #    mkdir -p data
+    #    touch data/database.sqlite
+
     - name: Create The Database
       run: |
-        mkdir -p data
-        touch data/database.sqlite
+        php bin/console doctrine:database:create
     
     - name: tests
-      env:
-         APP_CURRENCY_FIXER_API_KEY: "${{ secrets.APP_CURRENCY_FIXER_API_KEY }}"
-         APP_DEFAULT_LOCALE: "${{ secrets.APP_DEFAULT_LOCALE }}"
-         APP_DATABASE_BACKUP_ABS_PATH: "${{ secrets.APP_DATABASE_BACKUP_ABS_PATH }}"
-         APP_DATABASE_NAME: "${{ secrets.APP_DATABASE_NAME }}"
-         APP_DATABASE_PORT: "${{ secrets.APP_DATABASE_PORT }}"
-         APP_DATABASE_USER: "${{ secrets.APP_DATABASE_USER }}"
-         APP_DATABASE_HOST: "${{ secrets.APP_DATABASE_HOST }}"
-         APP_TEST_DATABASE_PASSWORD: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}"
-         DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
       run: vendor/bin/phpunit
