@@ -1,7 +1,7 @@
 {
   "name": "grinway/service-bundle",
   "type": "symfony-bundle",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Commonly used tools for a symfony app",
   "keywords": [
     "grinway",
