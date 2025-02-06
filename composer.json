@@ -59,7 +59,8 @@
     "nesbot/carbon": "^3.8",
     "symfony/process": "^7.2",
     "doctrine/doctrine-bundle": "^2.13",
-    "symfony/dotenv": "^7.2"
+    "symfony/dotenv": "^7.2",
+    "symfony/filesystem": "^7.2"
   },
   "config": {
     "allow-plugins": {

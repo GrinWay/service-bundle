@@ -7,7 +7,7 @@ grinway_service:
         database_name: '%env(APP_DATABASE_NAME)%'
         port: '%env(APP_DATABASE_PORT)%'
         user: '%env(APP_DATABASE_USER)%'
-        backup_abs_path: '%env(resolve:APP_DATABASE_BACKUP_ABS_PATH)%'
+        backup_abs_dir: '%env(resolve:APP_DATABASE_BACKUP_ABS_PATH)%'
 
     currency:
         fixer_api_key: '%env(APP_CURRENCY_FIXER_API_KEY)%'

@@ -74,7 +74,7 @@ class GrinWayServiceBundle extends AbstractBundle
             ->isRequired()
             ->end()//
 
-            ->stringNode('backup_abs_path')
+            ->stringNode('backup_abs_dir')
             ->isRequired()
             ->end()//
 
@@ -150,7 +150,7 @@ class GrinWayServiceBundle extends AbstractBundle
             ->set(self::bundlePrefixed('database.host'), $config['database']['host'])//
             ->set(self::bundlePrefixed('database.port'), $config['database']['port'])//
             ->set(self::bundlePrefixed('database.user'), $config['database']['user'])//
-            ->set(self::bundlePrefixed('database.backup_abs_path'), $config['database']['backup_abs_path'])//
+            ->set(self::bundlePrefixed('database.backup_abs_dir'), $config['database']['backup_abs_dir'])//
 
             ->set(self::bundlePrefixed('locale'), $config['locale'] ?? self::DEFAULT_LOCALE)//
             ->set(self::bundlePrefixed('timezone'), $config['timezone'] ?? self::DEFAULT_TIMEZONE)//

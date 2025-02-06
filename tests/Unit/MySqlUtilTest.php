@@ -4,11 +4,12 @@ namespace GrinWay\Service\Tests\Unit;
 
 use GrinWay\Service\Service\MySqlUtil;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[CoversClass(MySqlUtil::class)]
 class MySqlUtilTest extends AbstractUnitTestCase
 {
-    protected static string $backupAbsFilepath;
+    protected static string $backupAbsDir;
     protected static string $databaseTestPassword;
     protected static MySqlUtil $mysqlUtil;
 
@@ -18,11 +19,11 @@ class MySqlUtilTest extends AbstractUnitTestCase
 
         self::$databaseTestPassword = self::getContainer()->getParameter('grinway_service.test.database.password');
 
-        self::$backupAbsFilepath = self::getContainer()->getParameter('grinway_service.database.backup_abs_path');
-        if (\is_file(self::$backupAbsFilepath)) {
-            \unlink(self::$backupAbsFilepath);
+        self::$backupAbsDir = self::getContainer()->getParameter('grinway_service.database.backup_abs_dir');
+        if (\is_dir(self::$backupAbsDir)) {
+            (new Filesystem())->remove(self::$backupAbsDir);
         }
-        $this->assertFileDoesNotExist(self::$backupAbsFilepath);
+        $this->assertFileDoesNotExist(self::$backupAbsDir);
 
         self::$mysqlUtil = self::getContainer()->get('grinway_service.mysql_util');
     }
@@ -31,7 +32,7 @@ class MySqlUtilTest extends AbstractUnitTestCase
     {
         $dump = self::$mysqlUtil->backup(self::$databaseTestPassword, toFile: false);
 
-        $this->assertFileDoesNotExist(self::$backupAbsFilepath);
+        $this->assertFileDoesNotExist(self::$backupAbsDir);
         $this->assertNotFalse($dump);
         $this->assertNotEmpty($dump);
     }
@@ -40,8 +41,8 @@ class MySqlUtilTest extends AbstractUnitTestCase
     {
         $dump = self::$mysqlUtil->backup(self::$databaseTestPassword, toFile: true);
 
-        $this->assertFileExists(self::$backupAbsFilepath);
-        $this->assertFileIsReadable(self::$backupAbsFilepath);
+        $this->assertFileExists(self::$backupAbsDir);
+        $this->assertFileIsReadable(self::$backupAbsDir);
         $this->assertNotFalse($dump);
         $this->assertNotEmpty($dump);
     }
