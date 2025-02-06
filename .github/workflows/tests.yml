@@ -7,9 +7,10 @@ env:
    APP_DATABASE_NAME: "${{ secrets.APP_DATABASE_NAME }}"
    APP_DATABASE_PORT: "${{ secrets.APP_DATABASE_PORT }}"
    APP_DATABASE_USER: "${{ secrets.APP_DATABASE_USER }}"
-   APP_DATABASE_HOST: "${{ secrets.APP_DATABASE_HOST }}"
+   APP_DATABASE_IP: "${{ secrets.APP_DATABASE_IP }}"
+   APP_DATABASE_PORT_WITH_DOTS: "${{ secrets.APP_DATABASE_PORT_WITH_DOTS }}"
    APP_TEST_DATABASE_PASSWORD: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}"
-   DATABASE_URL: "mysql://${{ secrets.APP_DATABASE_USER }}:${{ secrets.APP_TEST_DATABASE_PASSWORD }}@${{ secrets.APP_DATABASE_HOST }}:${{ secrets.APP_DATABASE_PORT }}/${{ secrets.APP_DATABASE_NAME }}?sslmode=disable&charset=utf8mb4&serverVersion=8.0.40"
+   GRINWAY_SERVICE_DATABASE_URL: "mysql://${{ secrets.APP_DATABASE_USER }}:${{ secrets.APP_TEST_DATABASE_PASSWORD }}@${{ secrets.APP_DATABASE_IP }}${{ secrets.APP_DATABASE_PORT_WITH_DOTS }}/${{ secrets.APP_DATABASE_NAME }}?sslmode=disable&charset=utf8mb4"
 
 on:
   workflow_dispatch: ~
@@ -61,14 +62,9 @@ jobs:
         mysql user: "${{ secrets.APP_DATABASE_USER }}" # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
         mysql password: "${{ secrets.APP_TEST_DATABASE_PASSWORD }}" # Required if "mysql user" exists. The password for the "mysql user"
     
-    #- name: Create The Database
-    #  run: |
-    #    mkdir -p data
-    #    touch data/database.sqlite
-
     - name: Create The Database
       run: |
-        php bin/console doctrine:database:create
+        php bin/console doctrine:database:create --if-not-exists --env test
     
     - name: tests
       run: vendor/bin/phpunit
