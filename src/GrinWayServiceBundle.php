@@ -2,6 +2,7 @@
 
 namespace GrinWay\Service;
 
+use GrinWay\Service\Contract\Doctrine\DoctrineEventListenerInterface;
 use GrinWay\Service\Validator\LikeNumeric;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -83,6 +84,42 @@ class GrinWayServiceBundle extends AbstractBundle
             ->end()//
 
             //###< database array node ###
+            ->end()
+            ->end()//
+
+            ->arrayNode('doctrine')//
+            ->addDefaultsIfNotSet()
+            ->children()
+            //###> doctrine array node ###
+
+            ->arrayNode('event_listeners')//
+            ->canBeDisabled()
+            ->children()
+            //###> event_listeners array node ###
+
+            ->arrayNode('auto_set_created_at_when_pre_persist')//
+            ->canBeDisabled()
+            ->children()
+            //###> auto_set_created_at_when_pre_persist array node ###
+
+            //###< auto_set_created_at_when_pre_persist array node ###
+            ->end()
+            ->end()//
+
+            ->arrayNode('auto_set_updated_at_when_pre_update')//
+            ->canBeDisabled()
+            ->children()
+            //###> auto_set_updated_at_when_pre_update array node ###
+
+            //###< auto_set_updated_at_when_pre_update array node ###
+            ->end()
+            ->end()//
+
+            //###< event_listeners array node ###
+            ->end()
+            ->end()//
+
+            //###< doctrine array node ###
             ->end()
             ->end()//
 
@@ -206,6 +243,7 @@ class GrinWayServiceBundle extends AbstractBundle
     {
         $this->setServiceContainerParameters($config, $container);
         $this->setServiceContainerServices($config, $container);
+        $this->removeServiceContainerServices($config, $container, $builder);
     }
 
     /**
@@ -342,5 +380,37 @@ class GrinWayServiceBundle extends AbstractBundle
 //            $builder->registerForAutoconfiguration($interface)
 //                ->addTag($tagName, $tagAttributes)//
 //            ;
+    }
+
+    private function removeDoctrineEventListeners(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    {
+        $eventListenersAreDisabled = true !== $config['doctrine']['event_listeners']['enabled'];
+
+        if ($eventListenersAreDisabled) {
+            foreach ($builder->findTaggedServiceIds(DoctrineEventListenerInterface::TAG) as $serviceId => $tagAttributes) {
+                $builder->removeDefinition($serviceId);
+            }
+            return;
+        }
+
+        $createdAtEventListenerIsDisabled = true !== $config['doctrine']['event_listeners']['auto_set_created_at_when_pre_persist']['enabled'];
+        $updatedAtEventListenerIsDisabled = true !== $config['doctrine']['event_listeners']['auto_set_updated_at_when_pre_update']['enabled'];
+
+        if ($createdAtEventListenerIsDisabled) {
+            $builder->removeDefinition('.grinway_service.event_listener.doctrine.created_at');
+        }
+        if ($updatedAtEventListenerIsDisabled) {
+            $builder->removeDefinition('.grinway_service.event_listener.doctrine.updated_at');
+        }
+    }
+
+    /**
+     * Helper
+     *
+     * @internal
+     */
+    protected function removeServiceContainerServices(array $config, ContainerConfigurator $container, ContainerBuilder $builder)
+    {
+        $this->removeDoctrineEventListeners($config, $container, $builder);
     }
 }

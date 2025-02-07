@@ -5,6 +5,9 @@ namespace GrinWay\Service\Trait\Doctrine;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @author Grigory Koblitskiy <grin180898@outlook.com>
+ */
 trait CreatedAt
 {
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]

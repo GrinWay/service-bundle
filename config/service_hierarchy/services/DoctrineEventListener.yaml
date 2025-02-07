@@ -1,0 +1,25 @@
+services:
+
+    _defaults:
+        autoconfigure: false
+        autowire: false
+
+    .grinway_service.event_listener.doctrine.created_at:
+        class: 'GrinWay\Service\EventListener\Doctrine\CreatedAtEventListener'
+        arguments:
+            $serviceLocator: !service_locator
+                carbonFI: '@grinway_service.carbon_factory_immutable'
+        tags:
+        -   name: !php/const GrinWay\Service\Contract\Doctrine\DoctrineEventListenerInterface::TAG
+        -   name: 'doctrine.event_listener'
+            event: !php/const Doctrine\ORM\Events::prePersist
+
+    .grinway_service.event_listener.doctrine.updated_at:
+        class: 'GrinWay\Service\EventListener\Doctrine\UpdatedAtEventListener'
+        arguments:
+            $serviceLocator: !service_locator
+                carbonFI: '@grinway_service.carbon_factory_immutable'
+        tags:
+        -   name: !php/const GrinWay\Service\Contract\Doctrine\DoctrineEventListenerInterface::TAG
+        -   name: 'doctrine.event_listener'
+            event: !php/const Doctrine\ORM\Events::preUpdate

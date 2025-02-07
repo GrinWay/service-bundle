@@ -33,14 +33,14 @@ doctrine:
             # #[ORM\Column(type: Types::DATETIME)]
             # protected $dateTime = null;
             datetime:
-                class: Carbon\Doctrine\DateTimeType
+                class: 'Carbon\Doctrine\DateTimeType'
 
             # to immediately get the CarbonImmutable when: 
             #
             # #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
             # protected $dateTime = null;
             datetime_immutable:
-                class: Carbon\Doctrine\DateTimeImmutableType
+                class: 'Carbon\Doctrine\DateTimeImmutableType'
 ```
 
 # To be able to test MySqlUtil
@@ -51,3 +51,11 @@ dbal:
 url: '%env(resolve:GRINWAY_SERVICE_DATABASE_URL)%'
 server_version: '8.0.40'
 ```
+
+`Type`
+
+`event listenere for createdAt updatedAt traits`
+automatically createdAt and updatedAt is written!
+tests for
+CreatedAtEventListener
+UpdatedAtEventListener

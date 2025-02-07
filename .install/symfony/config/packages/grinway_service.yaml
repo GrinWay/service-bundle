@@ -19,6 +19,19 @@ grinway_service:
         # Required
         backup_abs_dir: '%env(resolve:APP_DATABASE_BACKUP_ABS_PATH)%'
 
+    doctrine:
+        event_listeners:
+            # Optional
+            enabled: true
+
+            # Optional
+            auto_set_created_at_when_pre_persist:
+                enabled: true
+
+            # Optional
+            auto_set_updated_at_when_pre_update:
+                enabled: true
+
     carbon:
         # Optional
         # if true throws exceptions when invalid argument for nesbot/carbon otherwise false
