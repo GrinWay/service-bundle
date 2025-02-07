@@ -1,6 +1,7 @@
 doctrine:
     dbal:
-
+        mapping_types:
+            percent: percent
         types:
             # Usage: #[ORM\Column(type: 'percent')]
             percent: 'GrinWay\Service\Doctrine\DBAL\Type\PercentType'
