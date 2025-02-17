@@ -42,15 +42,15 @@ class GrinWayServiceBundle extends AbstractBundle
         $definition->rootNode()
             ->children()//
 
-            ->stringNode('locale')
+            ->scalarNode('locale')
             ->defaultValue(self::DEFAULT_LOCALE)
             ->end()//
 
-            ->stringNode('timezone')
+            ->scalarNode('timezone')
             ->defaultValue(self::DEFAULT_TIMEZONE)
             ->end()//
 
-            ->stringNode('date_time_format')
+            ->scalarNode('date_time_format')
             ->defaultValue(self::DEFAULT_DATA_TIME_FORMAT)
             ->end()//
 
@@ -58,28 +58,28 @@ class GrinWayServiceBundle extends AbstractBundle
             ->children()
             //###> database array node ###
 
-            ->stringNode('ip')
+            ->scalarNode('ip')
             ->info('when prod: it\'s the database ip, when dev: docker container DSN when it\'s named network')
             ->isRequired()
             ->end()//
 
-            ->stringNode('database_name')
+            ->scalarNode('database_name')
             ->isRequired()
             ->end()//
 
-            ->stringNode('port')
+            ->scalarNode('port')
             ->isRequired()
             ->end()//
 
-            ->stringNode('user')
+            ->scalarNode('user')
             ->isRequired()
             ->end()//
 
-            ->stringNode('backup_abs_dir')
+            ->scalarNode('backup_abs_dir')
             ->isRequired()
             ->end()//
 
-            ->stringNode('password')
+            ->scalarNode('password')
             ->info('REQUIRED ONLY WHEN TEST')
             ->end()//
 
@@ -147,7 +147,7 @@ class GrinWayServiceBundle extends AbstractBundle
             ->children()//
             //###> currency array node ###
 
-            ->stringNode('fixer_api_key')//
+            ->scalarNode('fixer_api_key')//
             ->isRequired()
             ->cannotBeEmpty()
             ->end()//
