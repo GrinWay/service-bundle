@@ -208,6 +208,8 @@ class GrinWayServiceBundle extends AbstractBundle
 
             ->set(self::bundlePrefixed('currency.fixer_api_key'), $config['currency']['fixer_api_key'])//
             ->set(self::bundlePrefixed('currency.cache.lifetime'), $config['currency']['cache']['lifetime'] ?? self::DEFAULT_CURRENCY_CACHE_LIFETIME)//
+
+            ->set('grinway_service.logical_path.non_removable_cache.currency.fixer_api', '@GrinWayServiceBundle/non_removable_cache/currency/fixer_api.json')//
         ;
 
         if ('test' === $env) {

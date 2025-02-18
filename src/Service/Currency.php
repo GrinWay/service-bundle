@@ -2,12 +2,14 @@
 
 namespace GrinWay\Service\Service;
 
+use App\Kernel;
 use GrinWay\Service\Exception\Fixer\NoBaseFixerException;
 use GrinWay\Service\Exception\Fixer\NotSuccessFixerException;
 use GrinWay\Service\GrinWayServiceBundle;
 use GrinWay\Service\Validator\LikeInt;
 use GrinWay\Service\Validator\LikeNumeric;
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -22,7 +24,12 @@ use Symfony\Contracts\Cache\ItemInterface;
  */
 class Currency
 {
-    public function __construct(protected readonly ServiceLocator $serviceLocator)
+    private bool $freshFixerPayloadFlagForDumpToNonRemovableCache = false;
+
+    public function __construct(
+        protected readonly ServiceLocator $serviceLocator,
+        private readonly string           $nonRemovableCurrencyFixerApiCacheLogicalDir,
+    )
     {
     }
 
@@ -87,7 +94,25 @@ class Currency
         if (true === $success) {
             $baseString = $pa->getValue($fixerPayload, '[base]');
             if (null === $baseString) {
-                throw new NoBaseFixerException();
+
+                try {
+                    $fixerPayload = $this->getFixerPayloadFromNonRemovableCache();
+                } catch (\Exception $e) {
+                    throw new NoBaseFixerException();
+                }
+
+                $baseString = $pa->getValue($fixerPayload, '[base]');
+                if (null === $baseString) {
+                    throw new NoBaseFixerException();
+                }
+            }
+
+            if (true === $this->freshFixerPayloadFlagForDumpToNonRemovableCache) {
+                try {
+                    $this->dumpFixerPayloadToNonRemovableCache($fixerPayload);
+                } catch (\Exception $e) {
+                }
+                $this->freshFixerPayloadFlagForDumpToNonRemovableCache = false;
             }
 
             $oneBaseToCurrencyValue = $this->getValidatedOneBaseCurrencyValueFromFixerPayload(
@@ -163,7 +188,9 @@ class Currency
             $currencyCachePool->delete($currencyCacheKey);
         }
 
-        $fixerPayload = $currencyCachePool->get($currencyCacheKey, static function (ItemInterface $item) use ($fixerHttpClient): string {
+        $freshFixerPayloadFlagForDumpToNonRemovableCache =& $this->freshFixerPayloadFlagForDumpToNonRemovableCache;
+        $fixerPayload = $currencyCachePool->get($currencyCacheKey, static function (ItemInterface $item) use (&$freshFixerPayloadFlagForDumpToNonRemovableCache, $fixerHttpClient): string {
+            $freshFixerPayloadFlagForDumpToNonRemovableCache = true;
             $item->tag([GrinWayServiceBundle::GENERIC_CACHE_TAG]);
             return $fixerHttpClient->request('GET', '')->getContent();
         });
@@ -193,5 +220,29 @@ class Currency
             [new NotBlank(), new LikeNumeric()],
         );
         return $oneBaseCurrencyValue;
+    }
+
+    private function dumpFixerPayloadToNonRemovableCache(array $fixerPayload): void
+    {
+        /** @var \Symfony\Component\Serializer\SerializerInterface $serializer */
+        $serializer = $this->serviceLocator->get('serializer');
+        /** @var Kernel $kernel */
+        $kernel = $this->serviceLocator->get('kernel');
+        /** @var Filesystem $kernel */
+        $filesystem = $this->serviceLocator->get('filesystem');
+
+        $absPathname = $kernel->locateResource($this->nonRemovableCurrencyFixerApiCacheLogicalDir);
+        $filesystem->dumpFile($absPathname, $serializer->encode($fixerPayload, 'json'));
+    }
+
+    private function getFixerPayloadFromNonRemovableCache(): array
+    {
+        /** @var \Symfony\Component\Serializer\SerializerInterface $serializer */
+        $serializer = $this->serviceLocator->get('serializer');
+        /** @var Kernel $kernel */
+        $kernel = $this->serviceLocator->get('kernel');
+
+        $absPathname = $kernel->locateResource($this->nonRemovableCurrencyFixerApiCacheLogicalDir);
+        return $serializer->decode(\file_get_contents($absPathname), 'json');
     }
 }

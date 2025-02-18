@@ -1,7 +1,7 @@
 {
   "name": "grinway/service-bundle",
   "type": "symfony-bundle",
-  "version": "1.3.3",
+  "version": "1.4.3",
   "description": "Commonly used tools for a symfony app",
   "keywords": [
     "grinway",
@@ -61,7 +61,7 @@
     "symfony/process": "^7.2|^6",
     "doctrine/doctrine-bundle": "^2.13",
     "symfony/dotenv": "^7.2|^6",
-    "symfony/filesystem": "^7.2|^6",
+    "symfony/filesystem": "^7.2",
     "symfony/orm-pack": "^2.4",
     "doctrine/orm": "^3.3",
     "doctrine/dbal": "^3.9",

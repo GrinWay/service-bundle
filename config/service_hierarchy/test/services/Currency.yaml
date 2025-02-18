@@ -6,13 +6,16 @@ services:
 
     GrinWay\Service\Service\Currency:
         public: true
-        class: GrinWay\Service\Service\Currency
+        class: 'GrinWay\Service\Service\Currency'
         arguments:
             $serviceLocator: !service_locator
-                grinwayServiceCurrencyFixerLatest: '@Symfony\Contracts\HttpClient\HttpClientInterface $grinwayServiceCurrencyFixerLatest'
-                currencyCachePool: '@Symfony\Contracts\Cache\TagAwareCacheInterface $grinwayServiceCachePoolCurrency'
+                grinwayServiceCurrencyFixerLatest: '@grinway_service.currency.fixer_latest'
+                currencyCachePool: '@grinway_service.cache_pool.currency'
                 serializer: '@serializer'
                 validator: '@validator'
+                filesystem: '@filesystem'
+                kernel: '@kernel'
                 pa: '@Symfony\Component\PropertyAccess\PropertyAccessorInterface'
+            $nonRemovableCurrencyFixerApiCacheLogicalDir: '%env(string:default:grinway_service.logical_path.non_removable_cache.currency.fixer_api:)%'
 
     grinway_service.currency: '@GrinWay\Service\Service\Currency'

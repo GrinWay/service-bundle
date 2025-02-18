@@ -7,6 +7,11 @@ Reference
 |----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [grinway_service.currency](https://github.com/GrinWay/service-bundle/blob/main/src/Service/Currency.php) | Make operations with money, conversions<br>RUB -> EUR for instance<br>(see [tests](https://github.com/GrinWay/service-bundle/tree/main/tests/Unit/Conversion)) |
 
+> Since `1.4.3` if `access_token` of Fixer Api is invalid or maximum requests to the API reached
+> algorithm will try to get last cached payload from non-removable filesystem cache!
+> 
+> It got more stable 🤩
+
 ### Classes
 
 | Class name                                                                                                         | Description                                                                                                                                                                                                                  |
