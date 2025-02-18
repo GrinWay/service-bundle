@@ -1,10 +1,9 @@
-doctrine:
-    dbal:
-        mapping_types:
-            percent: percent
-        types:
-            # Usage: #[ORM\Column(type: 'percent')]
-            percent: 'GrinWay\Service\Doctrine\DBAL\Type\PercentType'
+#doctrine:
+#    dbal:
+#        url: '%env(resolve:GRINWAY_SERVICE_DATABASE_URL)%'
+#    orm:
+#        auto_generate_proxy_classes: '%kernel.debug%'
+#        auto_mapping: true
 
 # To be able to test MySqlUtil
 when@test:
@@ -12,3 +11,8 @@ when@test:
         dbal:
             url: '%env(resolve:GRINWAY_SERVICE_DATABASE_URL)%'
             server_version: '8.0.40'
+        orm:
+            controller_resolver:
+                auto_mapping: false
+            auto_generate_proxy_classes: '%kernel.debug%'
+            auto_mapping: true

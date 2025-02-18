@@ -61,3 +61,19 @@ Use the following traits in your test classes to obtain new functionality
 
 * [NotSuccessFixerException](https://github.com/GrinWay/service-bundle/blob/main/src/Exception/Fixer/NotSuccessFixerException.php)
 * [NoBaseFixerException](https://github.com/GrinWay/service-bundle/blob/main/src/Exception/Fixer/NoBaseFixerException.php)
+
+### DBAL Types
+
+In your `%kernel.project_dir%/config/packages/doctrine.yaml`
+
+```yaml
+doctrine:
+    dbal:
+        
+        mapping_types:
+            percent: percent
+            
+        types:
+            # Usage: #[ORM\Column(type: 'percent')]
+            percent: 'GrinWay\Service\Doctrine\DBAL\Type\PercentType'
+```

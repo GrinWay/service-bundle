@@ -16,7 +16,8 @@
     "symfony/phpunit-bridge": "^7.2|^6",
     "phpunit/phpunit": "11.4",
     "symfony/test-pack": "^1.0",
-    "symfony/maker-bundle": "^1.62"
+    "symfony/maker-bundle": "^1.62",
+    "zenstruck/foundry": "^2.3"
   },
   "authors": [
     {
@@ -62,7 +63,9 @@
     "symfony/dotenv": "^7.2|^6",
     "symfony/filesystem": "^7.2|^6",
     "symfony/orm-pack": "^2.4",
-    "doctrine/orm": "^3.3"
+    "doctrine/orm": "^3.3",
+    "doctrine/dbal": "^3.9",
+    "doctrine/doctrine-fixtures-bundle": "^4.0"
   },
   "config": {
     "allow-plugins": {

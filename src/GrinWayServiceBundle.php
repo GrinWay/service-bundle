@@ -97,6 +97,15 @@ class GrinWayServiceBundle extends AbstractBundle
             ->children()
             //###> event_listeners array node ###
 
+            ->arrayNode('auto_set_utc_date_time_before_to_database')//
+            ->canBeDisabled()
+            ->children()
+            //###> auto_set_created_at_when_pre_persist array node ###
+
+            //###< auto_set_created_at_when_pre_persist array node ###
+            ->end()
+            ->end()//
+
             ->arrayNode('auto_set_created_at_when_pre_persist')//
             ->canBeDisabled()
             ->children()
@@ -393,9 +402,13 @@ class GrinWayServiceBundle extends AbstractBundle
             return;
         }
 
+        $setUtcEventListenerIsDisabled = true !== $config['doctrine']['event_listeners']['auto_set_utc_date_time_before_to_database']['enabled'];
         $createdAtEventListenerIsDisabled = true !== $config['doctrine']['event_listeners']['auto_set_created_at_when_pre_persist']['enabled'];
         $updatedAtEventListenerIsDisabled = true !== $config['doctrine']['event_listeners']['auto_set_updated_at_when_pre_update']['enabled'];
 
+        if ($setUtcEventListenerIsDisabled) {
+            $builder->removeDefinition('.grinway_service.event_listener.doctrine.date_time_to_utc_before_to_database');
+        }
         if ($createdAtEventListenerIsDisabled) {
             $builder->removeDefinition('.grinway_service.event_listener.doctrine.created_at');
         }

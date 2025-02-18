@@ -1,0 +1,15 @@
+when@dev: &when_dev
+    services:
+
+        _defaults:
+            autoconfigure: false
+            autowire: false
+
+        GrinWay\Service\Repository\TestRepository:
+            class: 'GrinWay\Service\Repository\TestRepository'
+            tags:
+            -   name: 'doctrine.repository_service'
+            arguments:
+                $registry: '@Doctrine\Persistence\ManagerRegistry'
+
+when@test: *when_dev

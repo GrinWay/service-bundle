@@ -12,7 +12,7 @@ This bundle supplies you with:
       practically can throw the
       [NoBaseFixerException](https://github.com/GrinWay/service-bundle/blob/main/src/Exception/Fixer/NoBaseFixerException.php)
       so you can catch it in your code
-* class with static methods only
+* Class with static methods only
   [FiguresRepresentation](https://github.com/GrinWay/service-bundle/blob/main/src/Service/FiguresRepresentation.php)
   (its
   [test](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/FiguresRepresentationTest.php))
@@ -37,10 +37,26 @@ This bundle supplies you with:
     * [grinway_service.currency.fixer_latest](https://github.com/GrinWay/service-bundle/blob/main/config/packages/framework_http_client.yaml)
 * Symfony cache pools:
     * [grinway_service.cache_pool.currency](https://github.com/GrinWay/service-bundle/blob/main/config/packages/framework_cache.yaml)
-* Traits:
+* Test Traits:
     * [HasBufferTest](https://github.com/GrinWay/service-bundle/blob/main/src/Test/Trait/HasBufferTest.php)
+* Doctrine Traits:
+    * [CreatedAt](https://github.com/GrinWay/service-bundle/blob/main/src/Trait/Doctrine/CreatedAt.php)
+      (its listener
+      [CreatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/CreatedAtEventListener.php))
+    * [UpdatedAt](https://github.com/GrinWay/service-bundle/blob/main/src/Trait/Doctrine/UpdatedAt.php)
+      (its listener
+      [UpdatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/UpdatedAtEventListener.php))
+* Doctrine Event Listeners:
+    * [CreatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/CreatedAtEventListener.php)
+      (its [tests]())
+    * [UpdatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/UpdatedAtEventListener.php)
+      (its [tests]())
+    * [DateTimeToUtcBeforeToDatabaseEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/DateTimeToUtcBeforeToDatabaseEventListener.php)
+      (its [tests]())
 * Exceptions:
     * [NotSuccessFixerException](https://github.com/GrinWay/service-bundle/blob/main/src/Exception/Fixer/NotSuccessFixerException.php)
       (click and see when it throws)
     * [NoBaseFixerException](https://github.com/GrinWay/service-bundle/blob/main/src/Exception/Fixer/NoBaseFixerException.php)
       (click and see when it throws)
+* DBAL Types:
+    * [Percent](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/Type/Percent.php)
