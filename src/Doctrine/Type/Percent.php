@@ -2,9 +2,6 @@
 
 namespace GrinWay\Service\Doctrine\Type;
 
-use GrinWay\Service\Validator\LikeNumeric;
-use Symfony\Component\Validator\Validation;
-
 /**
  * Percent object for "percent" dbal type
  *
@@ -16,21 +13,33 @@ use Symfony\Component\Validator\Validation;
  */
 class Percent implements \Stringable
 {
-    public function __construct(private ?string $percent = null)
+    public function __construct(
+        private ?float $percent = null,
+    )
     {
-        Validation::createCallable(new LikeNumeric())($this->percent);
     }
 
-    public function getPercent(): ?string
+    public function getPercent(): ?float
     {
         return $this->percent;
     }
 
-    public function setPercent(?string $percent): static
+    public function setPercent(?float $percent): static
     {
         $this->percent = $percent;
 
         return $this;
+    }
+
+    public function toFloat(): float
+    {
+        if (null === $this->percent) {
+            $percent = 0.;
+        } else {
+            $percent = $this->percent;
+        }
+
+        return $percent;
     }
 
     public function __toString(): string

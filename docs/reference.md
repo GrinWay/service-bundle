@@ -53,9 +53,46 @@ If you do you will get an error:
 
 Use the following traits in your test classes to obtain new functionality
 
-| Trait                                                                                                 | Description                |
-|-------------------------------------------------------------------------------------------------------|----------------------------|
-| [HasBufferTest](https://github.com/GrinWay/service-bundle/blob/main/src/Test/Trait/HasBufferTest.php) | Supplies buffer assertions |
+| Trait                                                                                                 | Description                                               |
+|-------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| [HasBufferTest](https://github.com/GrinWay/service-bundle/blob/main/src/Test/Trait/HasBufferTest.php) | Supplies buffer assertions                                |
+| [CreatedAt](https://github.com/GrinWay/service-bundle/blob/main/src/Trait/Doctrine/CreatedAt.php)     | Adds `\DateTimeImmutable $createdAt` field to your entity |
+| [UpdatedAt](https://github.com/GrinWay/service-bundle/blob/main/src/Trait/Doctrine/UpdatedAt.php)     | Adds `\DateTimeImmutable $updatedAt` field to your entity |
+
+### Doctrine Event Listeners
+
+If you look at `%kernel.project_dir%/config/packages/grinway_service.yaml`
+
+you'll find a part of enabling doctrine event listeners:
+
+```yaml
+grinway_service:
+    doctrine:
+        event_listeners:
+            # Optional
+            enabled: true
+
+            # Optional
+            auto_set_utc_date_time_before_to_database:
+                enabled: false
+
+            # Optional
+            auto_set_created_at_when_pre_persist:
+                enabled: true
+
+            # Optional
+            auto_set_updated_at_when_pre_update:
+                enabled: true
+```
+
+| Doctrine Event Listener                                                                                                                                                     | Config key                                  | Description                                                                                                                                                                                                            |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [DateTimeToUtcBeforeToDatabaseEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/DateTimeToUtcBeforeToDatabaseEventListener.php) | `auto_set_utc_date_time_before_to_database` | To be absolutely sure that all the `\DateTimeInterface` dates always were saved with `UTC` timezone (listens [onFlush](https://www.doctrine-project.org/projects/doctrine-orm/en/3.3/reference/events.html#onflush))   |
+| [CreatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/CreatedAtEventListener.php)                                         | `auto_set_created_at_when_pre_persist`      | Intended to work together with `CreatedAt` trait of this bundle to automatically set `createdAt` field on [prePersist](https://www.doctrine-project.org/projects/doctrine-orm/en/3.3/reference/events.html#prepersist) |
+| [UpdatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/UpdatedAtEventListener.php)                                         | `auto_set_updated_at_when_pre_update`       | Intended to work together with `UpdatedAt` trait of this bundle to automatically set `updatedAt` field on [preUpdate](https://www.doctrine-project.org/projects/doctrine-orm/en/3.3/reference/events.html#preupdate)   |
+
+> Set `enabled: false` to stop using these listeners
+> (internally they will get removed from the Symfony service container)
 
 ### Exceptions
 
@@ -64,16 +101,29 @@ Use the following traits in your test classes to obtain new functionality
 
 ### DBAL Types
 
-In your `%kernel.project_dir%/config/packages/doctrine.yaml`
+Add types in your `%kernel.project_dir%/config/packages/doctrine.yaml`
 
 ```yaml
 doctrine:
     dbal:
-        
+
         mapping_types:
             percent: percent
-            
+
         types:
             # Usage: #[ORM\Column(type: 'percent')]
             percent: 'GrinWay\Service\Doctrine\DBAL\Type\PercentType'
+```
+
+to use them like:
+
+```php
+<?php
+
+class Entity {
+
+    #[ORM\Column(type: 'percent')]
+    private ?Percent $percent = null,
+    
+}
 ```

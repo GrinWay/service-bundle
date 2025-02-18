@@ -31,6 +31,6 @@ class PercentType extends Type
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         \assert($value instanceof Percent);
-        return (string) $value;
+        return $value->toFloat();
     }
 }
