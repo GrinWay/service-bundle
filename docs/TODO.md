@@ -61,3 +61,6 @@ CreatedAtEventListener
 UpdatedAtEventListener
 
 `CarbonUtil` class docs, test, real docs
+
+`ActiveAndPriorityAwareRepositoryTrait`
+`Active` `Priority`

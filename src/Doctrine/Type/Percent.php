@@ -14,17 +14,17 @@ namespace GrinWay\Service\Doctrine\Type;
 class Percent implements \Stringable
 {
     public function __construct(
-        private ?float $percent = null,
+        private string|float|null $percent = null,
     )
     {
     }
 
-    public function getPercent(): ?float
+    public function getPercent(): string|float|null
     {
         return $this->percent;
     }
 
-    public function setPercent(?float $percent): static
+    public function setPercent(string|float|null $percent): static
     {
         $this->percent = $percent;
 
@@ -33,7 +33,7 @@ class Percent implements \Stringable
 
     public function toFloat(): float
     {
-        if (null === $this->percent) {
+        if (empty($this->percent)) {
             $percent = 0.;
         } else {
             $percent = $this->percent;
