@@ -10,6 +10,8 @@ use GrinWay\Service\Validator\LikeInt;
 use GrinWay\Service\Validator\LikeNumeric;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\Exception\TransportException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -189,10 +191,21 @@ class Currency
         }
 
         $freshFixerPayloadFlagForDumpToNonRemovableCache =& $this->freshFixerPayloadFlagForDumpToNonRemovableCache;
-        $fixerPayload = $currencyCachePool->get($currencyCacheKey, static function (ItemInterface $item) use (&$freshFixerPayloadFlagForDumpToNonRemovableCache, $fixerHttpClient): string {
+        $fixerPayload = $currencyCachePool->get($currencyCacheKey, function (ItemInterface $item) use (&$freshFixerPayloadFlagForDumpToNonRemovableCache, $fixerHttpClient): string {
             $freshFixerPayloadFlagForDumpToNonRemovableCache = true;
             $item->tag([GrinWayServiceBundle::GENERIC_CACHE_TAG]);
-            return $fixerHttpClient->request('GET', '')->getContent();
+            try {
+                $content = $fixerHttpClient->request('GET', '')->getContent();
+            } catch (TransportException $exception) {
+                try {
+                    $content = $this->getFixerPayloadFromNonRemovableCache();
+                } catch (\Exception $e) {
+                    $content = '{}';
+                }
+            } catch (\Exception $exception) {
+                throw $exception;
+            }
+            return $content;
         });
 
         return $serializer->decode($fixerPayload, 'json');
@@ -224,7 +237,7 @@ class Currency
 
     private function dumpFixerPayloadToNonRemovableCache(array $fixerPayload): void
     {
-        /** @var \Symfony\Component\Serializer\SerializerInterface $serializer */
+        /** @var SerializerInterface $serializer */
         $serializer = $this->serviceLocator->get('serializer');
         /** @var Kernel $kernel */
         $kernel = $this->serviceLocator->get('kernel');
@@ -237,7 +250,7 @@ class Currency
 
     private function getFixerPayloadFromNonRemovableCache(): array
     {
-        /** @var \Symfony\Component\Serializer\SerializerInterface $serializer */
+        /** @var SerializerInterface $serializer */
         $serializer = $this->serviceLocator->get('serializer');
         /** @var Kernel $kernel */
         $kernel = $this->serviceLocator->get('kernel');
