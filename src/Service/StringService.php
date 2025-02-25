@@ -24,10 +24,15 @@ class StringService
     public static function getPath(string...$pathParts): string
     {
         $path = '';
-        foreach ($pathParts as $pathPart) {
+        foreach ($pathParts as $i => $pathPart) {
+            if (0 === $i) {
+                $pathPart = \rtrim($pathPart, self::SLASHES);
+            } else {
+                $pathPart = \trim($pathPart, self::SLASHES);
+            }
             $path .= \sprintf(
                 '%s' . self::NORMALIZED_SLASH,
-                \rtrim($pathPart, self::SLASHES),
+                $pathPart,
             );
         }
         $path = \rtrim($path, self::SLASHES);
