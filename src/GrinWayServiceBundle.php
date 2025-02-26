@@ -26,7 +26,7 @@ class GrinWayServiceBundle extends AbstractBundle
     public const GENERIC_CACHE_TAG = self::EXTENSION_ALIAS;
 
     //###> DEFAULTS ###
-    public const DEFAULT_CURRENCY_CACHE_LIFETIME = 86400;
+    public const DEFAULT_CURRENCY_CACHE_LIFETIME = 86400 * 4; // 86400 sec === 1 day
     public const DEFAULT_DATA_TIME_FORMAT = 'd.m.Y H:i:s P';
     public const DEFAULT_TIMEZONE = '+00:00';
     public const DEFAULT_LOCALE = 'en';

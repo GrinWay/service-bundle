@@ -2,10 +2,10 @@
 
 namespace GrinWay\Service\Service;
 
-use App\Kernel;
 use GrinWay\Service\Exception\Fixer\NoBaseFixerException;
 use GrinWay\Service\Exception\Fixer\NotSuccessFixerException;
 use GrinWay\Service\GrinWayServiceBundle;
+use GrinWay\Service\Kernel;
 use GrinWay\Service\Validator\LikeInt;
 use GrinWay\Service\Validator\LikeNumeric;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -89,14 +89,24 @@ class Currency
             $fixerPayload = $this->getCachedFixerDecodedPayload(refresh: true);
         }
         $success = $pa->getValue($fixerPayload, '[success]') ?: false;
+
         if (false === $success) {
             $fixerPayload = $this->getCachedFixerDecodedPayload(refresh: true);
+            $success = $pa->getValue($fixerPayload, '[success]') ?: false;
+
+            if (false === $success) {
+                try {
+                    // make sure data was got
+                    $fixerPayload = $this->getFixerPayloadFromNonRemovableCache();
+                } catch (\Exception $e) {
+                }
+            }
         }
 
+        $success = $pa->getValue($fixerPayload, '[success]') ?: false;
         if (true === $success) {
             $baseString = $pa->getValue($fixerPayload, '[base]');
             if (null === $baseString) {
-
                 try {
                     $fixerPayload = $this->getFixerPayloadFromNonRemovableCache();
                 } catch (\Exception $e) {
