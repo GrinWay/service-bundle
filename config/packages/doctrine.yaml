@@ -4,7 +4,7 @@
 #    orm:
 #        auto_generate_proxy_classes: '%kernel.debug%'
 #        auto_mapping: true
-
+#
 # To be able to test MySqlUtil
 when@test:
     doctrine:
