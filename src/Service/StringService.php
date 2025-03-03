@@ -48,6 +48,12 @@ class StringService
     }
 
     /**
+     * API
+     *
+     *  Imagine you have an entity in database and this entity has photo_rel_filename field
+     *  this function will get the full absolute filename to the photo
+     *  but if this file doesn't exist it will fall back to the default photo absolute filepath passed by you in this function
+     *
      * SAFE ABSOLUTE FILEPATH GETTER
      * Safe because it falls back to the default abs filepath
      *
@@ -83,6 +89,13 @@ class StringService
     }
 
     /**
+     * API
+     *
+     * Imagine you have an entity in database and this entity has photo_rel_filename field
+     * this function will get the full public filename to the photo
+     * but if this file doesn't exist it will fall back to the default static photo public path
+     * passed by you in this function
+     *
      * SAFE PUBLIC FILEPATH GETTER (using Packages Symfony service)
      * Safe because it falls back to the default public filepath
      *
