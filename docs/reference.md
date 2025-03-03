@@ -114,10 +114,15 @@ doctrine:
 
         mapping_types:
             percent: percent
+            week_day: week_day
 
         types:
-            # Usage: #[ORM\Column(type: 'percent')]
+            # Usage:
+            # #[ORM\Column(type: PercentType::NAME)]
             percent: 'GrinWay\Service\Doctrine\DBAL\Type\PercentType'
+            # Usage:
+            # [ORM\Column(type: WeekDayType::NAME)]
+            week_day: 'GrinWay\Service\Doctrine\DBAL\Type\WeekDayType'
 ```
 
 to use them like:
@@ -127,8 +132,11 @@ to use them like:
 
 class Entity {
 
-    #[ORM\Column(type: 'percent')]
+    #[ORM\Column(type: PercentType::NAME)]
     private ?Percent $percent = null,
+    
+    #[ORM\Column(type: WeekDayType::NAME)]
+    private ?\Carbon\WeekDay $weekDay = null;
     
 }
 ```

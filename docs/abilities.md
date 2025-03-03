@@ -68,3 +68,4 @@ This bundle supplies you with:
       (click and see when it throws)
 * DBAL Types:
     * [Percent](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/Type/Percent.php)
+    * [WeekDayType](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/DBAL/Type/WeekDayType.php)

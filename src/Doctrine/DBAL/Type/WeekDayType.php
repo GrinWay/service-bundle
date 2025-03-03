@@ -2,22 +2,25 @@
 
 namespace GrinWay\Service\Doctrine\DBAL\Type;
 
+use Carbon\WeekDay;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use GrinWay\Service\Doctrine\Type\Percent;
 
 /**
- * Percent DBAL type
+ * Carbon\WeekDay DBAL type
+ *
+ * #[ORM\Column(type: WeekDayType::NAME)]
+ * private ?\Carbon\WeekDay $weekDay = null;
  *
  * @author Grigory Koblitskiy <grin180898@outlook.com>
  */
-class PercentType extends Type
+class WeekDayType extends Type
 {
-    public const NAME = 'percent';
+    const NAME = 'week_day';
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
-        return 'DECIMAL(5, 2)';
+        return 'varchar(1)';
     }
 
     public function getName()
@@ -27,12 +30,12 @@ class PercentType extends Type
 
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
-        return new Percent($value);
+        return WeekDay::from((int)$value);
     }
 
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
-        \assert($value instanceof Percent);
-        return $value->toFloat();
+        \assert($value instanceof WeekDay);
+        return $value->value;
     }
 }

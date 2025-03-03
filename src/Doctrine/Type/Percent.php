@@ -6,7 +6,7 @@ namespace GrinWay\Service\Doctrine\Type;
  * Percent object for "percent" dbal type
  *
  * Usage:
- * #[ORM\Column(type: 'percent')]
+ * #[ORM\Column(type: PercentType::NAME)]
  * private ?Percent $percent = null;
  *
  * @author Grigory Koblitskiy <grin180898@outlook.com>
