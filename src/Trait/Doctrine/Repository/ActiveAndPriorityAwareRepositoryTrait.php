@@ -2,6 +2,8 @@
 
 namespace GrinWay\Service\Trait\Doctrine\Repository;
 
+use Doctrine\Common\Collections\Criteria;
+
 /**
  * Use together with traits for entity:
  *     GrinWay\Service\Trait\Doctrine\Active
@@ -14,11 +16,18 @@ trait ActiveAndPriorityAwareRepositoryTrait
     /**
      * Get first active entity (first means with the highest priority)
      */
-    public function findFirstActive(): ?object
+    public function findFirstActive(?Criteria $criteria = null): ?object
     {
-        return $this->createQueryBuilder('o')
+        $qb = $this->createQueryBuilder('o')
             ->orderBy('o.priority', 'DESC')
-            ->andWhere('o.active = TRUE')
+            ->andWhere('o.active = TRUE')//
+        ;
+
+        if (null !== $criteria) {
+            $qb->addCriteria($criteria);
+        }
+
+        return $qb
             ->getQuery()
             ->getOneOrNullResult()//
             ;
