@@ -64,3 +64,5 @@ UpdatedAtEventListener
 
 `ActiveAndPriorityAwareRepositoryTrait`
 `Active` `Priority`
+
+`TEST StringService`

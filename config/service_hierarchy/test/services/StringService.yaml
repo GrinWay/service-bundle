@@ -5,6 +5,7 @@ services:
         autowire: false
 
     GrinWay\Service\Service\StringService:
+        public: true
         class: 'GrinWay\Service\Service\StringService'
         arguments:
             $serviceLocator: !service_locator

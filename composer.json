@@ -65,7 +65,8 @@
     "symfony/orm-pack": "^2.4",
     "doctrine/orm": "^3.3",
     "doctrine/dbal": "^3.9",
-    "doctrine/doctrine-fixtures-bundle": "^4.0"
+    "doctrine/doctrine-fixtures-bundle": "^4.0",
+    "symfony/asset": "^7.2"
   },
   "config": {
     "allow-plugins": {
