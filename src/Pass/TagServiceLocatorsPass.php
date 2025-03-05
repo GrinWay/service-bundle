@@ -5,6 +5,7 @@ namespace GrinWay\Service\Pass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Passes ServiceLocators grouped by "owner" format key to the collector service method
@@ -44,6 +45,7 @@ class TagServiceLocatorsPass implements CompilerPassInterface
     {
     }
 
+    // https://symfony.com/doc/current/service_container/service_subscribers_locators.html#using-service-locators-in-compiler-passes
     public function process(ContainerBuilder $container)
     {
         $collectorDefinition = $container->findDefinition($this->collectorServiceId);
@@ -62,6 +64,7 @@ class TagServiceLocatorsPass implements CompilerPassInterface
                 $dynamicDefinition = $container->findDefinition($dynamicId);
                 // array_pop instead [0] or array_shift, cuz if I use AutoconfigureTag, I want to use this but not previous priority
                 $priority = \array_pop($dynamicTagAttributes)['priority'] ?? 0;
+                $dynamicDefinition = new Reference($dynamicDefinition->getClass());
                 $dynamicDefinitions[$priority][] = $dynamicDefinition;
             }
             $dynamicDefinitionsDepthDecreased = [];
@@ -69,7 +72,10 @@ class TagServiceLocatorsPass implements CompilerPassInterface
             \array_walk_recursive($dynamicDefinitions, static function ($val, $key) use (&$dynamicDefinitionsDepthDecreased) {
                 $dynamicDefinitionsDepthDecreased[] = $val;
             });
-            $dynamicLocator = ServiceLocatorTagPass::register($container, $dynamicDefinitionsDepthDecreased);
+            $dynamicLocator = ServiceLocatorTagPass::register(
+                $container,
+                $dynamicDefinitionsDepthDecreased,
+            );
             $collectorDefinition->addMethodCall($this->collectorServiceMethodCallName, [
                 (string)$dynamicTagName,
                 $dynamicLocator,
