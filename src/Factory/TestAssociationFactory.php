@@ -2,13 +2,13 @@
 
 namespace GrinWay\Service\Factory;
 
-use GrinWay\Service\Entity\Test;
+use GrinWay\Service\Entity\TestAssociation;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
- * @extends PersistentProxyObjectFactory<Test>
+ * @extends PersistentProxyObjectFactory<TestAssociation>
  */
-final class TestFactory extends PersistentProxyObjectFactory
+final class TestAssociationFactory extends PersistentProxyObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
@@ -21,7 +21,7 @@ final class TestFactory extends PersistentProxyObjectFactory
 
     public static function class(): string
     {
-        return Test::class;
+        return TestAssociation::class;
     }
 
     /**
@@ -32,10 +32,6 @@ final class TestFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'text' => 'text',
-            'test' => 'test',
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'dateTime' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
     }
 
@@ -44,8 +40,7 @@ final class TestFactory extends PersistentProxyObjectFactory
      */
     protected function initialize(): static
     {
-        return $this
-            // ->afterInstantiate(function(Test $test): void {})
-        ;
+        return $this// ->afterInstantiate(function(Test $test): void {})
+            ;
     }
 }

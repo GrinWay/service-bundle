@@ -9,7 +9,7 @@ Reference
 
 > Since `1.4.3` if `access_token` of Fixer Api is invalid or maximum requests to the API reached
 > algorithm will try to get last cached payload from non-removable filesystem cache!
-> 
+>
 > It got more stable 🤩
 
 ### Classes
@@ -131,3 +131,90 @@ class Entity {
     
 }
 ```
+
+### Classes to get extended
+
+| Class                                                                                       | Description                          |
+|---------------------------------------------------------------------------------------------|--------------------------------------|
+| [WorkerUtil](https://github.com/GrinWay/service-bundle/blob/main/src/Service/Messenger.php) | Utils to work with Symfony Messenger |
+
+The code below will allow you to get your entity from your MessageHandler
+and even more (its data with property path access)
+
+> For instance in this example it's an `Order` entity
+
+If `order id` or found by repository `order` or something of `property path required` will be null
+[UnrecoverableExceptionInterface](https://github.com/symfony/messenger/blob/7.2/Exception/UnrecoverableExceptionInterface.php)
+
+When this special exception is thrown Symfony Worker will
+[avoid retrying](https://symfony.com/doc/current/messenger.html#avoiding-retrying)
+
+If you use this you definitely want to access `not null` data
+if data is null it's just unprocessable
+
+```php
+<?php
+
+namespace App\Service\Messenger;
+
+use App\Entity\Order;
+use GrinWay\Service\Service\Messenger\WorkerUtil as WorkerUtilAlias;
+
+// YOUR SERVICE
+class WorkerUtil extends WorkerUtilAlias
+{
+    public function getOrderAndRequiredAvoidRetryingIfNull(
+        mixed     $entityId,
+        ?array    $requirePropertyPaths = null,
+        ?callable $entityNotFoundCallback = null,
+        ?callable $entityPropertyPathNotFoundCallback = null,
+    ): array
+    {
+        return $this->getEntityAndRequiredAvoidRetryingIfNull(
+            fqcn: Order::class,
+            entityId: $entityId,
+            requirePropertyPaths: $requirePropertyPaths,
+            entityNotFoundCallback: $entityNotFoundCallback,
+            entityPropertyPathNotFoundCallback: $entityPropertyPathNotFoundCallback,
+        );
+    }
+}
+```
+
+Later in your Message Handler just get entity from message payload: 
+
+```php
+// YOUR HANDLER
+public function __invoke(YourMessage $message): void
+{
+    [
+        'order' => $order, // YOU WILL ALWAYS GET THIS KEY (LOWER CASE SHORT ENTITY NAME) 
+    ] = $this->workerUtil->getOrderAndRequiredAvoidRetryingIfNull(
+        entityId: $message->orderId,
+    );
+    //...
+}
+
+// YOUR ANOTHER HANDLER
+public function __invoke(YourAnotherMessage $message): void
+{
+    [
+        'order' => $order, // YOU WILL ALWAYS GET THIS KEY (LOWER CASE SHORT ENTITY NAME)
+        'telegramAccount.id' => $orderTelegramAccountId,
+    ] = $this->workerUtil->getOrderAndRequiredAvoidRetryingIfNull(
+        entityId: $message->orderId,
+        requirePropertyPaths: [
+            'telegramAccount.id',
+        ],
+    );
+    //...
+}
+```
+
+This way you get real entity from message payload
+
+> **NOTE**: If you have property path same as entity lower case short name
+> for instance `order` as lower case short entity name
+> and this `order` entity has `order` property
+> In the result array `order` entity will win over required property path
+> but exception will be thrown if required property path is null 

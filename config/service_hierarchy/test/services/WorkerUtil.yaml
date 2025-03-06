@@ -1,0 +1,13 @@
+services:
+
+    _defaults:
+        autoconfigure: false
+        autowire: false
+        public: true
+
+    .grinway_service.test.worker_util:
+        class: 'GrinWay\Service\Test\Service\Messenger\WorkerUtil'
+        calls:
+        -   _setRequired_workerUtil:
+                $em: '@doctrine.orm.default_entity_manager'
+                $pa: '@property_accessor'

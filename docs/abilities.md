@@ -12,11 +12,12 @@ This bundle supplies you with:
       practically can throw the
       [NoBaseFixerException](https://github.com/GrinWay/service-bundle/blob/main/src/Exception/Fixer/NoBaseFixerException.php)
       so you can catch it in your code
-* service [grinway_service.string_service](https://github.com/GrinWay/service-bundle/blob/main/src/Service/StringService.php)
-  (its [test](https://github.com/GrinWay/service-bundle/tree/main/tests/Unit/StringService))
-  * `getPath`
-  * `getSafeAbsFilepath`
-  * `getSafePublicFilepath`
+*
+service [grinway_service.string_service](https://github.com/GrinWay/service-bundle/blob/main/src/Service/StringService.php)
+(its [test](https://github.com/GrinWay/service-bundle/tree/main/tests/Unit/StringService))
+    * `getPath`
+    * `getSafeAbsFilepath`
+    * `getSafePublicFilepath`
 * Class with static methods only
   [FiguresRepresentation](https://github.com/GrinWay/service-bundle/blob/main/src/Service/FiguresRepresentation.php)
   (its
@@ -69,3 +70,5 @@ This bundle supplies you with:
 * DBAL Types:
     * [Percent](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/Type/Percent.php)
     * [WeekDayType](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/DBAL/Type/WeekDayType.php)
+* Classes to get extended:
+    * [WorkerUtil](https://github.com/GrinWay/service-bundle/blob/main/src/Service/Messenger.php)

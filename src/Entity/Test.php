@@ -23,8 +23,17 @@ class Test
         return $this->id;
     }
 
+    #[ORM\Column(type: Types::TEXT)]
+    protected ?string $text = null;
+
+    #[ORM\Column(nullable: true)]
+    protected ?string $test = null;
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     protected ?\DateTimeInterface $dateTime = null;
+
+    #[ORM\OneToOne(inversedBy: 'test', cascade: ['persist'])]
+    protected ?TestAssociation $association = null;
 
     public function getDateTime(): ?\DateTimeInterface
     {
@@ -36,5 +45,37 @@ class Test
         $this->dateTime = $dateTime;
 
         return $this;
+    }
+
+    public function getAssociation(): ?TestAssociation
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?TestAssociation $association): static
+    {
+        $this->association = $association;
+
+        return $this;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    public function setText(?string $text): void
+    {
+        $this->text = $text;
+    }
+
+    public function getTest(): ?string
+    {
+        return $this->test;
+    }
+
+    public function setTest(?string $test): void
+    {
+        $this->test = $test;
     }
 }
