@@ -269,7 +269,7 @@ class WorkerUtilGetEntityAndItsPropertyPathRequiredDataThrowIfNotFoundTest exten
         ];
 
         [
-            'test' => $entity, // key is the lowercase short name of entity
+            0 => $entity, // key is the lowercase short name of entity
             'text' => $text,
         ] = $workerUtil->getTestAndRequiredAvoidRetryingIfNull(
             entityId: $entityId,
@@ -291,7 +291,7 @@ class WorkerUtilGetEntityAndItsPropertyPathRequiredDataThrowIfNotFoundTest exten
         ];
 
         [
-            'test' => $entity, // key is the lowercase short name of entity
+            0 => $entity, // key is the lowercase short name of entity
             'association' => $association,
         ] = $workerUtil->getTestAndRequiredAvoidRetryingIfNull(
             entityId: $entityId,
@@ -317,7 +317,7 @@ class WorkerUtilGetEntityAndItsPropertyPathRequiredDataThrowIfNotFoundTest exten
         ];
 
         [
-            'test' => $entity, // key is the lowercase short name of entity
+            0 => $entity, // key is the lowercase short name of entity
             'association' => $association,
             'association.id' => $associationId,
         ] = $workerUtil->getTestAndRequiredAvoidRetryingIfNull(
@@ -348,7 +348,8 @@ class WorkerUtilGetEntityAndItsPropertyPathRequiredDataThrowIfNotFoundTest exten
         ];
 
         [
-            'test' => $entity, // key is the lowercase short name of entity
+            0 => $entity, // key is the lowercase short name of entity
+            'test' => $test, // key is the lowercase short name of entity
             'association.id' => $associationId,
         ] = $workerUtil->getTestAndRequiredAvoidRetryingIfNull(
             entityId: $entityId,
@@ -359,6 +360,10 @@ class WorkerUtilGetEntityAndItsPropertyPathRequiredDataThrowIfNotFoundTest exten
         $this->assertSame(
             TestFactory::find($entityId)->getAssociation()->getId(),
             $associationId,
+        );
+        $this->assertSame(
+            'TEST',
+            $test,
         );
     }
 }

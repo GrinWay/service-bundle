@@ -44,7 +44,7 @@ class WorkerUtil
      *     (needless to retry)
      *
      * @reutrn [
-     *     'entity lowercase short class name' => $entity,
+     *     0 => $entity,
      *     'required property path' => $value,
      *     'another required property path' => $itsValue,
      *     ...
@@ -100,7 +100,7 @@ class WorkerUtil
             $data[$requirePropertyPath] = $entityData;
         }
 
-        $data[\strtolower($reflectionClassShortName)] = $entity;
+        $data[0] = $entity;
 
         return $data;
     }

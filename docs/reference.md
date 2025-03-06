@@ -188,7 +188,7 @@ Later in your Message Handler just get entity from message payload:
 public function __invoke(YourMessage $message): void
 {
     [
-        'order' => $order, // YOU WILL ALWAYS GET THIS KEY (LOWER CASE SHORT ENTITY NAME) 
+        $order, // YOU WILL ALWAYS HAVE THIS ZERO KEY 
     ] = $this->workerUtil->getOrderAndRequiredAvoidRetryingIfNull(
         entityId: $message->orderId,
     );
@@ -198,13 +198,14 @@ public function __invoke(YourMessage $message): void
 // YOUR ANOTHER HANDLER
 public function __invoke(YourAnotherMessage $message): void
 {
+    $tgAccKey = 'telegramAccount.id';
     [
-        'order' => $order, // YOU WILL ALWAYS GET THIS KEY (LOWER CASE SHORT ENTITY NAME)
-        'telegramAccount.id' => $orderTelegramAccountId,
+        0 => $order, // YOU WILL ALWAYS HAVE THIS ZERO KEY
+        $tgAccKey => $orderTelegramAccountId,
     ] = $this->workerUtil->getOrderAndRequiredAvoidRetryingIfNull(
         entityId: $message->orderId,
         requirePropertyPaths: [
-            'telegramAccount.id',
+            $tgAccKey,
         ],
     );
     //...
@@ -212,9 +213,3 @@ public function __invoke(YourAnotherMessage $message): void
 ```
 
 This way you get real entity from message payload
-
-> **NOTE**: If you have property path same as entity lower case short name
-> for instance `order` as lower case short entity name
-> and this `order` entity has `order` property
-> In the result array `order` entity will win over required property path
-> but exception will be thrown if required property path is null 

@@ -13,11 +13,14 @@ This bundle supplies you with:
       [NoBaseFixerException](https://github.com/GrinWay/service-bundle/blob/main/src/Exception/Fixer/NoBaseFixerException.php)
       so you can catch it in your code
 *
+
 service [grinway_service.string_service](https://github.com/GrinWay/service-bundle/blob/main/src/Service/StringService.php)
 (its [test](https://github.com/GrinWay/service-bundle/tree/main/tests/Unit/StringService))
-    * `getPath`
-    * `getSafeAbsFilepath`
-    * `getSafePublicFilepath`
+
+* `getPath`
+* `getSafeAbsFilepath`
+* `getSafePublicFilepath`
+
 * Class with static methods only
   [FiguresRepresentation](https://github.com/GrinWay/service-bundle/blob/main/src/Service/FiguresRepresentation.php)
   (its
@@ -54,14 +57,14 @@ service [grinway_service.string_service](https://github.com/GrinWay/service-bund
       [UpdatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/UpdatedAtEventListener.php))
 * Doctrine Event Listeners:
     * [CreatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/CreatedAtEventListener.php)
-      (
-      its [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/CreatedAtEventListenerTest.php))
+      (its
+      [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/CreatedAtEventListenerTest.php))
     * [UpdatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/UpdatedAtEventListener.php)
-      (
-      its [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/UpdatedAtEventListenerTest.php))
+      (its
+      [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/UpdatedAtEventListenerTest.php))
     * [DateTimeToUtcBeforeToDatabaseEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/DateTimeToUtcBeforeToDatabaseEventListener.php)
-      (
-      its [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/DateTimeToUtcBeforeToDatabaseEventListenerTest.php))
+      (its
+      [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/DateTimeToUtcBeforeToDatabaseEventListenerTest.php))
 * Exceptions:
     * [NotSuccessFixerException](https://github.com/GrinWay/service-bundle/blob/main/src/Exception/Fixer/NotSuccessFixerException.php)
       (click and see when it throws)
@@ -72,3 +75,5 @@ service [grinway_service.string_service](https://github.com/GrinWay/service-bund
     * [WeekDayType](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/DBAL/Type/WeekDayType.php)
 * Classes to get extended:
     * [WorkerUtil](https://github.com/GrinWay/service-bundle/blob/main/src/Service/Messenger.php)
+      (its
+      [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/WorkerUtil/WorkerUtilGetEntityAndItsPropertyPathRequiredDataThrowIfNotFoundTest.php))
