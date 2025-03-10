@@ -9,5 +9,5 @@ services:
         class: 'GrinWay\Service\Test\Service\Messenger\WorkerUtil'
         calls:
         -   _setRequired_workerUtil:
-                $em: '@doctrine.orm.default_entity_manager'
+                $em: '@Doctrine\ORM\EntityManagerInterface'
                 $pa: '@property_accessor'
