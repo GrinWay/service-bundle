@@ -20,7 +20,7 @@ class PercentType extends Type
         return 'DECIMAL(5, 2)';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return self::NAME;
     }

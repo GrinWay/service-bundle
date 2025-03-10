@@ -60,7 +60,7 @@ class Currency
      * @throws NotSuccessFixerException
      * @throws NoBaseFixerException
      */
-    public function convertFromCurrencyToAnotherWithEndFigures(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount, bool $forceMakeHttpRequestToFixer = false): string
+    public function convertFromCurrencyToAnotherWithEndFigures(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount, bool $forceMakeHttpRequestToFixer = false, bool $allowNonRemovableCache = true): string
     {
         $this->validate(
             $amountWithEndFigures,
@@ -97,7 +97,9 @@ class Currency
             if (false === $success) {
                 try {
                     // make sure data was got
-                    $fixerPayload = $this->getFixerPayloadFromNonRemovableCache();
+                    $fixerPayload = $this->getFixerPayloadFromNonRemovableCache(
+                        allowNonRemovableCache: $allowNonRemovableCache,
+                    );
                 } catch (\Exception $e) {
                 }
             }
@@ -108,7 +110,9 @@ class Currency
             $baseString = $pa->getValue($fixerPayload, '[base]');
             if (null === $baseString) {
                 try {
-                    $fixerPayload = $this->getFixerPayloadFromNonRemovableCache();
+                    $fixerPayload = $this->getFixerPayloadFromNonRemovableCache(
+                        allowNonRemovableCache: $allowNonRemovableCache,
+                    );
                 } catch (\Exception $e) {
                     throw new NoBaseFixerException();
                 }
@@ -121,7 +125,10 @@ class Currency
 
             if (true === $this->freshFixerPayloadFlagForDumpToNonRemovableCache) {
                 try {
-                    $this->dumpFixerPayloadToNonRemovableCache($fixerPayload);
+                    $this->dumpFixerPayloadToNonRemovableCache(
+                        fixerPayload: $fixerPayload,
+                        allowNonRemovableCache: $allowNonRemovableCache,
+                    );
                 } catch (\Exception $e) {
                 }
                 $this->freshFixerPayloadFlagForDumpToNonRemovableCache = false;
@@ -186,7 +193,7 @@ class Currency
     /**
      * @internal
      */
-    protected function getCachedFixerDecodedPayload(bool $refresh = false): array
+    protected function getCachedFixerDecodedPayload(bool $refresh = false, bool $allowNonRemovableCache = true): array
     {
         $serializer = $this->serviceLocator->get('serializer');
         $fixerHttpClient = $this->serviceLocator->get('grinwayServiceCurrencyFixerLatest');
@@ -201,14 +208,16 @@ class Currency
         }
 
         $freshFixerPayloadFlagForDumpToNonRemovableCache =& $this->freshFixerPayloadFlagForDumpToNonRemovableCache;
-        $fixerPayload = $currencyCachePool->get($currencyCacheKey, function (ItemInterface $item) use (&$freshFixerPayloadFlagForDumpToNonRemovableCache, $fixerHttpClient): string {
+        $fixerPayload = $currencyCachePool->get($currencyCacheKey, function (ItemInterface $item) use ($allowNonRemovableCache, &$freshFixerPayloadFlagForDumpToNonRemovableCache, $fixerHttpClient): string {
             $freshFixerPayloadFlagForDumpToNonRemovableCache = true;
             $item->tag([GrinWayServiceBundle::GENERIC_CACHE_TAG]);
             try {
                 $content = $fixerHttpClient->request('GET', '')->getContent();
             } catch (TransportException $exception) {
                 try {
-                    $content = $this->getFixerPayloadFromNonRemovableCache();
+                    $content = $this->getFixerPayloadFromNonRemovableCache(
+                        allowNonRemovableCache: $allowNonRemovableCache,
+                    );
                 } catch (\Exception $e) {
                     $content = '{}';
                 }
@@ -245,8 +254,15 @@ class Currency
         return $oneBaseCurrencyValue;
     }
 
-    private function dumpFixerPayloadToNonRemovableCache(array $fixerPayload): void
+    private function dumpFixerPayloadToNonRemovableCache(
+        array $fixerPayload,
+        bool  $allowNonRemovableCache,
+    ): void
     {
+        if (false === $allowNonRemovableCache) {
+            return;
+        }
+
         /** @var SerializerInterface $serializer */
         $serializer = $this->serviceLocator->get('serializer');
         /** @var Kernel $kernel */
@@ -258,8 +274,14 @@ class Currency
         $filesystem->dumpFile($absPathname, $serializer->encode($fixerPayload, 'json'));
     }
 
-    private function getFixerPayloadFromNonRemovableCache(): array
+    private function getFixerPayloadFromNonRemovableCache(
+        bool $allowNonRemovableCache,
+    ): array
     {
+        if (false === $allowNonRemovableCache) {
+            return [];
+        }
+
         /** @var SerializerInterface $serializer */
         $serializer = $this->serviceLocator->get('serializer');
         /** @var Kernel $kernel */

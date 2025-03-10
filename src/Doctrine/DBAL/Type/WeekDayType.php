@@ -23,7 +23,7 @@ class WeekDayType extends Type
         return 'varchar(1)';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return self::NAME;
     }

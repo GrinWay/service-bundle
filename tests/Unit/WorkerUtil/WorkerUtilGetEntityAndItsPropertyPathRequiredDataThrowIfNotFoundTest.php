@@ -336,7 +336,7 @@ class WorkerUtilGetEntityAndItsPropertyPathRequiredDataThrowIfNotFoundTest exten
         );
     }
 
-    public function testFetchedEntityAndRequiredPropertyPathWithTheSameKeyNameAsEntityNameOriginEntityWins()
+    public function testFetchedEntityAndRequiredPropertyPathWithSamePropertyNameAsEntity()
     {
         /** @var TestWorkerUtil $workerUtil */
         $workerUtil = self::$workerUtil;
