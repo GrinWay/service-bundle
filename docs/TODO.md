@@ -69,3 +69,33 @@ UpdatedAtEventListener
 
 `CarbonUtil removed use DateTimeService instead`
 `TEST DOCS DateTimeService`
+
+`DoctrineUtil`
+
+
+Avoid failure transport on Unrecoverable... as well as retry
+`unrecoverable_do_not_send_messages_to_failure_transport_middleware`
+```yaml
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    unrecoverable_do_not_send_messages_to_failure_transport_middleware:
+        class: 'GrinWay\Service\Messenger\Middleware\AvoidFailureTransportWhenUnrecoverableMessageHandlingExceptionIsThrownMiddleware'
+        arguments:
+            $logUnrecoverableException: true
+            $includeTractInUnrecoverableExceptionLog: false
+
+```
+```yaml
+framework:
+    messenger:
+        buses:
+            command.bus:
+                default_middleware:
+                    enabled: true
+                    allow_no_handlers: false
+                    allow_no_senders: true
+                middleware:
+                - unrecoverable_do_not_send_messages_to_failure_transport_middleware
+```

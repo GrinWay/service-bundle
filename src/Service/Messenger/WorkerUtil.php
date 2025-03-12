@@ -2,6 +2,7 @@
 
 namespace GrinWay\Service\Service\Messenger;
 
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -51,28 +52,36 @@ class WorkerUtil
      * ]
      */
     protected function getEntityAndRequiredAvoidRetryingIfNull(
-        string    $fqcn,
-        mixed     $entityId,
-        ?array    $requirePropertyPaths = null,
-        ?callable $entityNotFoundCallback = null,
-        ?callable $entityPropertyPathNotFoundCallback = null,
+        string            $fqcn,
+        mixed             $entityId,
+        ?array            $requirePropertyPaths = null,
+        ?callable         $entityNotFoundCallback = null,
+        ?callable         $entityPropertyPathNotFoundCallback = null,
+        LockMode|int|null $databaseLockMode = null,
+        int|null          $databaseLockVersion = null,
     ): array
     {
-        $data = [];
-
         $requirePropertyPaths ??= [];
         $entityNotFoundCallback ??= static fn(mixed $entityId) => true;
         $entityPropertyPathNotFoundCallback ??= static fn(string $requirePropertyPath) => true;
+
+        $data = [];
 
         $reflectionClass = new \ReflectionClass($fqcn);
         $reflectionClassShortName = $reflectionClass->getShortName();
         if (null === $entityId) {
             $entityNotFoundCallback($entityId);
+
             throw new UnrecoverableMessageHandlingException(
                 \sprintf('%s id is null', $reflectionClassShortName),
             );
         }
-        $entity = $this->em->find($fqcn, $entityId);
+        $entity = $this->em->find(
+            $fqcn,
+            $entityId,
+            lockMode: $databaseLockMode,
+            lockVersion: $databaseLockVersion,
+        );
         if (null === $entity) {
             $entityNotFoundCallback($entityId);
             throw new UnrecoverableMessageHandlingException(
