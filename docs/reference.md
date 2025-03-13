@@ -64,6 +64,7 @@ doctrine:
         dql:
             string_functions:
                 leave_only_numbers: 'GrinWay\Service\Doctrine\Function\LeaveOnlyNumbers'
+                dateinterval_to_sec: 'GrinWay\Service\Doctrine\Function\DateIntervalToSec'
 ```
 
 Usage:
@@ -85,7 +86,12 @@ class YourRepository extends ServiceEntityRepository
     public function findWithShortestIntervalFirst(): array
     {
         return $this->createQueryBuilder('o')
-            ->orderBy('CAST(LEAVE_ONLY_NUMBERS(o.dateInterval) AS INT)', 'ASC')
+            // or
+            ->orderBy('CAST(LEAVE_ONLY_NUMBERS(o.textWithNumbers) AS INT)', 'ASC')
+            
+            // or
+            ->orderBy('DATEINTERVAL_TO_SEC(o.dateInterval)', 'ASC')
+            
             ->getQuery()
             ->getResult()//
             ;

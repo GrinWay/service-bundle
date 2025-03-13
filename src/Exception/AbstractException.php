@@ -9,11 +9,16 @@ abstract class AbstractException extends \Exception
     abstract protected function exceptionGetMessage(): string;
 
     public function __construct(
+        array                                                                        $format = [],
         #[LanguageLevelTypeAware(['8.0' => 'int'], default: '')]                     $code = 0,
         #[LanguageLevelTypeAware(['8.0' => 'Throwable|null'], default: 'Throwable')] $previous = null
     )
     {
-        $message = $this->exceptionGetMessage();
+        if (empty($format)) {
+            $message = $this->exceptionGetMessage();
+        } else {
+            $message = \sprintf($this->exceptionGetMessage(), $format);
+        }
 
         parent::__construct(
             $message,

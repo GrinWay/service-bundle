@@ -39,7 +39,7 @@ class Percent implements \Stringable
             $percent = $this->percent;
         }
 
-        return $percent;
+        return (float)$percent;
     }
 
     public function __toString(): string

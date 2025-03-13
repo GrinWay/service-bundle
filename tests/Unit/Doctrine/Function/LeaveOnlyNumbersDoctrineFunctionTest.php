@@ -9,6 +9,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LeaveOnlyNumbers::class)]
 class LeaveOnlyNumbersDoctrineFunctionTest extends AbstractDoctrineFunctionTestCase
 {
+    protected function setUp(): void
+    {
+        static::$positiveDateInterval = new \DateInterval('P12Y34M56DT78H90M09S');
+
+        parent::setUp();
+    }
+
     public function test()
     {
         $dql = \sprintf(

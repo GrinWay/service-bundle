@@ -59,6 +59,9 @@ service [grinway_service.string_service](https://github.com/GrinWay/service-bund
     * [LeaveOnlyNumbers](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/Function/LeaveOnlyNumbers.php)
       (its
       [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/Function/LeaveOnlyNumbersDoctrineFunctionTest.php))
+    * [DateIntervalToSec](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/Function/DateIntervalToSec.php)
+      (its
+      [tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/Function/DateIntervalToSecDoctrineFunctionTest.php))
 * Doctrine Event Listeners:
     * [CreatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/CreatedAtEventListener.php)
       (its
