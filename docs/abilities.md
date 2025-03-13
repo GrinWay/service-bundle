@@ -55,6 +55,10 @@ service [grinway_service.string_service](https://github.com/GrinWay/service-bund
     * [UpdatedAt](https://github.com/GrinWay/service-bundle/blob/main/src/Trait/Doctrine/UpdatedAt.php)
       (its listener
       [UpdatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/UpdatedAtEventListener.php))
+* Doctrine Functions (switch them on in the `doctrine.yaml`):
+    * [LeaveOnlyNumbers](https://github.com/GrinWay/service-bundle/blob/main/src/Doctrine/Function/LeaveOnlyNumbers.php)
+      (its
+      [tests](https://github.com/GrinWay/service-bundle/blob/main/src/tests/Unit/Doctrine/Function/LeaveOnlyNumbersDoctrineFunctionTest.php))
 * Doctrine Event Listeners:
     * [CreatedAtEventListener](https://github.com/GrinWay/service-bundle/blob/main/src/EventListener/Doctrine/CreatedAtEventListener.php)
       (its

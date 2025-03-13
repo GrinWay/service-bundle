@@ -55,6 +55,44 @@ Use the following traits in your test classes to obtain new functionality
 | [CreatedAt](https://github.com/GrinWay/service-bundle/blob/main/src/Trait/Doctrine/CreatedAt.php)     | Adds `\DateTimeImmutable $createdAt` field to your entity |
 | [UpdatedAt](https://github.com/GrinWay/service-bundle/blob/main/src/Trait/Doctrine/UpdatedAt.php)     | Adds `\DateTimeImmutable $updatedAt` field to your entity |
 
+### Doctrine Functions
+
+```yaml
+# in your %kernel.project_dir%/config/packages/doctrine.yaml
+doctrine:
+    orm:
+        dql:
+            string_functions:
+                leave_only_numbers: 'GrinWay\Service\Doctrine\Function\LeaveOnlyNumbers'
+```
+
+Usage:
+
+```php
+<?php
+
+namespace App\Repository;
+
+//...
+
+class YourRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, YourEntity::class);
+    }
+
+    public function findWithShortestIntervalFirst(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->orderBy('CAST(LEAVE_ONLY_NUMBERS(o.dateInterval) AS INT)', 'ASC')
+            ->getQuery()
+            ->getResult()//
+            ;
+    }
+}
+```
+
 ### Doctrine Event Listeners
 
 If you look at `%kernel.project_dir%/config/packages/grinway_service.yaml`

@@ -32,6 +32,9 @@ class Test
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     protected ?\DateTimeInterface $dateTime = null;
 
+    #[ORM\Column(type: Types::DATEINTERVAL, nullable: true)]
+    protected ?\DateInterval $dateinterval = null;
+
     #[ORM\OneToOne(inversedBy: 'test', cascade: ['persist'])]
     protected ?TestAssociation $association = null;
 
@@ -77,5 +80,15 @@ class Test
     public function setTest(?string $test): void
     {
         $this->test = $test;
+    }
+
+    public function getDateinterval(): ?\DateInterval
+    {
+        return $this->dateinterval;
+    }
+
+    public function setDateinterval(?\DateInterval $dateinterval): void
+    {
+        $this->dateinterval = $dateinterval;
     }
 }
