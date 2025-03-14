@@ -175,7 +175,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
             1,
         );
 
-        $this->assertSame(1, $end);
+        $this->assertSame('1', $end);
     }
 
     public function testGetEndNumberWithEndFiguresWith3()
@@ -185,7 +185,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
             3,
         );
 
-        $this->assertSame(234, $end);
+        $this->assertSame('234', $end);
     }
 
     public function testGetStartNumberWithEndFiguresWithEqualActualNumberAndEndCountLength()
@@ -216,7 +216,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
         );
 
         $this->assertSame(0, $start);
-        $this->assertSame(1234567890, $end);
+        $this->assertSame('1234567890', $end);
     }
 
     public function testGetStartEndNumbersWithEndFigures()
@@ -227,7 +227,7 @@ class FiguresRepresentationTest extends AbstractUnitTestCase
         );
 
         $this->assertSame(12, $start);
-        $this->assertSame(45, $end);
+        $this->assertSame('45', $end);
     }
 
     public function testGetStartEndNumbersWithEndFiguresThrowsOnNegativeNumber()

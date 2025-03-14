@@ -106,9 +106,9 @@ class FiguresRepresentation
      * It's an array of int php types
      *
      * Usage:
-     * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbersWithEndFigures(123, 2);
+     * [$one, $twoZeros] = FiguresRepresentation::getStartEndNumbersWithEndFigures('101', 2);
      * // int 1  === $one
-     * // int 23 === $twoThree
+     * // string '01' === $twoThree
      */
     public static function getStartEndNumbersWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): array
     {
@@ -134,14 +134,14 @@ class FiguresRepresentation
     /**
      * API
      *
-     * Extracts "end" part of the dot-less number representation as int
+     * Extracts "end" part of the dot-less number representation as string NOT TO LOSE LEADING ZERO
      *
      * If 2 === $endFiguresCount
-     * '123' -> (int)23
+     * '101' -> (string)'01'
      */
-    public static function getEndNumberWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): int
+    public static function getEndNumberWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): string
     {
-        return (int)self::getEndFiguresWithEndFigures($numberWithEndFigures, $endFiguresCount);
+        return (string)self::getEndFiguresWithEndFigures($numberWithEndFigures, $endFiguresCount);
     }
 
     /**
@@ -183,7 +183,7 @@ class FiguresRepresentation
      * Extracts "end" part of the dot-less number representation as string
      *
      * If 2 === $endFiguresCount
-     * '123' -> '23'
+     * '109' -> '09'
      */
     public static function getEndFiguresWithEndFigures(string $numberWithEndFigures, int $endFiguresCount): string
     {
@@ -244,18 +244,6 @@ class FiguresRepresentation
             [new notBlank(), new LikeInt()],
         );
         return $resultNumberWithEndFigures;
-    }
-
-    /**
-     * @deprecated Use "concatStartEndPartsWithEndFigures" instead, since grinway/service-bundle v2 will be removed
-     */
-    public static function concatNumbersWithCorrectCountOfEndFigures(string|int $startNumberPart, string|int $endNumberPart, int $endFiguresCount): string
-    {
-        return self::concatStartEndPartsWithEndFigures(
-            startNumberPart: $startNumberPart,
-            endNumberPart: $endNumberPart,
-            endFiguresCount: $endFiguresCount,
-        );
     }
 
     /**

@@ -36,20 +36,6 @@ class Currency
     }
 
     /**
-     * @deprecated function "transferAmountFromTo" use "convertFromCurrencyToAnotherWithEndFigures" instead since grinway/service-bundle v2 will be removed
-     * @deprecated default value for $endFiguresCount since grinway/service-bundle v2 will be required
-     */
-    public function transferAmountFromTo(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount = 2): string
-    {
-        return $this->convertFromCurrencyToAnotherWithEndFigures(
-            $amountWithEndFigures,
-            $amountCurrency,
-            $convertToCurrency,
-            $endFiguresCount,
-        );
-    }
-
-    /**
      * API
      *
      * @param string $amountWithEndFigures has Telegram currency amount style (see above explanation)
