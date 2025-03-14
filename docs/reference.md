@@ -176,6 +176,9 @@ class Entity {
 }
 ```
 
+> **Since 2.0.1** `Percent::getPercentOf()` happened to get the percent of a float (example below)
+> [look simple examples in the tests](https://github.com/GrinWay/service-bundle/blob/main/tests/Unit/Doctrine/Type/PercentTest.php)
+
 ### Classes to get extended
 
 | Class                                                                                       | Description                          |

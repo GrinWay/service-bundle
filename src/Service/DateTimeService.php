@@ -84,6 +84,16 @@ class DateTimeService
     /**
      * API
      */
+    public static function greaterThanNow(
+        \DateTimeInterface $dateTime,
+    ): bool
+    {
+        return 0 < self::diffFromNow(dateTime: $dateTime)->total('seconds');
+    }
+
+    /**
+     * API
+     */
     public static function notLessThanNow(
         \DateTimeInterface $dateTime,
     ): bool

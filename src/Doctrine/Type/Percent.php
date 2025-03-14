@@ -46,4 +46,12 @@ class Percent implements \Stringable
     {
         return (string)$this->percent;
     }
+
+    /**
+     * Round to precision 2 (drops 3rd number after the dot)
+     */
+    public function getPercentOf(float $number): float {
+        $percent = $number * ($this->toFloat() / 100);
+        return ((int)(\round($percent, 3) * 100)) / 100;
+    }
 }
