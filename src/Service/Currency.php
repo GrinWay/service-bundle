@@ -46,7 +46,7 @@ class Currency
      * @throws NotSuccessFixerException
      * @throws NoBaseFixerException
      */
-    public function convertFromCurrencyToAnotherWithEndFigures(string $amountWithEndFigures, string $amountCurrency, mixed $convertToCurrency, int $endFiguresCount, bool $forceMakeHttpRequestToFixer = false, bool $allowNonRemovableCache = true): string
+    public function convertFromCurrencyToAnotherWithEndFigures(string $amountWithEndFigures, string $amountCurrency, string $convertToCurrency, int $endFiguresCount, bool $forceMakeHttpRequestToFixer = false, bool $allowNonRemovableCache = true): string
     {
         $this->validate(
             $amountWithEndFigures,
@@ -62,7 +62,7 @@ class Currency
         $fromCurrencyString = $amountCurrency;
         $toCurrencyString = $convertToCurrency;
 
-        if ($fromCurrencyString === $toCurrencyString) {
+        if ('000' === $amountWithEndFigures || $fromCurrencyString === $toCurrencyString) {
             return $amountWithEndFigures;
         }
 
@@ -165,11 +165,12 @@ class Currency
     /**
      * Helper
      */
-    protected function assertCurrencyExistsInFixerAPI(?string $currencyValue, string $currencyString): void
+    protected function assertCurrencyExistsInFixerAPI(?string $currencyValue, ?string $currencyString): void
     {
         if (null === $currencyValue) {
             $message = \sprintf(
-                'There is no info about "%s" currency in the fixer API payload',
+                'There is no info about (%s)"%s" currency in the fixer API payload',
+                \get_debug_type($currencyString),
                 $currencyString,
             );
             throw new \RuntimeException($message);
@@ -221,8 +222,15 @@ class Currency
      *
      * @internal
      */
-    private function getValidatedOneBaseCurrencyValueFromFixerPayload(mixed $currencyString, array $fixerPayload)
+    private function getValidatedOneBaseCurrencyValueFromFixerPayload(
+        string $currencyString,
+        array  $fixerPayload,
+    ): mixed
     {
+        if (empty($currencyString)) {
+            throw new \InvalidArgumentException('Currency string can\'t be empty');
+        }
+
         $pa = $this->serviceLocator->get('pa');
 
         $oneBaseCurrencyValue = $pa->getValue(

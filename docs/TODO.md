@@ -99,3 +99,5 @@ framework:
                 middleware:
                 - unrecoverable_do_not_send_messages_to_failure_transport_middleware
 ```
+
+`[CarbonIntervalString.php](..%2Fsrc%2FValidator%2FCarbonIntervalString.php)`
