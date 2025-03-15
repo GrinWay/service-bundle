@@ -78,26 +78,27 @@ class DateTimeServiceGetIntervalsTest extends AbstractDateTimeServiceTestCase
         $this->assertEquals((string)$intervals[0], (string)static::$interval1Y);
     }
 
-    public function testIterateBy3Months()
+    public function testIterateBy3MonthsAnd2Seconds()
     {
+        $minInterval = CarbonInterval::instance(static::$interval1Y)->addSeconds(2);
         $intervals = DateTimeService::getIntervals(
-            minInterval: static::$interval1Y,
+            minInterval: $minInterval,
             maxInterval: static::$interval2Y,
             iterateByValueUnits: '3 months',
         );
 
         $this->assertCount(5, $intervals);
-        $this->assertEquals((string)$intervals[0], (string)static::$interval1Y);
+        $this->assertEquals((string)$intervals[0], (string)$minInterval);
         $this->assertEquals(
-            (string)CarbonInterval::years(1)->add('3 months'),
+            (string)CarbonInterval::years(1)->addMonths(3 * 1)->addSeconds(2),
             (string)$intervals[1],
         );
         $this->assertEquals(
-            (string)CarbonInterval::years(1)->add('6 months'),
+            (string)CarbonInterval::years(1)->addMonths(3 * 2)->addSeconds(2),
             (string)$intervals[2],
         );
         $this->assertEquals(
-            (string)CarbonInterval::years(1)->add('9 months'),
+            (string)CarbonInterval::years(1)->addMonths(3 * 3)->addSeconds(2),
             (string)$intervals[3],
         );
         $this->assertEquals((string)$intervals[4], (string)static::$interval2Y);
@@ -157,6 +158,33 @@ class DateTimeServiceGetIntervalsTest extends AbstractDateTimeServiceTestCase
         $this->assertEquals((string)$intervals[4], (string)static::$interval2Y);
     }
 
+    public function testIterateBy3Month2MinuteAnd1SecondsAlignValueUnits()
+    {
+        $minInterval = CarbonInterval::instance(static::$interval1Y)->addDays(2)->addHours(3);
+        $intervals = DateTimeService::getIntervals(
+            minInterval: $minInterval,
+            maxInterval: static::$interval2Y,
+            iterateByValueUnits: '2 minute 3 month 1 seconds',
+            alignValueUnits: true,
+        );
+
+        $this->assertCount(5, $intervals);
+        $this->assertEquals((string)$intervals[0], (string)$minInterval);
+        $this->assertEquals(
+            (string)CarbonInterval::years(1)->addMonths(3)->addMinutes(2)->addSeconds(1),
+            (string)$intervals[1],
+        );
+        $this->assertEquals(
+            (string)CarbonInterval::years(1)->addMonths(6)->addMinutes(2)->addSeconds(1),
+            (string)$intervals[2],
+        );
+        $this->assertEquals(
+            (string)CarbonInterval::years(1)->addMonths(9)->addMinutes(2)->addSeconds(1),
+            (string)$intervals[3],
+        );
+        $this->assertEquals((string)$intervals[4], (string)static::$interval2Y);
+    }
+
     public function testIterateHourlyAlignValueUnits()
     {
         $minInterval = CarbonInterval::seconds(2);
@@ -189,6 +217,78 @@ class DateTimeServiceGetIntervalsTest extends AbstractDateTimeServiceTestCase
         $this->assertEquals((string)$intervals[5], (string)$maxInterval);
     }
 
+    public function testIterateHourlyWithSAlignValueUnits()
+    {
+        $minInterval = CarbonInterval::seconds(2);
+        $maxInterval = CarbonInterval::days(1);
+        $intervals = DateTimeService::getIntervals(
+            minInterval: $minInterval,
+            maxInterval: $maxInterval,
+            iterateByValueUnits: '5 hours',
+            alignValueUnits: true,
+        );
+
+        $this->assertCount(6, $intervals);
+        $this->assertEquals((string)$intervals[0], (string)$minInterval);
+        $this->assertEquals(
+            (string)CarbonInterval::hours(5 * 1),
+            (string)$intervals[1],
+        );
+        $this->assertEquals(
+            (string)CarbonInterval::hours(5 * 2),
+            (string)$intervals[2],
+        );
+        $this->assertEquals(
+            (string)CarbonInterval::hours(5 * 3),
+            (string)$intervals[3],
+        );
+        $this->assertEquals(
+            (string)CarbonInterval::hours(5 * 4),
+            (string)$intervals[4],
+        );
+        $this->assertEquals((string)$intervals[5], (string)$maxInterval);
+    }
+
+    public function testIterate2DaysAlignValueUnits()
+    {
+        $minInterval = CarbonInterval::days(1);
+        $maxInterval = CarbonInterval::days(3)->addSeconds(1);
+        $intervals = DateTimeService::getIntervals(
+            minInterval: $minInterval,
+            maxInterval: $maxInterval,
+            iterateByValueUnits: '2 days',
+            alignValueUnits: true,
+        );
+
+        $this->assertCount(3, $intervals);
+        $this->assertEquals((string)$intervals[0], (string)$minInterval);
+        $this->assertEquals(
+            (string)CarbonInterval::days(3),
+            (string)$intervals[1],
+        );
+        $this->assertEquals((string)$intervals[2], (string)$maxInterval);
+    }
+
+    public function testIterate2DayAlignValueUnits()
+    {
+        $minInterval = CarbonInterval::days(1);
+        $maxInterval = CarbonInterval::days(3)->addSeconds(1);
+        $intervals = DateTimeService::getIntervals(
+            minInterval: $minInterval,
+            maxInterval: $maxInterval,
+            iterateByValueUnits: '2 day',
+            alignValueUnits: true,
+        );
+
+        $this->assertCount(3, $intervals);
+        $this->assertEquals((string)$intervals[0], (string)$minInterval);
+        $this->assertEquals(
+            (string)CarbonInterval::days(3),
+            (string)$intervals[1],
+        );
+        $this->assertEquals((string)$intervals[2], (string)$maxInterval);
+    }
+
     public function testIterateYearlyAlignValueUnits()
     {
         $minInterval = CarbonInterval::years(1)->addSeconds(5);
@@ -197,6 +297,26 @@ class DateTimeServiceGetIntervalsTest extends AbstractDateTimeServiceTestCase
             minInterval: $minInterval,
             maxInterval: $maxInterval,
             iterateByValueUnits: '1 year',
+            alignValueUnits: true,
+        );
+
+        $this->assertCount(3, $intervals);
+        $this->assertEquals((string)$intervals[0], (string)$minInterval);
+        $this->assertEquals(
+            (string)CarbonInterval::years(2),
+            (string)$intervals[1],
+        );
+        $this->assertEquals((string)$intervals[2], (string)$maxInterval);
+    }
+
+    public function testIterateYearlyWithSAlignValueUnits()
+    {
+        $minInterval = CarbonInterval::years(1)->addSeconds(5);
+        $maxInterval = CarbonInterval::years(3);
+        $intervals = DateTimeService::getIntervals(
+            minInterval: $minInterval,
+            maxInterval: $maxInterval,
+            iterateByValueUnits: '1 years',
             alignValueUnits: true,
         );
 
