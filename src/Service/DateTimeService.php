@@ -16,17 +16,6 @@ class DateTimeService
 {
     /**
      * API
-     */
-    public static function diffFromNow(
-        \DateTimeInterface $dateTime,
-    ): CarbonInterval
-    {
-        $dateTimeUtc = Carbon::instance($dateTime)->setTimezone('UTC');
-        return Carbon::now('UTC')->diff($dateTimeUtc);
-    }
-
-    /**
-     * API
      *
      * @param ?int $iterateByCount Default behaviour, has effect only if below argument is null
      * @param ?string $iterateByValueUnits '1 second', '10 years', ...
@@ -111,7 +100,7 @@ class DateTimeService
                 $nextInterval = CarbonInterval::instance($nextInterval)
                     ->add($intervalPartSec, 'seconds')->cascade()//
                 ;
-                self::alignValueUnit(
+                static::alignValueUnit(
                     minInterval: $minInterval,
                     intervalPart: $intervalPart,
                     nextInterval: $nextInterval,
@@ -129,7 +118,7 @@ class DateTimeService
             \assert($nextInterval instanceof CarbonInterval);
             $stringInterval = (string)$nextInterval;
             if (!\in_array($stringInterval, $stringIntervals)) {
-                self::addFilteredItem($intervals, $nextInterval, $filterInterval);
+                static::addFilteredItem($intervals, $nextInterval, $filterInterval);
             }
             $stringIntervals[] = $stringInterval;
             --$idx;
@@ -140,21 +129,22 @@ class DateTimeService
     /**
      * API
      */
-    public static function lessThanNow(
+    public static function diffFromNow(
         \DateTimeInterface $dateTime,
-    ): bool
+    ): CarbonInterval
     {
-        return 0 > self::diffFromNow(dateTime: $dateTime)->total('seconds');
+        $dateTimeUtc = Carbon::instance($dateTime)->setTimezone('UTC');
+        return Carbon::now('UTC')->diff($dateTimeUtc);
     }
 
     /**
      * API
      */
-    public static function greaterThanNow(
+    public static function lessThanNow(
         \DateTimeInterface $dateTime,
     ): bool
     {
-        return 0 < self::diffFromNow(dateTime: $dateTime)->total('seconds');
+        return 0 > static::diffFromNow(dateTime: $dateTime)->total('seconds');
     }
 
     /**
@@ -164,23 +154,43 @@ class DateTimeService
         \DateTimeInterface $dateTime,
     ): bool
     {
-        return !self::lessThanNow(dateTime: $dateTime);
+        return !static::lessThanNow(dateTime: $dateTime);
+    }
+
+    /**
+     * API
+     */
+    public static function greaterThanNow(
+        \DateTimeInterface $dateTime,
+    ): bool
+    {
+        return 0 < static::diffFromNow(dateTime: $dateTime)->total('seconds');
+    }
+
+    /**
+     * API
+     */
+    public static function notGreaterThanNow(
+        \DateTimeInterface $dateTime,
+    ): bool
+    {
+        return !static::greaterThanNow(dateTime: $dateTime);
     }
 
     /**
      * API
      */
     public static function getPeriodsOverlapInterval(
-        CarbonPeriod $periodA,
-        CarbonPeriod $periodB,
+        CarbonPeriod $period1,
+        CarbonPeriod $period2,
     ): CarbonInterval
     {
-        if (!$periodA->overlaps($periodB)) {
+        if (!$period1->overlaps($period2)) {
             return new CarbonInterval();
         }
 
-        $firstEndDate = \min($periodA->calculateEnd(), $periodB->calculateEnd());
-        $latestStartDate = \max($periodA->getStartDate(), $periodB->getStartDate());
+        $firstEndDate = \min($period1->calculateEnd(), $period2->calculateEnd());
+        $latestStartDate = \max($period1->getStartDate(), $period2->getStartDate());
 
         return CarbonInterval::make($firstEndDate->diff($latestStartDate));
     }
