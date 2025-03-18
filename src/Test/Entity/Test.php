@@ -1,6 +1,6 @@
 <?php
 
-namespace GrinWay\Service\Entity;
+namespace GrinWay\Service\Test\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

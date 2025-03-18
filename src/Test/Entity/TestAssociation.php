@@ -1,6 +1,6 @@
 <?php
 
-namespace GrinWay\Service\Entity;
+namespace GrinWay\Service\Test\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use GrinWay\Service\Repository\TestAssociationRepository;

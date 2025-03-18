@@ -4,8 +4,8 @@ namespace GrinWay\Service\Tests\Unit\Doctrine;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use GrinWay\Service\Entity\Test;
 use GrinWay\Service\EventListener\Doctrine\UpdatedAtEventListener;
+use GrinWay\Service\Test\Entity\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(UpdatedAtEventListener::class)]

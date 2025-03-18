@@ -2,8 +2,8 @@
 
 namespace GrinWay\Service\Test\Service\Messenger;
 
-use GrinWay\Service\Entity\Test;
 use GrinWay\Service\Service\Messenger\WorkerUtil as WorkerUtilAlias;
+use GrinWay\Service\Test\Entity\Test;
 
 class WorkerUtil extends WorkerUtilAlias
 {

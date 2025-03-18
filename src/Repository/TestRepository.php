@@ -4,7 +4,7 @@ namespace GrinWay\Service\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use GrinWay\Service\Entity\Test;
+use GrinWay\Service\Test\Entity\Test;
 
 /**
  * @extends ServiceEntityRepository<Test>

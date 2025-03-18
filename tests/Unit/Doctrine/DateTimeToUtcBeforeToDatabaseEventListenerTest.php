@@ -2,9 +2,9 @@
 
 namespace GrinWay\Service\Tests\Unit\Doctrine;
 
-use GrinWay\Service\Entity\Test;
 use GrinWay\Service\EventListener\Doctrine\DateTimeToUtcBeforeToDatabaseEventListener;
 use GrinWay\Service\Factory\TestFactory;
+use GrinWay\Service\Test\Entity\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(DateTimeToUtcBeforeToDatabaseEventListener::class)]

@@ -2,9 +2,9 @@
 
 namespace GrinWay\Service\Tests\Unit\WorkerUtil;
 
-use GrinWay\Service\Entity\TestAssociation;
 use GrinWay\Service\Factory\TestFactory;
 use GrinWay\Service\Service\Messenger\WorkerUtil as WorkerUtilAlias;
+use GrinWay\Service\Test\Entity\TestAssociation;
 use GrinWay\Service\Test\Service\Messenger\WorkerUtil as TestWorkerUtil;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;

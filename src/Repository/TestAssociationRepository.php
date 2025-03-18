@@ -4,7 +4,7 @@ namespace GrinWay\Service\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use GrinWay\Service\Entity\TestAssociation;
+use GrinWay\Service\Test\Entity\TestAssociation;
 
 /**
  * @extends ServiceEntityRepository<TestAssociation>

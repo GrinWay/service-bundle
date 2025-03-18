@@ -3,8 +3,7 @@
 namespace GrinWay\Service\Tests\Unit\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
-use GrinWay\Service\Entity\Test;
-use GrinWay\Service\Factory\TestFactory;
+use GrinWay\Service\Test\Entity\Test;
 use GrinWay\Service\Tests\Unit\AbstractUnitTestCase;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;

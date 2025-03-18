@@ -19,6 +19,13 @@ when@test:
                 auto_mapping: false
             auto_generate_proxy_classes: '%kernel.debug%'
             auto_mapping: true
+            mappings:
+                Test:
+                    prefix: 'GrinWay\Service\Test\Entity'
+                    is_bundle: false
+                    type: "attribute"
+                    dir: '%kernel.project_dir%/src/Test/Entity'
+                    mapping: true
             dql:
                 string_functions:
                     leave_only_numbers: 'GrinWay\Service\Doctrine\Function\LeaveOnlyNumbers'

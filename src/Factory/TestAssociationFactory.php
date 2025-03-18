@@ -2,7 +2,7 @@
 
 namespace GrinWay\Service\Factory;
 
-use GrinWay\Service\Entity\TestAssociation;
+use GrinWay\Service\Test\Entity\TestAssociation;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**

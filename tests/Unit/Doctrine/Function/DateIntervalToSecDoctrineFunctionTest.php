@@ -3,7 +3,7 @@
 namespace GrinWay\Service\Tests\Unit\Doctrine\Function;
 
 use GrinWay\Service\Doctrine\Function\LeaveOnlyNumbers;
-use GrinWay\Service\Entity\Test;
+use GrinWay\Service\Test\Entity\Test;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(LeaveOnlyNumbers::class)]
