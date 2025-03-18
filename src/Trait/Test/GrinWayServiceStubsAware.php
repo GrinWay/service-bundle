@@ -2,6 +2,7 @@
 
 namespace GrinWay\Service\Trait\Test;
 
+use GrinWay\Service\Contract\Test\TestKey;
 use GrinWay\Service\Service\Currency;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -29,8 +30,9 @@ trait GrinWayServiceStubsAware
             );
         }
 
+        $serviceId = 'grinway_service.currency.fixer_latest';
         $currencyFixerPayload = static::getContainer()
-            ->get('grinway_service.currency.fixer_latest')
+            ->get($serviceId)
             ->request('GET', '')
             ->getContent()//
         ;
@@ -38,8 +40,13 @@ trait GrinWayServiceStubsAware
             ->get('serializer')
             ->decode($currencyFixerPayload, 'json')//
         ;
-        if (null === ($fixerArrayPayload['grinway_key_fake_fixer'] ?? null)) {
-            $message = '!!! Accidentally used a real fixer API service, MOCK IT !!!';
+        if (null === ($fixerArrayPayload[TestKey::GRINWAY_FAKE_FIXER_KEY] ?? null)) {
+            $message = \sprintf(
+                '!!! Mocked "%s" must have "%s" key in its mocked body to distinguish if it\'s mocked or not !!!%sTo do this return correct http client response body in the abstract method',
+                $serviceId,
+                TestKey::GRINWAY_FAKE_FIXER_KEY,
+                \PHP_EOL,
+            );
             echo $message . \PHP_EOL . \PHP_EOL;
             throw new \RuntimeException($message);
         }

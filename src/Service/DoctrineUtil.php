@@ -14,7 +14,7 @@ class DoctrineUtil
         array     $fieldValues,
         callable  $setParameterCallback,
         callable  $whereCallback,
-        ?callable $valueToKeyConverter = null,
+        ?callable $fieldValueToKeyConverterCallback = null,
     ): void
     {
         if (empty($fieldValues)) {
@@ -25,11 +25,11 @@ class DoctrineUtil
         Validation::createCallable(new NotBlank())($aliasName);
         Validation::createCallable(new NotBlank())($fieldName);
 
-        $valueToKeyConverter ??= static function (mixed $value): string {
-            if (\is_object($value)) {
-                return \spl_object_hash($value);
+        $fieldValueToKeyConverterCallback ??= static function (mixed $fieldValue): string {
+            if (\is_object($fieldValue)) {
+                return \spl_object_hash($fieldValue);
             }
-            return (string)$value;
+            return (string)$fieldValue;
         };
 
         $statement = \strtoupper($statement);
@@ -40,7 +40,7 @@ class DoctrineUtil
 
         $conditionStatement = '';
         foreach ($fieldValues as $fieldValue) {
-            $key = \sprintf('%s%s', $fieldName, $valueToKeyConverter($fieldValue));
+            $key = \sprintf('%s%s', $fieldName, $fieldValueToKeyConverterCallback($fieldValue));
             $expKey = \sprintf(':%s', $key);
             $conditionStatement .= \sprintf(
                 '%s%s.%s = %s',
