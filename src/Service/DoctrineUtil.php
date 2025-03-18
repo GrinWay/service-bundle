@@ -8,13 +8,13 @@ use Symfony\Component\Validator\Validation;
 class DoctrineUtil
 {
     public static function setStatementFor(
-        string   $aliasName,
-        string   $fieldName,
-        string   $statement,
-        array    $fieldValues,
-        callable $setParameterCallback,
-        callable $whereCallback,
-        ?callable $valueToStringConverter = null,
+        string    $aliasName,
+        string    $fieldName,
+        string    $statement,
+        array     $fieldValues,
+        callable  $setParameterCallback,
+        callable  $whereCallback,
+        ?callable $valueToKeyConverter = null,
     ): void
     {
         if (empty($fieldValues)) {
@@ -25,11 +25,11 @@ class DoctrineUtil
         Validation::createCallable(new NotBlank())($aliasName);
         Validation::createCallable(new NotBlank())($fieldName);
 
-        $valueToStringConverter = static function (mixed $value): string {
+        $valueToKeyConverter ??= static function (mixed $value): string {
             if (\is_object($value)) {
                 return \spl_object_hash($value);
             }
-            return (string) $value;
+            return (string)$value;
         };
 
         $statement = \strtoupper($statement);
@@ -40,7 +40,7 @@ class DoctrineUtil
 
         $conditionStatement = '';
         foreach ($fieldValues as $fieldValue) {
-            $key = \sprintf('%s%s', $fieldName, $valueToStringConverter($fieldValue));
+            $key = \sprintf('%s%s', $fieldName, $valueToKeyConverter($fieldValue));
             $expKey = \sprintf(':%s', $key);
             $conditionStatement .= \sprintf(
                 '%s%s.%s = %s',
