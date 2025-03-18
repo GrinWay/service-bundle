@@ -12,7 +12,6 @@ when@test:
             url: '%env(resolve:GRINWAY_SERVICE_DATABASE_URL)%'
             server_version: '8.0.40'
 
-            # "TEST_TOKEN" is typically set by ParaTest
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
         orm:
             controller_resolver:
@@ -20,7 +19,7 @@ when@test:
             auto_generate_proxy_classes: '%kernel.debug%'
             auto_mapping: true
             mappings:
-                Test:
+                App:
                     prefix: 'GrinWay\Service\Test\Entity'
                     is_bundle: false
                     type: "attribute"
