@@ -3,14 +3,11 @@
 namespace GrinWay\Service\Trait\Test;
 
 use GrinWay\Service\Contract\Test\TestKey;
-use GrinWay\Service\Service\Currency;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
 trait GrinWayServiceStubsAware
 {
-    protected static Currency $currencyService;
-
     abstract protected static function isStubCurrencyFixerLatest(): bool;
 
     abstract protected static function getStubCurrencyFixerLatestResponseBody(): string;
@@ -50,7 +47,5 @@ trait GrinWayServiceStubsAware
             echo $message . \PHP_EOL . \PHP_EOL;
             throw new \RuntimeException($message);
         }
-
-        static::$currencyService = static::getContainer()->get('grinway_service.currency');
     }
 }
