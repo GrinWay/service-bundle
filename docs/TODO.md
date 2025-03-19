@@ -101,3 +101,6 @@ framework:
 ```
 
 `[CarbonIntervalString.php](..%2Fsrc%2FValidator%2FCarbonIntervalString.php)`
+
+
+`test for SessionAware`

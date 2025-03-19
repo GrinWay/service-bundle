@@ -48,6 +48,7 @@ service [grinway_service.string_service](https://github.com/GrinWay/service-bund
     * [grinway_service.cache_pool.currency](https://github.com/GrinWay/service-bundle/blob/main/config/packages/framework_cache.yaml)
 * Test Traits:
     * [HasBufferTest](https://github.com/GrinWay/service-bundle/blob/main/src/Test/Trait/HasBufferTest.php)
+    * [SessionAware](https://github.com/GrinWay/service-bundle/blob/main/src/Test/Trait/SessionAware.php)
 * Doctrine Traits:
     * [CreatedAt](https://github.com/GrinWay/service-bundle/blob/main/src/Trait/Doctrine/CreatedAt.php)
       (its listener
