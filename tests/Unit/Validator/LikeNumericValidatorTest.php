@@ -1,6 +1,6 @@
 <?php
 
-namespace GrinWay\Service\Tests\Unit;
+namespace GrinWay\Service\Tests\Unit\Validator;
 
 use GrinWay\Service\Validator\LikeNumeric;
 use GrinWay\Service\Validator\LikeNumericValidator;
@@ -20,6 +20,12 @@ class LikeNumericValidatorTest extends ConstraintValidatorTestCase
     public function testNullIsValid(): void
     {
         $this->validator->validate(null, new LikeNumeric());
+        $this->assertNoViolation();
+    }
+
+    public function testEmptyStringIsValid(): void
+    {
+        $this->validator->validate('', new LikeNumeric());
         $this->assertNoViolation();
     }
 
@@ -66,6 +72,16 @@ class LikeNumericValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate('alpha', new LikeNumeric());
         $this->buildViolation('The {{ like_numeric }} is not like numeric.')
             ->setParameter('{{ like_numeric }}', 'alpha')
+            ->assertRaised();
+    }
+
+    public function testNonScalarIsInvalidLikeNumeric()
+    {
+        $object = new \StdClass();
+        $this->validator->validate($object, new LikeNumeric());
+
+        $this->buildViolation('The {{ like_numeric }} is not like numeric.')
+            ->setParameter('{{ like_numeric }}', \get_debug_type($object))
             ->assertRaised();
     }
 }

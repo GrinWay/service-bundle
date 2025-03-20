@@ -1,8 +1,9 @@
 <?php
 
-namespace GrinWay\Service\Tests\Unit;
+namespace GrinWay\Service\Tests\Unit\Service;
 
 use GrinWay\Service\Service\FiguresRepresentation;
+use GrinWay\Service\Tests\Unit\AbstractUnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 

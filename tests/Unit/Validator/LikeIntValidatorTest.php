@@ -1,6 +1,6 @@
 <?php
 
-namespace GrinWay\Service\Tests\Unit;
+namespace GrinWay\Service\Tests\Unit\Validator;
 
 use GrinWay\Service\Validator\LikeInt;
 use GrinWay\Service\Validator\LikeIntValidator;
@@ -20,6 +20,12 @@ class LikeIntValidatorTest extends ConstraintValidatorTestCase
     public function testNullIsValid(): void
     {
         $this->validator->validate(null, new LikeInt());
+        $this->assertNoViolation();
+    }
+
+    public function testEmptyStringIsValid(): void
+    {
+        $this->validator->validate('', new LikeInt());
         $this->assertNoViolation();
     }
 
@@ -64,6 +70,16 @@ class LikeIntValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate('alpha', new LikeInt());
         $this->buildViolation('It is not like int: {{ like_int }}.')
             ->setParameter('{{ like_int }}', 'alpha')
+            ->assertRaised();
+    }
+
+    public function testNonScalarIsInvalidLikeInt()
+    {
+        $object = new \StdClass();
+        $this->validator->validate($object, new LikeInt());
+
+        $this->buildViolation('It is not like int: {{ like_int }}.')
+            ->setParameter('{{ like_int }}', \get_debug_type($object))
             ->assertRaised();
     }
 }

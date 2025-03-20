@@ -1,6 +1,6 @@
 <?php
 
-namespace GrinWay\Service\Trait\Test;
+namespace GrinWay\Service\Test\Trait;
 
 use GrinWay\Service\Contract\Test\TestKey;
 use Symfony\Component\HttpClient\MockHttpClient;

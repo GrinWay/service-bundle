@@ -1,6 +1,6 @@
 <?php
 
-namespace GrinWay\Service\Trait\Test;
+namespace GrinWay\Service\Test\Trait;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

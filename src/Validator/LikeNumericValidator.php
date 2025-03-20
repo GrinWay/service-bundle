@@ -18,8 +18,12 @@ final class LikeNumericValidator extends ConstraintValidator
             return;
         }
 
-        if (\is_numeric($likeNumeric)) {
-            return;
+        if (!\is_scalar($likeNumeric)) {
+            $likeNumeric = \get_debug_type($likeNumeric);
+        } else {
+            if (\is_numeric($likeNumeric)) {
+                return;
+            }
         }
 
         $this->context->buildViolation($constraint->message)

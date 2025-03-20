@@ -1,6 +1,6 @@
 <?php
 
-namespace GrinWay\Service\Tests\Unit;
+namespace GrinWay\Service\Tests\Unit\Validator;
 
 use GrinWay\Service\Validator\AbsolutePath;
 use GrinWay\Service\Validator\AbsolutePathValidator;
@@ -20,6 +20,12 @@ class AbsolutePathValidatorTest extends ConstraintValidatorTestCase
     public function testNullIsValid(): void
     {
         $this->validator->validate(null, new AbsolutePath());
+        $this->assertNoViolation();
+    }
+
+    public function testEmptyStringIsValid(): void
+    {
+        $this->validator->validate('', new AbsolutePath());
         $this->assertNoViolation();
     }
 
@@ -50,6 +56,16 @@ class AbsolutePathValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation('The path "{{ path }}" is not an absolute one.')
             ->setParameter('{{ path }}', 'relative/path')
+            ->assertRaised();
+    }
+
+    public function testNonScalarIsInvalidAbsolutePath()
+    {
+        $object = new \StdClass();
+        $this->validator->validate($object, new AbsolutePath());
+
+        $this->buildViolation('The path "{{ path }}" is not an absolute one.')
+            ->setParameter('{{ path }}', \get_debug_type($object))
             ->assertRaised();
     }
 }
