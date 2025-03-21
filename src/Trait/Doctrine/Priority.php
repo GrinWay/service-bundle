@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait Priority
 {
     #[ORM\Column(type: Types::SMALLINT)]
-    protected int $priority = 0;
+    protected ?int $priority = 0;
 
     public function getPriority(): int
     {

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait Active
 {
     #[ORM\Column]
-    protected bool $active = false;
+    protected ?bool $active = false;
 
     public function isActive(): bool
     {
