@@ -2,9 +2,9 @@
 
 namespace GrinWay\Service\Validator;
 
+use Carbon\Carbon;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use function Symfony\Component\String\u;
 
 final class TimezoneValidator extends ConstraintValidator
 {
@@ -18,7 +18,13 @@ final class TimezoneValidator extends ConstraintValidator
             return;
         }
 
-        if (null !== (u($value)->match('~^(?<timezone>[+\-][0-9]{1,2}[:][0-9]{1,2})$~i')['timezone'] ?? null)) {
+        $valid = true;
+        try {
+            Carbon::now('UTC')->timezone($value);
+        } catch (\Exception) {
+            $valid = false;
+        }
+        if (true === $valid) {
             return;
         }
 
