@@ -18,8 +18,10 @@ trait Priority
         return $this->priority;
     }
 
-    public function setPriority(int $priority): static
+    public function setPriority(?int $priority): static
     {
+        $priority ??= 0;
+
         $this->priority = $priority;
 
         return $this;

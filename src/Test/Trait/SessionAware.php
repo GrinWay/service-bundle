@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 
 trait SessionAware
 {
-    protected static function setUpUnitTestSession()
+    protected static function setUpUnitTestSession(): void
     {
         $sessionMock = new Session(new MockArraySessionStorage());
         $request = new Request();
@@ -19,7 +19,7 @@ trait SessionAware
         $requestStack->push($request);
     }
 
-    protected static function setUpFunctionalTestSession()
+    protected static function setUpFunctionalTestSession(): void
     {
         $sessionMock = new Session(new MockFileSessionStorage());
         $request = new Request();
