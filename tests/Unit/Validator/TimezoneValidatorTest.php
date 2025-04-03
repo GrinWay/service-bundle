@@ -43,6 +43,18 @@ class TimezoneValidatorTest extends ConstraintValidatorTestCase
         $this->assertNoViolation();
     }
 
+    public function testValidOneFrontNumberCarbonTimezoneString(): void
+    {
+        $this->validator->validate('+1:34', new Timezone());
+        $this->assertNoViolation();
+    }
+
+    public function testValidOneEndNumberCarbonTimezoneString(): void
+    {
+        $this->validator->validate('+01:3', new Timezone());
+        $this->assertNoViolation();
+    }
+
     public function testValidNegativeCarbonTimezoneString(): void
     {
         $this->validator->validate('-01:00', new Timezone());

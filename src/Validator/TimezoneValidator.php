@@ -18,7 +18,7 @@ final class TimezoneValidator extends ConstraintValidator
             return;
         }
 
-        if (null !== (u($value)->match('~^(?<timezone>[+\-][0-9]{2}[:][0-9]{2})$~i')['timezone'] ?? null)) {
+        if (null !== (u($value)->match('~^(?<timezone>[+\-][0-9]{1,2}[:][0-9]{1,2})$~i')['timezone'] ?? null)) {
             return;
         }
 
