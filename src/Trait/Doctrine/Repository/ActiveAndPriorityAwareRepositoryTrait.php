@@ -3,6 +3,7 @@
 namespace GrinWay\Service\Trait\Doctrine\Repository;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Use together with traits for entity:
@@ -18,10 +19,7 @@ trait ActiveAndPriorityAwareRepositoryTrait
      */
     public function findFirstActive(?Criteria $criteria = null): ?object
     {
-        $qb = $this->createQueryBuilder('o')
-            ->orderBy('o.priority', 'DESC')
-            ->andWhere('o.active = TRUE')//
-        ;
+        $qb = static::firstActiveQb($this->createQueryBuilder('o'));
 
         if (null !== $criteria) {
             $qb->addCriteria($criteria);
@@ -30,6 +28,20 @@ trait ActiveAndPriorityAwareRepositoryTrait
         return $qb
             ->getQuery()
             ->getOneOrNullResult()//
+            ;
+    }
+
+    public static function firstActiveQb(QueryBuilder $qb): QueryBuilder
+    {
+        $alias = $qb->getRootAliases()[0];
+
+        return $qb
+            ->orderBy(
+                \sprintf('%s.priority', $alias),
+                'DESC',
+            )
+            ->andWhere(\sprintf('%s.active = TRUE', $alias))
+            ->setMaxResults(1)//
             ;
     }
 }

@@ -1,0 +1,2 @@
+'The {{ like_numeric }} is not like numeric.': >-
+    {{ like_numeric }} не похоже на число.
