@@ -2,8 +2,8 @@
 
 namespace GrinWay\Service\Tests\Unit\Validator;
 
-use GrinWay\Service\Validator\StreetWithoutNumber;
-use GrinWay\Service\Validator\StreetWithoutNumberValidator;
+use GrinWay\Service\Validator\Street;
+use GrinWay\Service\Validator\StreetValidator;
 use GrinWay\Service\Validator\Timezone;
 use GrinWay\Service\Validator\TimezoneValidator;
 use PHPUnit\Framework\Attributes\CoversClass;

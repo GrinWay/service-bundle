@@ -9,12 +9,10 @@ use function Symfony\Component\String\u;
 /**
  * @author Grigory Koblitskiy <grin180898@outlook.com>
  */
-final class StreetWithoutNumberValidator extends ConstraintValidator
+final class StreetValidator extends ConstraintValidator
 {
     public function validate(mixed $street, Constraint $constraint): void
     {
-        /* @var AbsolutePath $constraint */
-
         if (null === $street || '' === $street) {
             return;
         }
@@ -22,7 +20,7 @@ final class StreetWithoutNumberValidator extends ConstraintValidator
         if (!\is_scalar($street)) {
             $street = \get_debug_type($street);
         } else {
-            if (null !== (u($street)->match('~^(?<street>[a-zа-я\(\)\s\/\\\_\-,.]+)$~ui')['street'] ?? null)) {
+            if (null !== (u($street)->match('~^(?<street>[a-z\(\p{Cyrillic}\)0-9 \/\\\_\-,.]+)$~ui')['street'] ?? null)) {
                 return;
             }
         }

@@ -28,9 +28,12 @@ class StringService
      * API
      *
      * Gets the complete path
+     * Filters for strings
      */
-    public static function getPath(string...$pathParts): string
+    public static function getPath(...$pathParts): string
     {
+        $pathParts = \array_filter($pathParts, static fn($path) => \is_string($path));
+
         $path = '';
         foreach ($pathParts as $i => $pathPart) {
             if (0 === $i) {

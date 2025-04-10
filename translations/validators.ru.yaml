@@ -1,2 +1,4 @@
 'The {{ like_numeric }} is not like numeric.': >-
     {{ like_numeric }} не похоже на число.
+'The "{{ street }}" is not a street string.': >-
+    "{{ street }}" не строка улицы.

@@ -13,8 +13,6 @@ final class StreetNumberValidator extends ConstraintValidator
 {
     public function validate(mixed $streetNumber, Constraint $constraint): void
     {
-        /* @var AbsolutePath $constraint */
-
         if (null === $streetNumber || '' === $streetNumber) {
             return;
         }

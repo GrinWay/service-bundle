@@ -13,8 +13,6 @@ final class AbsolutePathValidator extends ConstraintValidator
 {
     public function validate(mixed $path, Constraint $constraint): void
     {
-        /* @var AbsolutePath $constraint */
-
         if (null === $path || '' === $path) {
             return;
         }

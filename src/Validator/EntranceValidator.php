@@ -13,8 +13,6 @@ final class EntranceValidator extends ConstraintValidator
 {
     public function validate(mixed $entrance, Constraint $constraint): void
     {
-        /* @var LikeNumeric $constraint */
-
         if (null === $entrance || '' === $entrance) {
             return;
         }

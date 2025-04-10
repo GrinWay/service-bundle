@@ -12,8 +12,6 @@ final class LikeNumericValidator extends ConstraintValidator
 {
     public function validate(mixed $likeNumeric, Constraint $constraint): void
     {
-        /* @var LikeNumeric $constraint */
-
         if (null === $likeNumeric || '' === $likeNumeric) {
             return;
         }
