@@ -15,6 +15,7 @@ class DoctrineUtil
         callable  $setParameterCallback,
         callable  $whereCallback,
         ?callable $fieldValueToKeyConverterCallback = null,
+        string    $operator = '=',
     ): void
     {
         if (empty($fieldValues)) {
@@ -43,10 +44,11 @@ class DoctrineUtil
             $key = \sprintf('%s%s', $fieldName, $fieldValueToKeyConverterCallback($fieldValue));
             $expKey = \sprintf(':%s', $key);
             $conditionStatement .= \sprintf(
-                '%s%s.%s = %s',
+                '%s%s.%s %s %s',
                 $startConditionStatement,
                 $aliasName,
                 $fieldName,
+                $operator,
                 $expKey,
             );
             $setParameterCallback($key, $fieldValue);

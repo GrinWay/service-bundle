@@ -62,7 +62,7 @@ class LikeNumericValidatorTest extends ConstraintValidatorTestCase
     public function testCommaStringIsInvalid()
     {
         $this->validator->validate('1,903212380', new LikeNumeric());
-        $this->buildViolation('The {{ like_numeric }} is not like numeric.')
+        $this->buildViolation('The "{{ like_numeric }}" is not like numeric.')
             ->setParameter('{{ like_numeric }}', '1,903212380')
             ->assertRaised();
     }
@@ -70,7 +70,7 @@ class LikeNumericValidatorTest extends ConstraintValidatorTestCase
     public function testAlphaStringIsInvalid()
     {
         $this->validator->validate('alpha', new LikeNumeric());
-        $this->buildViolation('The {{ like_numeric }} is not like numeric.')
+        $this->buildViolation('The "{{ like_numeric }}" is not like numeric.')
             ->setParameter('{{ like_numeric }}', 'alpha')
             ->assertRaised();
     }
@@ -80,7 +80,7 @@ class LikeNumericValidatorTest extends ConstraintValidatorTestCase
         $object = new \StdClass();
         $this->validator->validate($object, new LikeNumeric());
 
-        $this->buildViolation('The {{ like_numeric }} is not like numeric.')
+        $this->buildViolation('The "{{ like_numeric }}" is not like numeric.')
             ->setParameter('{{ like_numeric }}', \get_debug_type($object))
             ->assertRaised();
     }

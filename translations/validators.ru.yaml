@@ -1,4 +1,16 @@
-'The {{ like_numeric }} is not like numeric.': >-
-    {{ like_numeric }} не похоже на число.
+'The path "{{ path }}" is not an absolute one.': >-
+    Путь "{{ path }}" не абсолютный.
+'The "{{ entrance }}" is not an entrance string.': >-
+    "{{ entrance }}" не строка подъезда.
+'It is not like int: "{{ like_int }}".': >-
+    Не как целое число: "{{ like_int }}".
+'The "{{ like_numeric }}" is not like numeric.': >-
+    "{{ like_numeric }}" не похоже на число.
+'The "{{ phone_number }}" is not a valid phone number string.': >-
+    "{{ phone_number }}" не телефонный номер.
 'The "{{ street }}" is not a street string.': >-
     "{{ street }}" не строка улицы.
+'The "{{ street_number }}" is not a street number string.': >-
+    "{{ street_number }}" не номер улицы.
+'The "{{ timezone }}" is not a valid timezone string.': >-
+    "{{ timezone }}" не временная зона.

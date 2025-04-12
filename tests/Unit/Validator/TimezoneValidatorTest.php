@@ -65,7 +65,7 @@ class TimezoneValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validator->validate('word/TheOtherWord', new Timezone());
 
-        $this->buildViolation('The {{ timezone }} is not a valid timezone string.')
+        $this->buildViolation('The "{{ timezone }}" is not a valid timezone string.')
             ->setParameter('{{ timezone }}', 'word/TheOtherWord')
             ->assertRaised();
     }
@@ -74,7 +74,7 @@ class TimezoneValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validator->validate('01:00', new Timezone());
 
-        $this->buildViolation('The {{ timezone }} is not a valid timezone string.')
+        $this->buildViolation('The "{{ timezone }}" is not a valid timezone string.')
             ->setParameter('{{ timezone }}', '01:00')
             ->assertRaised();
     }

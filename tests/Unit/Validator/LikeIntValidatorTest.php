@@ -45,7 +45,7 @@ class LikeIntValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validator->validate('1.1', new LikeInt());
 
-        $this->buildViolation('It is not like int: {{ like_int }}.')
+        $this->buildViolation('It is not like int: "{{ like_int }}".')
             ->setParameter('{{ like_int }}', '1.1')
             ->assertRaised();
     }
@@ -54,7 +54,7 @@ class LikeIntValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validator->validate(1.2, new LikeInt());
 
-        $this->buildViolation('It is not like int: {{ like_int }}.')
+        $this->buildViolation('It is not like int: "{{ like_int }}".')
             ->setParameter('{{ like_int }}', '1.2')
             ->assertRaised();
     }
@@ -68,7 +68,7 @@ class LikeIntValidatorTest extends ConstraintValidatorTestCase
     public function testAlphaStringIsInvalid()
     {
         $this->validator->validate('alpha', new LikeInt());
-        $this->buildViolation('It is not like int: {{ like_int }}.')
+        $this->buildViolation('It is not like int: "{{ like_int }}".')
             ->setParameter('{{ like_int }}', 'alpha')
             ->assertRaised();
     }
@@ -78,7 +78,7 @@ class LikeIntValidatorTest extends ConstraintValidatorTestCase
         $object = new \StdClass();
         $this->validator->validate($object, new LikeInt());
 
-        $this->buildViolation('It is not like int: {{ like_int }}.')
+        $this->buildViolation('It is not like int: "{{ like_int }}".')
             ->setParameter('{{ like_int }}', \get_debug_type($object))
             ->assertRaised();
     }
