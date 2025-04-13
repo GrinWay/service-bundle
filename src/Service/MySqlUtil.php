@@ -39,9 +39,9 @@ class MySqlUtil
      * @return string|false Tries to return full dump of the backup, but there is a possibility return false
      * when something went wrong
      */
-    public function backup(#[SensitiveParameter] string $databasePassword, bool $toFile = true): string|false
+    public function backup(#[SensitiveParameter] string $databasePassword, bool $toFile = true, string $format = 'Y-m-d H:i:s T'): string|false
     {
-        $filename = $this->serviceLocator->get('carbonFI')->now()->format('T d-m-Y');
+        $filename = $this->serviceLocator->get('carbonFI')->now()->format($format);
         $filename = \sprintf(
             '%s.sql',
             $this->serviceLocator->get('slugger')->slug($filename),
@@ -75,7 +75,7 @@ class MySqlUtil
             'MYSQL_PWD' => $databasePassword,
         ]);
 
-        // Unfortunately InputStream it's a risky decision (doesn't work with sometimes)
+// Unfortunately InputStream it's a risky decision (sometimes doesn't work)
 //        $input = new InputStream();
 //        $input->write($databasePassword);
 //        $process->setInput($input);
