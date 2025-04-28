@@ -15,8 +15,9 @@ class AvoidFailureTransportWhenUnrecoverableMessageHandlingExceptionIsThrownMidd
     protected LoggerInterface $logger;
 
     public function __construct(
-        protected readonly bool $logUnrecoverableException = true,
-        protected readonly bool $includeTractInUnrecoverableExceptionLog = true,
+        protected readonly string $loggerLogMethod = 'warning',
+        protected readonly bool   $logUnrecoverableException = true,
+        protected readonly bool   $includeTractInUnrecoverableExceptionLog = true,
     )
     {
     }
@@ -53,7 +54,9 @@ class AvoidFailureTransportWhenUnrecoverableMessageHandlingExceptionIsThrownMidd
                             $context['trace'] = $previousException->getTrace();
                         }
 
-                        $this->logger->error($previousException->getMessage(), $context);
+                        if (\method_exists($this->logger, $this->loggerLogMethod)) {
+                            [$this->logger, $this->loggerLogMethod]($previousException->getMessage(), $context);
+                        }
                     }
                     return $envelope;
                 }
