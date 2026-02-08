@@ -30,15 +30,7 @@ class HideServiceByTagPass implements CompilerPassInterface
         string                  ...$tags,
     )
     {
-        if (!\str_starts_with($hiddenServiceIdPrefix, '.')) {
-            if (empty($hiddenServiceIdPrefix)) {
-                $this->hiddenServiceIdPrefix = '.';
-            } else {
-                $this->hiddenServiceIdPrefix = '.' . u($hiddenServiceIdPrefix)->snake() . '.';
-            }
-        } else {
-            $this->hiddenServiceIdPrefix = '.';
-        }
+        $this->hiddenServiceIdPrefix = (string)u($hiddenServiceIdPrefix)->snake()->ensureStart('.');
         $this->tags = $tags;
     }
 
@@ -46,12 +38,14 @@ class HideServiceByTagPass implements CompilerPassInterface
     {
         foreach ($this->tags as $tag) {
             foreach ($container->findTaggedServiceIds($tag) as $currentServiceId => $serviceTagAttributes) {
-                if (!\str_starts_with($currentServiceId, '.') && $container->hasDefinition($currentServiceId)) {
-                    $definition = $container->findDefinition($currentServiceId);
-                    $newServiceId = $this->getNewServiceId($definition, $tag);
-                    $container->removeDefinition($currentServiceId);
-                    $container->setDefinition($newServiceId, $definition);
+                if (\str_starts_with($currentServiceId, '.') || !$container->hasDefinition($currentServiceId)) {
+                    continue;
                 }
+
+                $definition = $container->findDefinition($currentServiceId);
+                $newServiceId = $this->getNewServiceId($definition, $tag);
+                $container->removeDefinition($currentServiceId);
+                $container->setDefinition($newServiceId, $definition);
             }
         }
     }
@@ -72,9 +66,15 @@ class HideServiceByTagPass implements CompilerPassInterface
     private function getNewServiceId(Definition $definition, string $tag): string
     {
         $shortClassName = $this->getShortClassName($definition);
+
+        $prefix = $this->hiddenServiceIdPrefix;
+        if ('.' !== $prefix) {
+            $prefix .= '.';
+        }
+
         return \sprintf(
             '%s%s.%s',
-            $this->hiddenServiceIdPrefix,
+            $prefix,
             $tag,
             $shortClassName,
         );
