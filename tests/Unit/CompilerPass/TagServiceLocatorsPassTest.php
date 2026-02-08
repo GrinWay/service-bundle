@@ -2,11 +2,16 @@
 
 namespace GrinWay\Service\Tests\Unit;
 
+use ArrayObject;
 use GrinWay\Service\Pass\TagServiceLocatorsPass;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Compiler\AutowirePass;
+use Symfony\Component\DependencyInjection\Compiler\AutowireRequiredMethodsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Contracts\Service\Attribute\Required;
 
 #[CoversClass(TagServiceLocatorsPassTest::class)]
 class TagServiceLocatorsPassTest extends TestCase
@@ -18,23 +23,45 @@ class TagServiceLocatorsPassTest extends TestCase
         $container = new ContainerBuilder();
         $this->fillInContainer($container);
 
+        // For working #[Required] attribute for autowired services
+        $this->setBuiltInAutowireRequiredMethodsPass($container);
+
+        // For working #[Autowire] attribute
+        $this->setBuiltInAutowirePass($container);
+
         // COMPILER PASS IN ACTION
-        $this->process($container);
+        $this->setThisTagServiceLocatorsPass($container);
 
         $resultCollection = $container->get('collector')->getCollection();
 
+        $firstOwnerServices = $resultCollection[$this->getTagFormat('first_uniq_data')] ?? new ArrayObject();
         $this->assertCount(
             3,
-            $resultCollection[$this->getTagFormat('first_uniq_data')],
+            $firstOwnerServices,
         );
+        $firstOwnerServices = \array_values(\iterator_to_array($firstOwnerServices));
+        $this->assertInstanceOf(FirstOwnerSubService1::class, $firstOwnerServices[0]);
+        $this->assertInstanceOf(FirstOwnerSubService2::class, $firstOwnerServices[1]);
+        $this->assertInstanceOf(FirstOwnerSubService3::class, $firstOwnerServices[2]);
+
+        $secondOwnerServices = $resultCollection[$this->getTagFormat('second_uniq_data')] ?? new ArrayObject();
         $this->assertCount(
             2,
-            $resultCollection[$this->getTagFormat('second_uniq_data')],
+            $secondOwnerServices,
         );
+        $secondOwnerServices = \array_values(\iterator_to_array($secondOwnerServices));
+        $this->assertInstanceOf(SecondOwnerSubService1::class, $secondOwnerServices[0]);
+        $this->assertInstanceOf(SecondOwnerSubService2::class, $secondOwnerServices[1]);
+
+        $thirdOwnerServices = $resultCollection[$this->getTagFormat('third_uniq_data')] ?? new ArrayObject();
         $this->assertCount(
             1,
-            $resultCollection[$this->getTagFormat('third_uniq_data')],
+            $thirdOwnerServices,
         );
+        $thirdOwnerServices = \array_values(\iterator_to_array($thirdOwnerServices));
+        $thirdOwnerService = $thirdOwnerServices[0];
+        $this->assertInstanceOf(ThirdOwnerSubService1::class, $thirdOwnerService);
+        $this->assertInstanceOf(SomeService::class, $thirdOwnerService->getSomeService());
     }
 
     public function testCollectedServiceLocatorsThrowsWhenStaticMethodReturnNotString()
@@ -48,7 +75,7 @@ class TagServiceLocatorsPassTest extends TestCase
         ;
         // COMPILER PASS IN ACTION
         $this->expectException(\BadMethodCallException::class);
-        $this->process($container);
+        $this->setThisTagServiceLocatorsPass($container);
     }
 
     /**
@@ -57,62 +84,116 @@ class TagServiceLocatorsPassTest extends TestCase
     private function fillInContainer(ContainerBuilder $container): void
     {
         $container
-            ->register('collector')
+            ->register(CollectorService::class)
+            ->setPublic(true)
             ->setClass(CollectorService::class)//
+        ;
+        $container
+            ->addAliases([
+                'collector' => CollectorService::class,
+            ])//
         ;
 
         $container
-            ->register('first_owner')
+            ->register(FirstOwner::class)
+            ->setPublic(true)
             ->setClass(FirstOwner::class)
             ->addTag(self::OWNER_TAG)//
         ;
         $container
-            ->register('second_owner')
+            ->register(SecondOwner::class)
+            ->setPublic(true)
             ->setClass(SecondOwner::class)
             ->addTag(self::OWNER_TAG)//
         ;
         $container
-            ->register('third_owner')
+            ->register(ThirdOwner::class)
+            ->setPublic(true)
             ->setClass(ThirdOwner::class)
             ->addTag(self::OWNER_TAG)//
         ;
+        $container
+            ->addAliases([
+                'first_owner'  => FirstOwner::class,
+                'second_owner' => SecondOwner::class,
+                'third_owner'  => ThirdOwner::class,
+            ])//
+        ;
 
         $container
-            ->register('first_sub_service_1')
+            ->register(FirstOwnerSubService1::class)
+            ->setPublic(true)
             ->setClass(FirstOwnerSubService1::class)
             ->addTag($this->getTagFormat('first_uniq_data'))//
         ;
         $container
-            ->register('first_sub_service_2')
+            ->register(FirstOwnerSubService2::class)
+            ->setPublic(true)
             ->setClass(FirstOwnerSubService2::class)
             ->addTag($this->getTagFormat('first_uniq_data'))//
         ;
         $container
-            ->register('first_sub_service_3')
+            ->register(FirstOwnerSubService3::class)
+            ->setPublic(true)
             ->setClass(FirstOwnerSubService3::class)
             ->addTag($this->getTagFormat('first_uniq_data'))//
         ;
         $container
-            ->register('second_sub_service_1')
+            ->addAliases([
+                'first_sub_service_1' => FirstOwnerSubService1::class,
+                'first_sub_service_2' => FirstOwnerSubService2::class,
+                'first_sub_service_3' => FirstOwnerSubService3::class,
+            ])//
+        ;
+
+        $container
+            ->register(SecondOwnerSubService1::class)
+            ->setPublic(true)
             ->setClass(SecondOwnerSubService1::class)
             ->addTag($this->getTagFormat('second_uniq_data'))//
         ;
         $container
-            ->register('second_sub_service_2')
+            ->register(SecondOwnerSubService2::class)
+            ->setPublic(true)
             ->setClass(SecondOwnerSubService2::class)
             ->addTag($this->getTagFormat('second_uniq_data'))//
         ;
         $container
-            ->register('third_sub_service_1')
+            ->addAliases([
+                'second_sub_service_1' => SecondOwnerSubService1::class,
+                'second_sub_service_2' => SecondOwnerSubService2::class,
+            ])//
+        ;
+
+        $container
+            ->register(ThirdOwnerSubService1::class)
+            ->setPublic(true)
+            ->setAutowired(true)
             ->setClass(ThirdOwnerSubService1::class)
             ->addTag($this->getTagFormat('third_uniq_data'))//
+        ;
+        $container
+            ->addAliases([
+                'third_sub_service_1' => ThirdOwnerSubService1::class,
+            ])//
+        ;
+
+        $container
+            ->register(SomeService::class)
+            ->setPublic(true)
+            ->setClass(SomeService::class)//
+        ;
+        $container
+            ->addAliases([
+                'some_service' => SomeService::class,
+            ])//
         ;
     }
 
     /**
      * Compiler pass in action
      */
-    protected function process(ContainerBuilder $container): void
+    protected function setThisTagServiceLocatorsPass(ContainerBuilder $container): void
     {
         (new TagServiceLocatorsPass(
             'collector',
@@ -121,6 +202,22 @@ class TagServiceLocatorsPassTest extends TestCase
             'getUniqOwnerString',
             $this->getTagFormat('%s'),
         ))->process($container);
+    }
+
+    /**
+     * Check built in compiler pass
+     */
+    protected function setBuiltInAutowirePass(ContainerBuilder $container): void
+    {
+        (new AutowirePass())->process($container);
+    }
+
+    /**
+     * Check built in compiler pass
+     */
+    protected function setBuiltInAutowireRequiredMethodsPass(ContainerBuilder $container): void
+    {
+        (new AutowireRequiredMethodsPass())->process($container);
     }
 
     /**
@@ -248,5 +345,27 @@ class SecondOwnerSubService2
  * Exactly "third" owner sub-service because its"third_uniq_data.sub_service" tag name
  */
 class ThirdOwnerSubService1
+{
+    private SomeService $someService;
+
+    #[Required]
+    public function setSomeService(
+        #[Autowire(service: SomeService::class)]
+        SomeService $someService,
+    ): self {
+        $this->someService = $someService;
+        return $this;
+    }
+
+    public function getSomeService(): SomeService
+    {
+        return $this->someService;
+    }
+}
+
+/**
+ * @internal for tests
+ */
+class SomeService
 {
 }
