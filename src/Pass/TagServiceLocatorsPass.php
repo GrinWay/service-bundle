@@ -61,9 +61,11 @@ class TagServiceLocatorsPass implements CompilerPassInterface
 
             $dynamicDefinitions = [];
             foreach ($container->findTaggedServiceIds($dynamicTagName) as $dynamicId => $dynamicTagAttributes) {
-                // consider priority
+                $dynamicDefinition = $container->findDefinition($dynamicId);
+                // array_pop instead [0] or array_shift, cuz if I use AutoconfigureTag, I want to use this but not previous priority
                 $priority = \array_pop($dynamicTagAttributes)['priority'] ?? 0;
-                $dynamicDefinitions[$priority][] = new Reference($dynamicId);
+                $dynamicDefinition = new Reference($dynamicDefinition->getClass());
+                $dynamicDefinitions[$priority][] = $dynamicDefinition;
             }
             $dynamicDefinitionsDepthDecreased = [];
             \krsort($dynamicDefinitions);
