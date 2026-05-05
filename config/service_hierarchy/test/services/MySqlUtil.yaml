@@ -16,5 +16,6 @@ services:
             $databaseName: '%env(string:default:grinway_service.database.database_name:)%'
             $databasePort: '%env(string:default:grinway_service.database.port:)%'
             $databaseUsername: '%env(string:default:grinway_service.database.user:)%'
+            $databasePassword: '%env(string:APP_DB_PASS)%'
 
     grinway_service.mysql_util: '@GrinWay\Service\Service\MySqlUtil'
