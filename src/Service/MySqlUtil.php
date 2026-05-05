@@ -2,7 +2,6 @@
 
 namespace GrinWay\Service\Service;
 
-use SensitiveParameter;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\ExecutableFinder;
@@ -20,14 +19,14 @@ class MySqlUtil
     private readonly Filesystem $filesystem;
 
     public function __construct(
-        protected readonly ServiceLocator $serviceLocator,
-        protected readonly string         $backupAbsPath,
-        protected readonly string         $databaseHost,
-        protected readonly string         $databasePort,
-        protected readonly string         $databaseName,
-        protected readonly string         $databaseUsername,
-    )
-    {
+        protected readonly ServiceLocator              $serviceLocator,
+        protected readonly string                      $backupAbsPath,
+        protected readonly string                      $databaseHost,
+        protected readonly string                      $databasePort,
+        protected readonly string                      $databaseName,
+        protected readonly string                      $databaseUsername,
+        #[\SensitiveParameter] private readonly string $databasePassword,
+    ) {
         $this->filesystem = new Filesystem();
     }
 
@@ -39,59 +38,65 @@ class MySqlUtil
      * @return string|false Tries to return full dump of the backup, but there is a possibility return false
      * when something went wrong
      */
-    public function backup(#[SensitiveParameter] string $databasePassword, bool $toFile = true, string $format = 'Y-m-d H:i:s T'): string|false
+    public function backup(#[\SensitiveParameter] ?string $databasePassword = null, bool $toFile = true, string $format = 'Y-m-d H:i:s T'): string|false
     {
-        $filename = $this->serviceLocator->get('carbonFI')->now()->format($format);
-        $filename = \sprintf(
-            '%s.sql',
-            $this->serviceLocator->get('slugger')->slug($filename),
-        );
-        $absFilepath = StringService::getPath(
-            $this->backupAbsPath,
-            $filename,
-        );
+        $absFilepath = '';
+        try {
+            $databasePassword ??= $this->databasePassword;
+            $filename = $this->serviceLocator->get('carbonFI')->now()->format($format);
+            $filename = \sprintf(
+                '%s.sql',
+                $this->serviceLocator->get('slugger')->slug($filename),
+            );
+            $absFilepath = StringService::getPath(
+                $this->backupAbsPath,
+                $filename,
+            );
 
-        $mysqlExecutableName = 'mysqldump';
-        $mysqlExecutableName = (new ExecutableFinder())->find($mysqlExecutableName, default: $mysqlExecutableName);
+            $mysqlExecutableName = 'mysqldump';
+            $mysqlExecutableName = (new ExecutableFinder())->find($mysqlExecutableName, default: $mysqlExecutableName);
 
-        $mysqlDumpCommand = '"%s" --user "%s" --host %s --port "%s" --databases "%s" --skip-comments';
+            $mysqlDumpCommand = '"%s" --user "%s" --host %s --port "%s" --databases "%s" --skip-comments';
 
-        $dopCommandParameters = [];
-        if (true === $toFile) {
-            $this->filesystem->mkdir($this->backupAbsPath);
-            $mysqlDumpCommand .= ' ' . '--result-file "%s"';
-            $dopCommandParameters[] = $absFilepath;
-        }
+            $dopCommandParameters = [];
+            if (true === $toFile) {
+                $this->filesystem->mkdir($this->backupAbsPath);
+                $mysqlDumpCommand .= ' ' . '--result-file "%s"';
+                $dopCommandParameters[] = $absFilepath;
+            }
 
-        $process = Process::fromShellCommandline(\sprintf(
-            $mysqlDumpCommand,
-            $mysqlExecutableName,
-            $this->databaseUsername,
-            $this->databaseHost,
-            $this->databasePort,
-            $this->databaseName,
-            ...$dopCommandParameters,
-        ), env: [
-            'MYSQL_PWD' => $databasePassword,
-        ]);
+            $process = Process::fromShellCommandline(\sprintf(
+                $mysqlDumpCommand,
+                $mysqlExecutableName,
+                $this->databaseUsername,
+                $this->databaseHost,
+                $this->databasePort,
+                $this->databaseName,
+                ...$dopCommandParameters,
+            ), env: [
+                'MYSQL_PWD' => $databasePassword,
+            ]);
 
 // Unfortunately InputStream it's a risky decision (sometimes doesn't work)
 //        $input = new InputStream();
 //        $input->write($databasePassword);
 //        $process->setInput($input);
 
-        $process->mustRun();
+            $process->mustRun();
 //        $input->close();
 
-        if (true === $toFile) {
-            return \file_get_contents($absFilepath);
-        }
+            if (true === $toFile) {
+                return \file_get_contents($absFilepath);
+            }
 
-        $output = $process->getOutput();
-        if (empty($output)) {
-            return false;
+            $output = $process->getOutput();
+            if (empty($output)) {
+                return false;
+            }
+        } catch (\Throwable $e) {
+            $this->filesystem->remove($absFilepath);
+            throw $e;
         }
-
         return $output;
     }
 }
